@@ -6,303 +6,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TỔ TOÁN - TIN | Dashboard</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         :root {
-            --primary-color: #2563eb;
-            --text-dark: #1e293b;
-            --text-light: #475569;
-            --border-color: rgba(255, 255, 255, 0.3);
-            --glow-color: rgba(255, 255, 255, 0.8);
+            /* Palette màu hiện đại, tươi sáng nhưng chuyên nghiệp */
+            --primary-color: #3b82f6;
+            --accent-color: #8b5cf6;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text-main: #1e293b;
+            --text-sub: #475569;
+            --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.12);
         }
 
-        html,
-        body {
+        html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            background-color: transparent !important;
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
         }
 
+        /* --- BACKGROUND LUNG LINH --- */
         body {
+            /* Animated Gradient Background */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 5px;
+            color: var(--text-main);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         #hero-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -1;
-            pointer-events: none;
+            /* Lớp phủ mờ nhẹ để tách biệt nội dung với các hạt */
+            /* backdrop-filter: blur(1px); */ 
         }
 
-        /* --- HEADER LUNG LINH --- */
-        /* UPDATE: Giảm khoảng cách header */
+        /* --- HEADER --- */
         .page-header {
             text-align: center;
+            margin-top: 30px;
             margin-bottom: 10px;
-            /* Giảm từ 40px */
             z-index: 10;
-            padding: 20px 15px 10px;
-            /* Giảm padding */
             position: relative;
         }
 
         .page-header h1 {
             font-weight: 800;
-            letter-spacing: 6px;
-            font-size: 2.8rem;
+            font-size: 3.5rem;
             text-transform: uppercase;
-            background: linear-gradient(90deg, #60a5fa, #a78bfa, #c084fc, #e879f9);
+            letter-spacing: 4px;
+            color: white;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 0;
+            /* Text Gradient on top of White text shadow looks cool */
+            background: linear-gradient(to right, #ffffff, #e0f2fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(167, 139, 250, 0.6), 0 0 60px rgba(96, 165, 250, 0.4);
-            margin-bottom: 8px;
-            /* Giảm margin */
-            animation: glowPulse 4s ease-in-out infinite alternate;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+            animation: float 6s ease-in-out infinite;
         }
 
         .page-header p {
-            font-size: 1.2rem;
-            color: #f0f9ff;
-            max-width: 900px;
-            margin: 0 auto;
-            line-height: 1.7;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 4px 15px rgba(0, 0, 0, 0.3);
-            opacity: 0.95;
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            margin-top: 5px;
+            font-weight: 500;
         }
 
-        @keyframes glowPulse {
-            0% {
-                text-shadow: 0 0 20px rgba(167, 139, 250, 0.5), 0 0 40px rgba(96, 165, 250, 0.3);
-            }
-
-            100% {
-                text-shadow: 0 0 40px rgba(167, 139, 250, 0.8), 0 0 80px rgba(96, 165, 250, 0.6);
-            }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
-        @media (min-width: 768px) {
-            .page-header h1 {
-                font-size: 4.2rem;
-                letter-spacing: 10px;
-            }
-
-            .page-header p {
-                font-size: 1.45rem;
-            }
-        }
-
-        /* UPDATE: Giảm margin line */
         .header-line {
-            height: 5px;
-            width: 220px;
-            background: linear-gradient(90deg, transparent, #60a5fa, #a78bfa, #c084fc, transparent);
-            margin: 15px auto 30px;
-            /* Giảm margin */
+            height: 4px;
+            width: 150px;
+            background: white;
+            margin: 10px auto 30px;
             border-radius: 50px;
-            box-shadow: 0 0 25px rgba(167, 139, 250, 0.9);
-            animation: lineGlow 3s ease-in-out infinite alternate;
-        }
-
-        @keyframes lineGlow {
-            0% {
-                box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
-            }
-
-            100% {
-                box-shadow: 0 0 35px rgba(167, 139, 250, 1);
-            }
-        }
-
-        /* --- FOOTER LUNG LINH --- */
-        .page-footer {
-            text-align: center;
-            padding: 40px 20px 40px;
-            color: #e0f2fe;
-            font-size: 1.05rem;
-            line-height: 1.9;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
             position: relative;
-            margin-top: auto;
+            overflow: hidden;
         }
-
-        .page-footer strong {
-            font-size: 1.4rem;
-            background: linear-gradient(90deg, #60a5fa, #c084fc, #e879f9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-            margin-bottom: 12px;
-            text-shadow: 0 0 25px rgba(167, 139, 250, 0.7);
-            animation: glowPulse 4s ease-in-out infinite alternate;
-        }
-
-        .page-footer::before {
+        
+        /* Hiệu ứng ánh sáng chạy qua line */
+        .header-line::after {
             content: '';
             position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 180px;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #a78bfa, transparent);
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.9);
-            border-radius: 50px;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            animation: shimmerLine 3s infinite;
         }
 
-        /* --- DASHBOARD --- */
+        @keyframes shimmerLine {
+            100% { left: 100%; }
+        }
+
+        /* --- DASHBOARD CONTAINER --- */
         .dashboard-container {
             width: 100%;
-            max-width: 100%;
+            padding: 10px 0 60px 0;
             overflow-x: auto;
             scroll-behavior: smooth;
-            padding: 10px 0 60px 0;
+            /* Ẩn scrollbar mặc định của container chính để đẹp hơn */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.5) transparent;
         }
 
         .edu-grid {
             display: flex;
             flex-wrap: nowrap;
-            gap: 22px;
-            padding: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-container {
-                overflow-x: hidden;
-            }
-
-            .edu-grid {
-                flex-wrap: wrap;
-                justify-content: center;
-                padding: 15px;
-            }
-
-            .edu-col {
-                flex: 0 0 100% !important;
-                min-width: 100% !important;
-            }
-
-            .edu-card {
-                height: auto !important;
-                min-height: 450px;
-            }
+            gap: 25px;
+            padding: 20px 40px; /* Thêm padding 2 bên */
+            min-width: min-content; /* Đảm bảo grid không bị co lại */
         }
 
         .edu-col {
-            flex: 0 0 357px;
-            min-width: 357px;
+            flex: 0 0 360px;
+            min-width: 360px;
+            opacity: 0; /* Ẩn để làm animation hiện ra */
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- CARD GLASSMORPHISM --- */
         .edu-card {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border-color);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 24px 20px;
-            height: 500px;
-            transition: all 0.3s ease-in-out;
+            padding: 25px;
+            height: 520px; /* Tăng chiều cao một chút */
             display: flex;
             flex-direction: column;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            /* UPDATE: Border Top Logic - Default value, will be overridden by inline style */
-            border-top: 5px solid transparent;
+            box-shadow: var(--shadow-light);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            /* Border top sẽ được set inline từ JS */
+            border-top: 5px solid transparent; 
         }
 
-        /* UPDATE: Hover effect for Border Top */
+        .edu-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .edu-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            background: rgba(255, 255, 255, 0.98);
-            /* border-color handled by inline style on hover logic via CSS var if possible, 
-               but simple transition on border-width works best with inline color */
-            border-top-width: 8px;
-            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+            background: rgba(255, 255, 255, 0.85);
+            z-index: 5;
         }
 
+        /* --- CARD CONTENT --- */
         .card-header-inline {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             margin-bottom: 20px;
             flex-shrink: 0;
+            position: relative;
+            z-index: 1;
         }
 
         .edu-icon-wrapper {
-            width: 46px;
-            height: 46px;
-            border-radius: 13px;
+            width: 50px; height: 50px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            /* Default colors, overridden by inline style */
-            background: #eff6ff;
-            color: #2563eb;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .edu-card:hover .edu-icon-wrapper {
+            transform: rotate(10deg) scale(1.1);
         }
 
         .edu-title {
             font-weight: 800;
-            font-size: 1.2rem;
-            color: var(--text-dark);
+            font-size: 1.25rem;
+            color: var(--text-main);
             margin: 0;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* UPDATE: Scrollbar inside Card */
+        /* --- MENU SCROLLBAR --- */
         .edu-menu {
             overflow-y: auto;
             flex-grow: 1;
-            padding-right: 5px;
+            padding-right: 8px;
+            position: relative;
+            z-index: 1;
         }
 
         .edu-menu::-webkit-scrollbar {
-            width: 6px;
-            /* Nhỏ hơn thanh ngang chính 1 chút */
+            width: 5px;
         }
-
         .edu-menu::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0,0,0,0.02);
             border-radius: 10px;
         }
-
         .edu-menu::-webkit-scrollbar-thumb {
-            background: rgba(167, 139, 250, 0.5);
-            /* Màu tím nhạt */
+            background: rgba(0,0,0,0.15);
             border-radius: 10px;
         }
-
         .edu-menu::-webkit-scrollbar-thumb:hover {
-            background: rgba(167, 139, 250, 0.8);
+            background: rgba(0,0,0,0.3);
         }
 
+        /* --- MENU ITEMS --- */
         .edu-menu-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 9px 0;
-            color: var(--text-light);
+            padding: 12px 10px;
+            color: var(--text-sub);
             text-decoration: none;
             font-weight: 600;
-            /* LEVEL 1 Font Size */
-            font-size: 1.05rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-            transition: 0.2s;
+            font-size: 1rem;
+            border-radius: 12px;
+            transition: all 0.2s ease;
             cursor: pointer;
+            margin-bottom: 4px;
+        }
+
+        .edu-menu-item:hover {
+            background: rgba(255, 255, 255, 0.6);
+            color: var(--primary-color);
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
         }
 
         .menu-main-content {
@@ -312,115 +276,152 @@
         }
 
         .edu-menu-item i:first-child {
-            width: 30px;
+            width: 35px;
             font-size: 1.1rem;
-            margin-right: 10px;
             text-align: center;
+            margin-right: 5px;
+            transition: 0.2s;
+        }
+        
+        /* Hiệu ứng icon nhảy nhẹ khi hover */
+        .edu-menu-item:hover i:first-child {
+            transform: scale(1.2);
         }
 
-        .edu-menu-item:hover {
-            color: var(--primary-color);
-            padding-left: 6px;
-        }
-
-        /* SUBMENU Styling */
+        /* --- SUBMENU --- */
         .submenu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s ease-in-out, opacity 0.3s, margin 0.3s;
-            background: rgba(0, 0, 0, 0.02);
-            border-radius: 10px;
-            opacity: 0;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), margin 0.3s;
+            margin-left: 10px;
+            border-left: 2px dashed rgba(0,0,0,0.1); /* Đường nối đứt nét kiểu sơ đồ */
+            padding-left: 5px;
         }
 
         .submenu.active {
-            /* max-height set dynamically via JS usually, but strict CSS helps */
-            max-height: 1000px;
+            max-height: 1000px; /* Đủ lớn để hiện nội dung */
             margin-bottom: 10px;
-            padding: 5px 0;
-            opacity: 1;
         }
 
         .submenu-item {
-            padding: 8px 15px 8px 40px;
-            /* Indent for Level 2 */
-            /* LEVEL 2 Font Size: Smaller than Level 1 */
+            padding: 8px 10px 8px 15px;
             font-size: 0.95rem;
-            color: var(--text-light);
+            color: var(--text-sub);
             cursor: pointer;
-            transition: 0.2s;
+            border-radius: 8px;
+            margin-top: 2px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            transition: 0.2s;
+            position: relative;
+        }
+        
+        /* Dot chỉ dẫn */
+        .submenu-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px; height: 6px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            transition: 0.2s;
         }
 
-        .submenu-item i.menu-icon {
-            width: 20px;
-            text-align: center;
-            margin-right: 8px;
+        .submenu-item:hover::before {
+            background: var(--primary-color);
+            box-shadow: 0 0 5px var(--primary-color);
         }
 
         .submenu-item:hover {
             color: var(--primary-color);
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255,255,255,0.5);
         }
 
-        /* LEVEL 3 Styling (Nested Submenu) */
         .submenu .submenu {
-            background: rgba(0, 0, 0, 0.03);
-            /* Darker slightly */
-            border-left: 2px solid rgba(0, 0, 0, 0.1);
-            margin-left: 20px;
-            border-radius: 0 10px 10px 0;
+            margin-left: 15px;
+            border-left: 2px dotted rgba(0,0,0,0.15);
         }
-
+        
         .submenu .submenu .submenu-item {
-            padding-left: 30px;
-            /* LEVEL 3 Font Size: Smaller than Level 2 */
             font-size: 0.85rem;
         }
 
         .rotate-icon {
             transition: 0.3s;
-            margin-left: 10px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            opacity: 0.6;
         }
-
         .rotate-icon.active {
             transform: rotate(180deg);
+            opacity: 1;
+            color: var(--primary-color);
         }
 
+        /* --- FOOTER --- */
+        .page-footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 0.95rem;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            margin-top: auto;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+        }
+        
+        /* --- TOAST --- */
         .custom-toast {
-            background: rgba(15, 17, 42, 0.95);
-            color: #fff;
-            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1e293b;
+            padding: 12px 30px;
             border-radius: 50px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 40px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
             z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            white-space: nowrap;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,1);
+            opacity: 0;
+            animation: toastUp 0.3s forwards;
+        }
+        
+        @keyframes toastUp {
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        /* Scrollbar Global */
-        .dashboard-container::-webkit-scrollbar {
-            height: 8px;
+        /* LOADING SPINNER STYLE */
+        .loader-container {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
         }
-
-        .dashboard-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+        .spinner-ring {
+            width: 50px; height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
         }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .dashboard-container::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg, #38bdf8, var(--primary-color));
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2.5rem; }
+            .edu-grid { flex-wrap: wrap; justify-content: center; padding: 10px; }
+            .edu-col { flex: 0 0 100%; min-width: 100%; }
+            .edu-card { height: auto; min-height: 400px; }
         }
     </style>
 </head>
@@ -432,78 +433,68 @@
 
     <div class="page-header">
         <h1>TỔ TOÁN - TIN</h1>
+        <p>Kho tàng tri thức & Tài nguyên số</p>
     </div>
 
     <div class="header-line"></div>
 
     <div class="dashboard-container" id="scroll-container">
         <div class="edu-grid" id="dynamic-grid">
-            <div style="width:100%; text-align:center; color:white; font-size:1.2rem;">
-                <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu từ CSDL...
+            <div class="loader-container">
+                <div class="spinner-ring"></div>
+                <div>Đang kết nối cơ sở dữ liệu...</div>
             </div>
         </div>
     </div>
 
     <div class="page-footer">
-        <strong>*****</strong>
-        HỖ TRỢ TRUY CẬP NHANH ĐẾN TÀI NGUYÊN<br>
-        Phát triển và duy trì bởi: Tổ Toán - Tin<br>
-        Mọi góp ý vui lòng liên hệ qua email: nguyenhaunghia@gmail.com.
+        <div><strong>DESIGN BY TO TOAN TIN</strong></div>
+        <div style="font-size: 0.85rem; opacity: 0.8; margin-top: 5px;">Hỗ trợ truy cập nhanh đến tài nguyên học tập</div>
     </div>
 
     <script>
-        // --- 1. CONFIG & UTILS ---
+        // --- CONFIG ---
         const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
         const SHEET_NAME = 'CSDL';
-        
-        // Helper: Làm nhạt màu hex để làm nền (Background color helper)
+
+        // --- UTILS ---
         function hexToRgba(hex, alpha) {
             let c;
-            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
-                c= hex.substring(1).split('');
-                if(c.length== 3){
-                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-                }
-                c= '0x'+c.join('');
-                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+                c = hex.substring(1).split('');
+                if (c.length == 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+                c = '0x' + c.join('');
+                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
             }
-            return hex; // fallback if not hex
+            return hex;
         }
 
-        // --- 2. DATA FETCHING ---
+        // --- FETCH DATA ---
         async function fetchSheetData() {
             const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
-                // Google Viz API trả về JSONP, cần cắt bỏ phần bọc bên ngoài
                 const jsonText = text.substring(47).slice(0, -2);
                 const json = JSON.parse(jsonText);
                 return parseData(json.table.rows);
             } catch (error) {
-                console.error('Lỗi tải dữ liệu:', error);
-                document.getElementById('dynamic-grid').innerHTML = '<div style="color:red; text-align:center;">Lỗi kết nối CSDL!</div>';
+                console.error('Lỗi:', error);
+                document.getElementById('dynamic-grid').innerHTML = '<div style="color:white; text-align:center;">Không thể tải dữ liệu. Vui lòng kiểm tra kết nối!</div>';
             }
         }
 
-        // --- 3. DATA PARSING ---
         function parseData(rows) {
-            // Cấu trúc mong đợi từ Sheet:
-            // Col 0: Level, Col 1: Icon, Col 2: Color, Col 3: Label, Col 4: Link, Col 5: Note
-            
             const cards = [];
-            let currentCard = null;
-            let currentL1 = null;
-            let currentL2 = null;
+            let currentCard = null, currentL1 = null, currentL2 = null;
 
             rows.forEach(row => {
                 const c = row.c;
-                if (!c || !c[0]) return; // Bỏ qua dòng trống
-
+                if (!c || !c[0]) return;
                 const level = c[0] ? c[0].v : 0;
-                const icon = c[1] ? c[1].v : '';
+                const icon = c[1] ? c[1].v : 'fas fa-circle';
                 const color = c[2] ? c[2].v : '#333';
-                const label = c[3] ? c[3].v : '';
+                const label = c[3] ? c[3].v : 'No Name';
                 const link = c[4] ? c[4].v : '#';
                 const note = c[5] ? c[5].v : '';
 
@@ -512,12 +503,12 @@
                 if (level === 0) {
                     currentCard = item;
                     cards.push(currentCard);
-                    currentL1 = null; // Reset
+                    currentL1 = null;
                 } else if (level === 1) {
                     if (currentCard) {
                         currentL1 = item;
                         currentCard.children.push(currentL1);
-                        currentL2 = null; // Reset
+                        currentL2 = null;
                     }
                 } else if (level === 2) {
                     if (currentL1) {
@@ -525,34 +516,31 @@
                         currentL1.children.push(currentL2);
                     }
                 } else if (level === 3) {
-                    if (currentL2) {
-                        currentL2.children.push(item);
-                    }
+                    if (currentL2) currentL2.children.push(item);
                 }
             });
             return cards;
         }
 
-        // --- 4. RENDERING UI ---
+        // --- RENDER ---
         function renderDashboard(cards) {
             const grid = document.getElementById('dynamic-grid');
             grid.innerHTML = '';
 
-            cards.forEach(card => {
-                // Tạo Card Container
+            cards.forEach((card, index) => {
                 const col = document.createElement('div');
                 col.className = 'edu-col';
+                // Stagger Animation: Các card hiện ra lệch nhau 1 chút
+                col.style.animationDelay = `${index * 0.15}s`;
 
-                // Style động cho Icon wrapper và Border top
-                // Lấy màu từ Sheet để làm border top và background icon
-                const cardColor = card.color || '#2563eb';
+                const cardColor = card.color || '#3b82f6';
                 const bgIcon = hexToRgba(cardColor, 0.15);
 
                 const cardHtml = document.createElement('div');
                 cardHtml.className = 'edu-card';
-                cardHtml.style.borderTopColor = cardColor; 
+                // Border top màu đậm để nhấn mạnh
+                cardHtml.style.borderTopColor = cardColor;
 
-                // Header của Card
                 const headerHtml = `
                     <div class="card-header-inline">
                         <div class="edu-icon-wrapper" style="background:${bgIcon}; color:${cardColor};">
@@ -562,14 +550,9 @@
                     </div>
                 `;
 
-                // Menu Container
                 const menuContainer = document.createElement('div');
                 menuContainer.className = 'edu-menu';
-
-                // Render Level 1 items
-                card.children.forEach(l1 => {
-                    menuContainer.appendChild(createMenuItem(l1));
-                });
+                card.children.forEach(l1 => menuContainer.appendChild(createMenuItem(l1)));
 
                 cardHtml.innerHTML = headerHtml;
                 cardHtml.appendChild(menuContainer);
@@ -578,35 +561,13 @@
             });
         }
 
-        // Hàm đệ quy tạo Menu Item (cho Level 1, 2, 3)
         function createMenuItem(item) {
             const hasChildren = item.children && item.children.length > 0;
             const isLevel1 = item.level === 1;
-            
-            // Xử lý sự kiện click
-            let onClickAttr = '';
-            let linkAction = '';
+            let onClickAttr = hasChildren ? 'onclick="toggleSub(this)"' : (item.link && item.link.length > 5 ? `onclick="window.open('${item.link}', '_blank')"` : 'onclick="updateNotify()"');
 
-            if (hasChildren) {
-                // Nếu có con -> Toggle
-                onClickAttr = 'onclick="toggleSub(this)"';
-            } else {
-                // Nếu không có con -> Mở link hoặc thông báo
-                if (item.link && item.link !== '#' && item.link.trim() !== '') {
-                    // Nếu là link web
-                    onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
-                } else {
-                    // Nếu không có link -> Update notify
-                    onClickAttr = `onclick="updateNotify()"`;
-                }
-            }
-
-            // --- HTML Structure ---
-            
             if (isLevel1) {
-                // --- LEVEL 1 RENDER ---
                 const div = document.createElement('div');
-                // Wrapper cho cả item và submenu của nó (để append submenu ngay sau)
                 const itemHtml = `
                     <div class="edu-menu-item" ${onClickAttr} title="${item.note || ''}">
                         <div class="menu-main-content">
@@ -616,62 +577,38 @@
                     </div>
                 `;
                 div.innerHTML = itemHtml;
-
-                // Nếu có con (Level 2), tạo container submenu
                 if (hasChildren) {
                     const subDiv = document.createElement('div');
                     subDiv.className = 'submenu';
-                    item.children.forEach(child => {
-                        subDiv.appendChild(createMenuItem(child)); // Đệ quy Level 2
-                    });
+                    item.children.forEach(c => subDiv.appendChild(createMenuItem(c)));
                     div.appendChild(subDiv);
                 }
-                
-                // Trả về fragment bao gồm item và submenu
-                return div; 
-
+                return div;
             } else {
-                // --- LEVEL 2 & 3 RENDER (Dùng class submenu-item) ---
-                // Level 2 và 3 dùng chung cấu trúc, CSS sẽ lo phần thụt đầu dòng
-                
+                // Logic chung cho Level 2 & 3
                 if (hasChildren) {
-                     // Trường hợp Level 2 có con là Level 3
-                     const wrapper = document.createElement('div');
-                     
-                     const itemHtml = `
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = `
                         <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
                             <div style="display:flex; align-items:center;">
-                                <i class="${item.icon} menu-icon" style="color: ${item.color}"></i> ${item.label}
+                                <i class="${item.icon} menu-icon" style="color: ${item.color}; margin-right:8px; width:20px; text-align:center;"></i> ${item.label}
                             </div>
                             <i class="fas fa-caret-down rotate-icon"></i>
                         </div>
-                     `;
-                     wrapper.innerHTML = itemHtml;
-
-                     const subSubDiv = document.createElement('div');
-                     subSubDiv.className = 'submenu'; // Nested submenu
-                     item.children.forEach(child => {
-                         subSubDiv.appendChild(createMenuItem(child));
-                     });
-                     wrapper.appendChild(subSubDiv);
-                     return wrapper;
-
+                    `;
+                    const subSubDiv = document.createElement('div');
+                    subSubDiv.className = 'submenu';
+                    item.children.forEach(c => subSubDiv.appendChild(createMenuItem(c)));
+                    wrapper.appendChild(subSubDiv);
+                    return wrapper;
                 } else {
-                    // Item lá (cuối cùng)
                     const el = document.createElement('div');
                     el.className = 'submenu-item';
                     el.title = item.note || '';
-                    el.onclick = function() {
-                        if (item.link && item.link !== '#' && item.link.trim() !== '') {
-                            window.open(item.link, '_blank');
-                        } else {
-                            updateNotify();
-                        }
-                    };
-                    
+                    el.onclick = hasChildren ? null : (item.link && item.link.length > 5 ? () => window.open(item.link, '_blank') : updateNotify);
                     el.innerHTML = `
-                        <div style="display:flex; align-items:center;">
-                             <i class="${item.icon} menu-icon" style="color: ${item.color}"></i> ${item.label}
+                         <div style="display:flex; align-items:center;">
+                            <i class="${item.icon}" style="color: ${item.color}; margin-right:8px; width:20px; text-align:center;"></i> ${item.label}
                         </div>
                     `;
                     return el;
@@ -679,26 +616,16 @@
             }
         }
 
-        // --- 5. INTERACTION LOGIC (Original + Updated) ---
+        // --- INTERACTION ---
         function toggleSub(el) {
-            // el là thẻ div chứa sự kiện click
-            // submenu là phần tử kế tiếp (sibling)
-            // Lưu ý: Do cấu trúc HTML JS tạo ra có thể bọc trong div cha
-            
-            // Tìm submenu ngay sau element được click
-            // Nếu click vào .edu-menu-item, submenu nằm ngay sau nó trong cùng parent div hoặc là nextSibling
-            
-            // Logic tìm kiếm submenu tương thích với cấu trúc JS render
+            // Tìm submenu sibling
             let sub = el.nextElementSibling;
-            
-            // Nếu không thấy, thử tìm trong parent (trường hợp click vào text bên trong)
-            if (!sub || !sub.classList.contains('submenu')) {
-                // Do cấu trúc tạo: <div> <item onclick>...</div> <submenu>...</div> </div>
-                // nextElementSibling của item chính là submenu
+            if(!sub && el.parentElement.querySelector('.submenu')) {
+                // Trường hợp click text bên trong, tìm từ parent
+                sub = el.parentElement.querySelector('.submenu');
             }
-
-            const icon = el.querySelector('.rotate-icon');
             
+            const icon = el.querySelector('.rotate-icon');
             if (sub && sub.classList.contains('submenu')) {
                 sub.classList.toggle('active');
                 if (icon) icon.classList.toggle('active');
@@ -707,72 +634,95 @@
 
         function updateNotify() {
             const box = document.getElementById('toast-box');
-            box.innerHTML = ''; 
+            if(box.children.length > 0) return; // Prevent spam
+
             const toast = document.createElement('div');
             toast.className = 'custom-toast';
-            toast.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Nội dung đang cập nhật ...</span>`;
+            toast.innerHTML = `<i class="fas fa-tools" style="color:#fbbf24"></i><span>Nội dung đang được cập nhật...</span>`;
             box.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transition = '0.5s';
-                setTimeout(() => toast.remove(), 500);
-            }, 2500);
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
         }
 
-        // --- 6. ANIMATION & EVENTS ---
-        const scrollContainer = document.getElementById('scroll-container');
-        scrollContainer.addEventListener('wheel', (evt) => {
-            if (window.innerWidth > 768) {
-                // Chỉ cuộn ngang khi không scroll trong submenu dọc
-                // Kiểm tra xem target có nằm trong .edu-menu không
-                if (!evt.target.closest('.edu-menu')) {
-                    evt.preventDefault();
-                    scrollContainer.scrollLeft += evt.deltaY * 1.5;
-                } else {
-                    // Nếu đang trong menu dọc, để hành vi mặc định (cuộn dọc)
-                    // Trừ khi đã cuộn hết thì mới prevent
-                }
-            }
-        });
-
+        // --- ANIMATED CONSTELLATION CANVAS (HIỆU ỨNG TOÁN HỌC) ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
-        let width, height, dots = [];
+        let width, height, particles = [];
 
         function initCanvas() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            dots = [];
-            const count = width < 768 ? 20 : 40;
-            for(let i = 0; i < count; i++) {
-                dots.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2 + 1, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 });
+            particles = [];
+            // Số lượng hạt phụ thuộc vào màn hình
+            const count = width < 768 ? 40 : 80; 
+            for (let i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1
+                });
             }
         }
 
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
-            dots.forEach(d => {
-                d.x += d.vx; d.y += d.vy;
-                if(d.x < 0 || d.x > width) d.vx *= -1;
-                if(d.y < 0 || d.y > height) d.vy *= -1;
-                ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'; ctx.fill();
-            });
+            
+            // Vẽ các đường nối (Constellation effect)
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                // Di chuyển
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Dội tường
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                // Vẽ điểm
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.fill();
+
+                // Nối dây nếu gần nhau
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dist = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+                    if (dist < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - dist/150})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
             requestAnimationFrame(animateCanvas);
         }
 
+        // Mouse scroll horizontal fix
+        const scrollContainer = document.getElementById('scroll-container');
+        scrollContainer.addEventListener('wheel', (evt) => {
+            if (window.innerWidth > 768 && !evt.target.closest('.edu-menu')) {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY * 1.5;
+            }
+        });
+
         window.addEventListener('resize', initCanvas);
-        
-        // --- INIT ---
-        initCanvas(); 
+        initCanvas();
         animateCanvas();
 
-        // Start Fetching Data
+        // Start
         fetchSheetData().then(data => {
             if (data) renderDashboard(data);
         });
 
     </script>
 </body>
-
 </html>
