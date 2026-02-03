@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TỔ TOÁN - TIN | Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --text-dark: #1e293b;
+            --text-light: #475569;
+            --border-color: rgba(255, 255, 255, 0.3);
+            --glow-color: rgba(255, 255, 255, 0.8);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: transparent !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 5px;
+        }
+
+        #hero-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- HEADER LUNG LINH --- */
+        /* UPDATE: Giảm khoảng cách header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 10px;
+            /* Giảm từ 40px */
+            z-index: 10;
+            padding: 20px 15px 10px;
+            /* Giảm padding */
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+            letter-spacing: 6px;
+            font-size: 2.8rem;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #c084fc, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(167, 139, 250, 0.6), 0 0 60px rgba(96, 165, 250, 0.4);
+            margin-bottom: 8px;
+            /* Giảm margin */
+            animation: glowPulse 4s ease-in-out infinite alternate;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: #f0f9ff;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.7;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5), 0 4px 15px rgba(0, 0, 0, 0.3);
+            opacity: 0.95;
+        }
+
+        @keyframes glowPulse {
+            0% {
+                text-shadow: 0 0 20px rgba(167, 139, 250, 0.5), 0 0 40px rgba(96, 165, 250, 0.3);
+            }
+
+            100% {
+                text-shadow: 0 0 40px rgba(167, 139, 250, 0.8), 0 0 80px rgba(96, 165, 250, 0.6);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .page-header h1 {
+                font-size: 4.2rem;
+                letter-spacing: 10px;
+            }
+
+            .page-header p {
+                font-size: 1.45rem;
+            }
+        }
+
+        /* UPDATE: Giảm margin line */
+        .header-line {
+            height: 5px;
+            width: 220px;
+            background: linear-gradient(90deg, transparent, #60a5fa, #a78bfa, #c084fc, transparent);
+            margin: 15px auto 30px;
+            /* Giảm margin */
+            border-radius: 50px;
+            box-shadow: 0 0 25px rgba(167, 139, 250, 0.9);
+            animation: lineGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes lineGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 0 35px rgba(167, 139, 250, 1);
+            }
+        }
+
+        /* --- FOOTER LUNG LINH --- */
+        .page-footer {
+            text-align: center;
+            padding: 40px 20px 40px;
+            color: #e0f2fe;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            z-index: 10;
+            position: relative;
+            margin-top: auto;
+        }
+
+        .page-footer strong {
+            font-size: 1.4rem;
+            background: linear-gradient(90deg, #60a5fa, #c084fc, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+            margin-bottom: 12px;
+            text-shadow: 0 0 25px rgba(167, 139, 250, 0.7);
+            animation: glowPulse 4s ease-in-out infinite alternate;
+        }
+
+        .page-footer::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.9);
+            border-radius: 50px;
+        }
+
+        /* --- DASHBOARD --- */
+        .dashboard-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 0 60px 0;
+        }
+
+        .edu-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 22px;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                overflow-x: hidden;
+            }
+
+            .edu-grid {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 15px;
+            }
+
+            .edu-col {
+                flex: 0 0 100% !important;
+                min-width: 100% !important;
+            }
+
+            .edu-card {
+                height: auto !important;
+                min-height: 450px;
+            }
+        }
+
+        .edu-col {
+            flex: 0 0 357px;
+            min-width: 357px;
+        }
+
+        .edu-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px 20px;
+            height: 500px;
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            /* UPDATE: Border Top Logic - Default value, will be overridden by inline style */
+            border-top: 5px solid transparent;
+        }
+
+        /* UPDATE: Hover effect for Border Top */
+        .edu-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            background: rgba(255, 255, 255, 0.98);
+            /* border-color handled by inline style on hover logic via CSS var if possible, 
+               but simple transition on border-width works best with inline color */
+            border-top-width: 8px;
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+        }
+
+        .card-header-inline {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .edu-icon-wrapper {
+            width: 46px;
+            height: 46px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            /* Default colors, overridden by inline style */
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .edu-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        /* UPDATE: Scrollbar inside Card */
+        .edu-menu {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+        }
+
+        .edu-menu::-webkit-scrollbar {
+            width: 6px;
+            /* Nhỏ hơn thanh ngang chính 1 chút */
+        }
+
+        .edu-menu::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .edu-menu::-webkit-scrollbar-thumb {
+            background: rgba(167, 139, 250, 0.5);
+            /* Màu tím nhạt */
+            border-radius: 10px;
+        }
+
+        .edu-menu::-webkit-scrollbar-thumb:hover {
+            background: rgba(167, 139, 250, 0.8);
+        }
+
+        .edu-menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 0;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 600;
+            /* LEVEL 1 Font Size */
+            font-size: 1.05rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .menu-main-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .edu-menu-item i:first-child {
+            width: 30px;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .edu-menu-item:hover {
+            color: var(--primary-color);
+            padding-left: 6px;
+        }
+
+        /* SUBMENU Styling */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.3s, margin 0.3s;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 10px;
+            opacity: 0;
+        }
+
+        .submenu.active {
+            /* max-height set dynamically via JS usually, but strict CSS helps */
+            max-height: 1000px;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            opacity: 1;
+        }
+
+        .submenu-item {
+            padding: 8px 15px 8px 40px;
+            /* Indent for Level 2 */
+            /* LEVEL 2 Font Size: Smaller than Level 1 */
+            font-size: 0.95rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .submenu-item i.menu-icon {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+
+        .submenu-item:hover {
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* LEVEL 3 Styling (Nested Submenu) */
+        .submenu .submenu {
+            background: rgba(0, 0, 0, 0.03);
+            /* Darker slightly */
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+            margin-left: 20px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .submenu .submenu .submenu-item {
+            padding-left: 30px;
+            /* LEVEL 3 Font Size: Smaller than Level 2 */
+            font-size: 0.85rem;
+        }
+
+        .rotate-icon {
+            transition: 0.3s;
+            margin-left: 10px;
+            font-size: 0.8rem;
+        }
+
+        .rotate-icon.active {
+            transform: rotate(180deg);
+        }
+
+        .custom-toast {
+            background: rgba(15, 17, 42, 0.95);
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        /* Scrollbar Global */
+        .dashboard-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .dashboard-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .dashboard-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #38bdf8, var(--primary-color));
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="hero-canvas"></canvas>
+
+    <div id="toast-box"></div>
+
+    <div class="page-header">
+        <h1>TỔ TOÁN - TIN</h1>
+    </div>
+
+    <div class="header-line"></div>
+
+    <div class="dashboard-container" id="scroll-container">
+        <div class="edu-grid" id="dynamic-grid">
+            <div style="width:100%; text-align:center; color:white; font-size:1.2rem;">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu từ CSDL...
+            </div>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <strong>*****</strong>
+        HỖ TRỢ TRUY CẬP NHANH ĐẾN TÀI NGUYÊN<br>
+        Phát triển và duy trì bởi: Tổ Toán - Tin<br>
+        Mọi góp ý vui lòng liên hệ qua email: nguyenhaunghia@gmail.com.
+    </div>
+
+    <script>
+        // --- 1. CONFIG & UTILS ---
+        const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
+        const SHEET_NAME = 'CSDL';
+        
+        // Helper: Làm nhạt màu hex để làm nền (Background color helper)
+        function hexToRgba(hex, alpha) {
+            let c;
+            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                c= hex.substring(1).split('');
+                if(c.length== 3){
+                    c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+                }
+                c= '0x'+c.join('');
+                return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+            }
+            return hex; // fallback if not hex
+        }
+
+        // --- 2. DATA FETCHING ---
+        async function fetchSheetData() {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                // Google Viz API trả về JSONP, cần cắt bỏ phần bọc bên ngoài
+                const jsonText = text.substring(47).slice(0, -2);
+                const json = JSON.parse(jsonText);
+                return parseData(json.table.rows);
+            } catch (error) {
+                console.error('Lỗi tải dữ liệu:', error);
+                document.getElementById('dynamic-grid').innerHTML = '<div style="color:red; text-align:center;">Lỗi kết nối CSDL!</div>';
+            }
+        }
+
+        // --- 3. DATA PARSING ---
+        function parseData(rows) {
+            // Cấu trúc mong đợi từ Sheet:
+            // Col 0: Level, Col 1: Icon, Col 2: Color, Col 3: Label, Col 4: Link, Col 5: Note
+            
+            const cards = [];
+            let currentCard = null;
+            let currentL1 = null;
+            let currentL2 = null;
+
+            rows.forEach(row => {
+                const c = row.c;
+                if (!c || !c[0]) return; // Bỏ qua dòng trống
+
+                const level = c[0] ? c[0].v : 0;
+                const icon = c[1] ? c[1].v : '';
+                const color = c[2] ? c[2].v : '#333';
+                const label = c[3] ? c[3].v : '';
+                const link = c[4] ? c[4].v : '#';
+                const note = c[5] ? c[5].v : '';
+
+                const item = { level, icon, color, label, link, note, children: [] };
+
+                if (level === 0) {
+                    currentCard = item;
+                    cards.push(currentCard);
+                    currentL1 = null; // Reset
+                } else if (level === 1) {
+                    if (currentCard) {
+                        currentL1 = item;
+                        currentCard.children.push(currentL1);
+                        currentL2 = null; // Reset
+                    }
+                } else if (level === 2) {
+                    if (currentL1) {
+                        currentL2 = item;
+                        currentL1.children.push(currentL2);
+                    }
+                } else if (level === 3) {
+                    if (currentL2) {
+                        currentL2.children.push(item);
+                    }
+                }
+            });
+            return cards;
+        }
+
+        // --- 4. RENDERING UI ---
+        function renderDashboard(cards) {
+            const grid = document.getElementById('dynamic-grid');
+            grid.innerHTML = '';
+
+            cards.forEach(card => {
+                // Tạo Card Container
+                const col = document.createElement('div');
+                col.className = 'edu-col';
+
+                // Style động cho Icon wrapper và Border top
+                // Lấy màu từ Sheet để làm border top và background icon
+                const cardColor = card.color || '#2563eb';
+                const bgIcon = hexToRgba(cardColor, 0.15);
+
+                const cardHtml = document.createElement('div');
+                cardHtml.className = 'edu-card';
+                cardHtml.style.borderTopColor = cardColor; 
+
+                // Header của Card
+                const headerHtml = `
+                    <div class="card-header-inline">
+                        <div class="edu-icon-wrapper" style="background:${bgIcon}; color:${cardColor};">
+                            <i class="${card.icon}"></i>
+                        </div>
+                        <h3 class="edu-title">${card.label}</h3>
+                    </div>
+                `;
+
+                // Menu Container
+                const menuContainer = document.createElement('div');
+                menuContainer.className = 'edu-menu';
+
+                // Render Level 1 items
+                card.children.forEach(l1 => {
+                    menuContainer.appendChild(createMenuItem(l1));
+                });
+
+                cardHtml.innerHTML = headerHtml;
+                cardHtml.appendChild(menuContainer);
+                col.appendChild(cardHtml);
+                grid.appendChild(col);
+            });
+        }
+
+        // Hàm đệ quy tạo Menu Item (cho Level 1, 2, 3)
+        function createMenuItem(item) {
+            const hasChildren = item.children && item.children.length > 0;
+            const isLevel1 = item.level === 1;
+            
+            // Xử lý sự kiện click
+            let onClickAttr = '';
+            let linkAction = '';
+
+            if (hasChildren) {
+                // Nếu có con -> Toggle
+                onClickAttr = 'onclick="toggleSub(this)"';
+            } else {
+                // Nếu không có con -> Mở link hoặc thông báo
+                if (item.link && item.link !== '#' && item.link.trim() !== '') {
+                    // Nếu là link web
+                    onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
+                } else {
+                    // Nếu không có link -> Update notify
+                    onClickAttr = `onclick="updateNotify()"`;
+                }
+            }
+
+            // --- HTML Structure ---
+            
+            if (isLevel1) {
+                // --- LEVEL 1 RENDER ---
+                const div = document.createElement('div');
+                // Wrapper cho cả item và submenu của nó (để append submenu ngay sau)
+                const itemHtml = `
+                    <div class="edu-menu-item" ${onClickAttr} title="${item.note || ''}">
+                        <div class="menu-main-content">
+                            <i class="${item.icon}" style="color: ${item.color}"></i> ${item.label}
+                        </div>
+                        ${hasChildren ? '<i class="fas fa-caret-down rotate-icon"></i>' : ''}
+                    </div>
+                `;
+                div.innerHTML = itemHtml;
+
+                // Nếu có con (Level 2), tạo container submenu
+                if (hasChildren) {
+                    const subDiv = document.createElement('div');
+                    subDiv.className = 'submenu';
+                    item.children.forEach(child => {
+                        subDiv.appendChild(createMenuItem(child)); // Đệ quy Level 2
+                    });
+                    div.appendChild(subDiv);
+                }
+                
+                // Trả về fragment bao gồm item và submenu
+                return div; 
+
+            } else {
+                // --- LEVEL 2 & 3 RENDER (Dùng class submenu-item) ---
+                // Level 2 và 3 dùng chung cấu trúc, CSS sẽ lo phần thụt đầu dòng
+                
+                if (hasChildren) {
+                     // Trường hợp Level 2 có con là Level 3
+                     const wrapper = document.createElement('div');
+                     
+                     const itemHtml = `
+                        <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
+                            <div style="display:flex; align-items:center;">
+                                <i class="${item.icon} menu-icon" style="color: ${item.color}"></i> ${item.label}
+                            </div>
+                            <i class="fas fa-caret-down rotate-icon"></i>
+                        </div>
+                     `;
+                     wrapper.innerHTML = itemHtml;
+
+                     const subSubDiv = document.createElement('div');
+                     subSubDiv.className = 'submenu'; // Nested submenu
+                     item.children.forEach(child => {
+                         subSubDiv.appendChild(createMenuItem(child));
+                     });
+                     wrapper.appendChild(subSubDiv);
+                     return wrapper;
+
+                } else {
+                    // Item lá (cuối cùng)
+                    const el = document.createElement('div');
+                    el.className = 'submenu-item';
+                    el.title = item.note || '';
+                    el.onclick = function() {
+                        if (item.link && item.link !== '#' && item.link.trim() !== '') {
+                            window.open(item.link, '_blank');
+                        } else {
+                            updateNotify();
+                        }
+                    };
+                    
+                    el.innerHTML = `
+                        <div style="display:flex; align-items:center;">
+                             <i class="${item.icon} menu-icon" style="color: ${item.color}"></i> ${item.label}
+                        </div>
+                    `;
+                    return el;
+                }
+            }
+        }
+
+        // --- 5. INTERACTION LOGIC (Original + Updated) ---
+        function toggleSub(el) {
+            // el là thẻ div chứa sự kiện click
+            // submenu là phần tử kế tiếp (sibling)
+            // Lưu ý: Do cấu trúc HTML JS tạo ra có thể bọc trong div cha
+            
+            // Tìm submenu ngay sau element được click
+            // Nếu click vào .edu-menu-item, submenu nằm ngay sau nó trong cùng parent div hoặc là nextSibling
+            
+            // Logic tìm kiếm submenu tương thích với cấu trúc JS render
+            let sub = el.nextElementSibling;
+            
+            // Nếu không thấy, thử tìm trong parent (trường hợp click vào text bên trong)
+            if (!sub || !sub.classList.contains('submenu')) {
+                // Do cấu trúc tạo: <div> <item onclick>...</div> <submenu>...</div> </div>
+                // nextElementSibling của item chính là submenu
+            }
+
+            const icon = el.querySelector('.rotate-icon');
+            
+            if (sub && sub.classList.contains('submenu')) {
+                sub.classList.toggle('active');
+                if (icon) icon.classList.toggle('active');
+            }
+        }
+
+        function updateNotify() {
+            const box = document.getElementById('toast-box');
+            box.innerHTML = ''; 
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.innerHTML = `<i class="fas fa-spinner fa-spin"></i><span>Nội dung đang cập nhật ...</span>`;
+            box.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = '0.5s';
+                setTimeout(() => toast.remove(), 500);
+            }, 2500);
+        }
+
+        // --- 6. ANIMATION & EVENTS ---
+        const scrollContainer = document.getElementById('scroll-container');
+        scrollContainer.addEventListener('wheel', (evt) => {
+            if (window.innerWidth > 768) {
+                // Chỉ cuộn ngang khi không scroll trong submenu dọc
+                // Kiểm tra xem target có nằm trong .edu-menu không
+                if (!evt.target.closest('.edu-menu')) {
+                    evt.preventDefault();
+                    scrollContainer.scrollLeft += evt.deltaY * 1.5;
+                } else {
+                    // Nếu đang trong menu dọc, để hành vi mặc định (cuộn dọc)
+                    // Trừ khi đã cuộn hết thì mới prevent
+                }
+            }
+        });
+
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, dots = [];
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            dots = [];
+            const count = width < 768 ? 20 : 40;
+            for(let i = 0; i < count; i++) {
+                dots.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2 + 1, vx: Math.random() * 0.5 - 0.25, vy: Math.random() * 0.5 - 0.25 });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            dots.forEach(d => {
+                d.x += d.vx; d.y += d.vy;
+                if(d.x < 0 || d.x > width) d.vx *= -1;
+                if(d.y < 0 || d.y > height) d.vy *= -1;
+                ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'; ctx.fill();
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        
+        // --- INIT ---
+        initCanvas(); 
+        animateCanvas();
+
+        // Start Fetching Data
+        fetchSheetData().then(data => {
+            if (data) renderDashboard(data);
+        });
+
+    </script>
+</body>
+
+</html>
