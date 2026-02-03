@@ -15,7 +15,8 @@
     <style>
         :root {
             /* Palette Tech/Science */
-            --bg-deep: #020617;
+            /* Đã chỉnh sáng hơn: Từ #020617 -> #0f172a (Xanh đen màn đêm thay vì đen tuyền) */
+            --bg-deep: #0f172a;
             --bg-card: rgba(15, 23, 42, 0.65);
             --border-tech: rgba(56, 189, 248, 0.3);
             --primary-neon: #0ea5e9;
@@ -35,14 +36,25 @@
             /* Chặn cuộn ngang toàn trang */
         }
 
-        /* --- BACKGROUND: SPACE + GRID --- */
+        /* --- BACKGROUND: SPACE + GRID (UPDATED BRIGHTER) --- */
         body {
             background-image:
-                radial-gradient(circle at 50% 50%, transparent 40%, #020617 100%),
-                linear-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(6, 182, 212, 0.08) 1px, transparent 1px),
-                radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.15), transparent 70%);
-            background-size: 100% 100%, 50px 50px, 50px 50px, 100% 100%;
+                /* 1. Vignette: Làm tối 4 góc nhưng nhẹ hơn bản cũ */
+                radial-gradient(circle at 50% 50%, transparent 20%, #020617 120%),
+                
+                /* 2. Grid Ngang (Tăng độ nét lên 0.1) */
+                linear-gradient(rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+                
+                /* 3. Grid Dọc (Tăng độ nét lên 0.1) */
+                linear-gradient(90deg, rgba(6, 182, 212, 0.1) 1px, transparent 1px),
+                
+                /* 4. Ánh sáng đỉnh (Cyan): Tăng độ sáng và vùng phủ */
+                radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.25), transparent 80%),
+                
+                /* 5. MỚI: Ánh sáng đáy (Tím/Indigo): Giúp nền trông sáng và sâu hơn */
+                radial-gradient(circle at 50% 100%, rgba(99, 102, 241, 0.15), transparent 60%);
+
+            background-size: 100% 100%, 50px 50px, 50px 50px, 100% 100%, 100% 100%;
             background-position: center;
             background-attachment: fixed;
         }
@@ -399,7 +411,7 @@
                 const level = c[0] ? c[0].v : 0;
                 const icon = c[1] ? c[1].v : 'fas fa-cube';
                 let color = c[2] ? c[2].v : '#22d3ee';
-                if(color === '#000000') color = '#e2e8f0'; 
+                if (color === '#000000') color = '#e2e8f0';
                 const label = c[3] ? c[3].v : 'Undefined';
                 const link = c[4] ? c[4].v : '#';
                 const note = c[5] ? c[5].v : '';
@@ -425,7 +437,7 @@
                 col.style.animationDelay = `${index * 0.05}s`; // Hiệu ứng xuất hiện lần lượt nhanh hơn chút
 
                 const cardColor = card.color;
-                
+
                 const cardHtml = document.createElement('div');
                 cardHtml.className = 'edu-card';
                 cardHtml.style.borderTop = `3px solid ${cardColor}`;
@@ -442,7 +454,7 @@
                 const menuContainer = document.createElement('div');
                 menuContainer.className = 'edu-menu';
                 // Render children
-                if(card.children && card.children.length > 0) {
+                if (card.children && card.children.length > 0) {
                     card.children.forEach(child => menuContainer.appendChild(createMenuItem(child)));
                 } else {
                     menuContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b; font-size:0.85rem;">Coming Soon</div>`;
@@ -458,7 +470,7 @@
         function createMenuItem(item) {
             const hasChildren = item.children && item.children.length > 0;
             const isLevel1 = item.level === 1;
-            
+
             let onClickAttr = '';
             if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
             else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
@@ -505,9 +517,9 @@
         // --- INTERACTION ---
         function toggleSub(el) {
             let sub = el.nextElementSibling;
-            if(!sub) sub = el.parentElement.querySelector('.submenu'); 
+            if (!sub) sub = el.parentElement.querySelector('.submenu');
             const icon = el.querySelector('.rotate-icon');
-            
+
             if (sub && sub.classList.contains('submenu')) {
                 sub.classList.toggle('active');
                 if (icon) icon.classList.toggle('active');
@@ -523,13 +535,13 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             particles = [];
-            const count = Math.floor(width / 8); 
-            for(let i=0; i<count; i++) {
+            const count = Math.floor(width / 8);
+            for (let i = 0; i < count; i++) {
                 particles.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.1, 
-                    vy: (Math.random() - 0.5) * 0.1, 
+                    vx: (Math.random() - 0.5) * 0.1,
+                    vy: (Math.random() - 0.5) * 0.1,
                     size: Math.random() * 1.5,
                     alpha: Math.random()
                 });
@@ -537,11 +549,11 @@
         }
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
-            for(let i=0; i<particles.length; i++) {
+            for (let i = 0; i < particles.length; i++) {
                 let p = particles[i];
                 p.x += p.vx; p.y += p.vy;
-                if(p.x<0) p.x=width; if(p.x>width) p.x=0;
-                if(p.y<0) p.y=height; if(p.y>height) p.y=0;
+                if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(200, 240, 255, ${p.alpha * 0.5})`;
@@ -562,4 +574,3 @@
 </body>
 
 </html>
-
