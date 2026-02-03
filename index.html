@@ -12,71 +12,51 @@
 
     <style>
         :root {
-            /* Palette Tech/Science - Giữ nguyên theo yêu cầu */
+            /* Palette Tech/Science */
             --bg-deep: #020617; 
-            --bg-panel: rgba(15, 23, 42, 0.6); 
+            --bg-card: rgba(15, 23, 42, 0.65); 
             --border-tech: rgba(56, 189, 248, 0.3); 
             --primary-neon: #0ea5e9; 
-            --accent-neon: #8b5cf6; 
             --text-glow: #e2e8f0;
             --text-dim: #94a3b8;
         }
 
         html, body {
-            height: 100%;
+            min-height: 100%;
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
             color: var(--text-glow);
-            overflow-x: hidden;
-            /* BACKGROUND MỚI: VŨ TRỤ */
-            background-color: #000;
+            background-color: var(--bg-deep);
+            overflow-x: hidden; /* Chặn cuộn ngang toàn trang */
         }
 
-        /* --- SPACE BACKGROUND CSS --- */
-        /* Tạo nền tinh vân (Nebula) bằng CSS Gradient */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.25), transparent 40%), /* Tím huyền ảo bên trái */
-                radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.15), transparent 40%), /* Xanh dương bên phải */
-                linear-gradient(to bottom, #020617, #0f172a); /* Nền tối sâu thẳm */
-            z-index: -2;
-            pointer-events: none;
+        /* --- BACKGROUND: SPACE + GRID --- */
+        body {
+            background-image:
+                radial-gradient(circle at 50% 50%, transparent 40%, #020617 100%),
+                linear-gradient(rgba(6, 182, 212, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 182, 212, 0.08) 1px, transparent 1px),
+                radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.15), transparent 70%);
+            background-size: 100% 100%, 50px 50px, 50px 50px, 100% 100%;
+            background-position: center;
+            background-attachment: fixed;
         }
 
-        /* Lớp sương mù trôi nhẹ */
-        body::after {
-            content: "";
-            position: fixed;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: url('http://assets.iceable.com/img/noise-transparent.png'); /* Texture nhiễu nhẹ cho đỡ trơn */
-            opacity: 0.05;
-            animation: drift 20s linear infinite;
-            pointer-events: none;
-            z-index: -2;
-        }
-
-        @keyframes drift {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(20px, 20px); }
-        }
-
+        /* Canvas sao bay nền sau */
         #hero-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: -1;
-            /* Canvas sẽ vẽ sao thay vì lưới */
+            pointer-events: none;
         }
 
         /* --- HEADER --- */
         .page-header {
             text-align: center;
-            padding-top: 40px;
-            margin-bottom: 20px;
+            padding-top: 50px;
+            margin-bottom: 40px;
             position: relative;
             z-index: 10;
         }
@@ -85,14 +65,14 @@
             display: inline-block;
             font-family: 'Roboto Mono', monospace;
             font-size: 0.8rem;
-            color: var(--primary-neon);
-            border: 1px solid var(--border-tech);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.4);
             padding: 4px 12px;
             border-radius: 4px;
-            background: rgba(14, 165, 233, 0.1);
-            margin-bottom: 10px;
+            background: rgba(8, 145, 178, 0.15);
+            margin-bottom: 15px;
             letter-spacing: 2px;
-            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3); /* Thêm glow cho badge */
+            box-shadow: 0 0 15px rgba(34, 211, 238, 0.2);
         }
 
         .page-header h1 {
@@ -100,269 +80,197 @@
             font-weight: 700;
             font-size: 3.5rem;
             text-transform: uppercase;
-            letter-spacing: 4px;
+            letter-spacing: 3px;
             color: white;
-            margin: 0;
-            text-shadow: 0 0 30px rgba(139, 92, 246, 0.6); /* Đổi bóng chữ sang tím cho hợp không gian */
+            text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 40px rgba(14, 165, 233, 0.6);
         }
 
-        .page-header p {
-            color: var(--text-dim);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 10px auto 0;
-            font-weight: 400;
-            border-left: 2px solid var(--accent-neon);
-            padding-left: 15px;
-            text-align: left;
-            display: inline-block;
-        }
-
-        /* --- DASHBOARD CONTAINER --- */
+        /* --- LAYOUT GRID 3xN --- */
         .dashboard-container {
             width: 100%;
-            padding: 20px 0 60px 0;
-            overflow-x: auto;
+            max-width: 1400px; /* Giới hạn chiều rộng để không bị quá bè trên màn hình lớn */
+            margin: 0 auto;
+            padding: 0 20px 60px 20px;
         }
 
         .edu-grid {
-            display: flex;
-            gap: 30px;
-            padding: 20px 50px;
-            width: max-content; 
-            margin: 0 auto;
+            display: grid;
+            /* QUAN TRỌNG: Chia 3 cột bằng nhau */
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 25px; /* Khoảng cách giữa các card */
+            width: 100%;
+        }
+
+        /* Responsive: Xuống 2 cột trên Tablet, 1 cột trên Mobile */
+        @media (max-width: 1100px) {
+            .edu-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .edu-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 2.2rem; }
         }
 
         .edu-col {
-            width: 380px; 
             opacity: 0;
-            animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; /* Chậm hơn chút cho mượt */
+            animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(40px); scale: 0.95; }
-            to { opacity: 1; transform: translateY(0); scale: 1; }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- TECH CARD STYLE (GIỮ NGUYÊN) --- */
+        /* --- CARD STYLE MỚI --- */
         .edu-card {
-            background: rgba(15, 23, 42, 0.4); /* Giảm opacity nền card để thấy vũ trụ phía sau */
-            backdrop-filter: blur(16px); /* Tăng độ mờ kính */
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px; 
-            height: 550px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 12px;
+            /* Không set chiều cao cứng (height) cho card tổng, để nó co giãn theo nội dung */
             display: flex;
             flex-direction: column;
-            padding: 0; 
-            position: relative;
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            transition: all 0.4s ease;
-        }
-
-        .edu-card::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transform: skewX(-20deg);
-            transition: 0.5s;
-            pointer-events: none;
-        }
-
-        .edu-card:hover::after {
-            left: 150%;
-            transition: 0.7s ease-in-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .edu-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(255,255,255,0.3);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2); /* Glow tím khi hover */
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(6, 182, 212, 0.15);
+            border-color: rgba(34, 211, 238, 0.5);
         }
 
         .card-header-block {
-            padding: 20px 25px;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .edu-icon-box {
-            width: 42px; height: 42px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.1);
-            position: relative;
-        }
-        
-        .edu-icon-box::before {
-            content: ''; position: absolute; top: -1px; left: -1px;
-            width: 6px; height: 6px; border-top: 2px solid white; border-left: 2px solid white;
-            border-radius: 2px 0 0 0; opacity: 0.5;
-        }
-        .edu-icon-box::after {
-            content: ''; position: absolute; bottom: -1px; right: -1px;
-            width: 6px; height: 6px; border-bottom: 2px solid white; border-right: 2px solid white;
-            border-radius: 0 0 2px 0; opacity: 0.5;
-        }
-
-        .edu-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: #fff;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* --- CONTENT AREA --- */
-        .edu-menu {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px 25px;
-        }
-
-        .edu-menu::-webkit-scrollbar { width: 4px; }
-        .edu-menu::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        .edu-menu::-webkit-scrollbar-thumb { background: var(--border-tech); border-radius: 2px; }
-
-        .edu-menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            color: var(--text-dim);
-            font-size: 0.95rem;
-            border-bottom: 1px dashed rgba(255,255,255,0.1); 
-            transition: 0.2s;
-            cursor: pointer;
-        }
-
-        .edu-menu-item:hover {
-            color: var(--primary-neon);
-            padding-left: 10px;
-            border-bottom-color: var(--primary-neon);
-            text-shadow: 0 0 8px rgba(14,165,233,0.5);
-        }
-
-        .menu-left {
+            padding: 15px 20px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.4s;
-            margin-left: 10px;
-            border-left: 1px solid rgba(255,255,255,0.1);
-            opacity: 0;
+        .edu-icon-box {
+            width: 36px; height: 36px;
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .submenu.active {
-            max-height: 800px;
-            opacity: 1;
-            margin-bottom: 10px;
-            margin-top: 5px;
+        .edu-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 0;
+            text-transform: uppercase;
         }
 
-        .submenu-item {
-            padding: 8px 0 8px 15px;
-            font-size: 0.9rem;
-            color: #94a3b8;
-            cursor: pointer;
-            position: relative;
+        /* --- MENU SCROLL AREA (QUAN TRỌNG) --- */
+        .edu-menu {
+            padding: 10px 15px;
+            /* Chiều cao 1 dòng ~ 45px. 
+               5 dòng ~ 225px. 
+               Set max-height để hiện thanh cuộn nếu quá dài.
+               Set min-height để các card trông đều nhau nếu ít nội dung.
+            */
+            height: 240px; 
+            overflow-y: auto; /* Bật thanh cuộn dọc */
+        }
+
+        /* Tùy chỉnh thanh cuộn đẹp (Scrollbar Styling) */
+        .edu-menu::-webkit-scrollbar {
+            width: 4px; /* Thanh cuộn mảnh */
+        }
+        .edu-menu::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1); 
+            border-radius: 2px;
+        }
+        .edu-menu::-webkit-scrollbar-thumb {
+            background: rgba(34, 211, 238, 0.4); /* Màu Cyan mờ */
+            border-radius: 2px;
+        }
+        .edu-menu::-webkit-scrollbar-thumb:hover {
+            background: #22d3ee; /* Sáng lên khi hover */
+        }
+
+        .edu-menu-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 10px 5px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            border-bottom: 1px dashed rgba(255,255,255,0.08); 
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .edu-menu-item:hover {
+            color: #22d3ee;
+            padding-left: 8px;
+            background: rgba(255,255,255,0.02);
+            border-bottom-color: #22d3ee;
+        }
+
+        .menu-left { display: flex; align-items: center; gap: 10px; }
+
+        /* Submenu */
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s;
+            margin-left: 8px;
+            border-left: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+        }
+        .submenu.active {
+            max-height: 500px;
+            opacity: 1;
+            margin-bottom: 5px;
+        }
+        .submenu-item {
+            padding: 6px 0 6px 12px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            cursor: pointer;
+            display: flex; justify-content: space-between;
             transition: 0.2s;
         }
-
-        .submenu-item::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 50%;
-            width: 10px; height: 1px;
-            background: rgba(255,255,255,0.2);
-        }
-
-        .submenu-item:hover {
-            color: #fff;
-            background: linear-gradient(90deg, rgba(255,255,255,0.05), transparent);
-        }
-
-        .rotate-icon { transition: 0.3s; font-size: 0.7rem; opacity: 0.7; }
-        .rotate-icon.active { transform: rotate(180deg); color: var(--primary-neon); }
+        .submenu-item:hover { color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+        .rotate-icon { transition: 0.3s; font-size: 0.7rem; }
+        .rotate-icon.active { transform: rotate(180deg); color: #22d3ee; }
 
         /* --- FOOTER --- */
         .page-footer {
             text-align: center;
-            margin-top: auto;
+            margin-top: 40px;
             padding: 20px;
             border-top: 1px solid rgba(255,255,255,0.05);
-            background: rgba(2, 6, 23, 0.6);
-            backdrop-filter: blur(5px);
+            background: rgba(2, 6, 23, 0.9);
             font-family: 'Roboto Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text-dim);
+            font-size: 0.8rem; color: #64748b;
         }
-        
-        .page-footer span { color: var(--accent-neon); }
 
         /* --- LOADER --- */
         .loader-radar {
-            width: 60px; height: 60px;
-            border: 2px solid var(--border-tech);
+            width: 50px; height: 50px;
+            border: 2px solid rgba(34, 211, 238, 0.3);
             border-radius: 50%;
             position: relative;
-            animation: radarPulse 2s infinite;
+            animation: radarPulse 2s infinite; margin: 0 auto;
         }
         .loader-radar::after {
-            content: ''; position: absolute;
-            top: 50%; left: 50%; width: 50%; height: 50%;
-            background: linear-gradient(45deg, transparent 50%, var(--primary-neon) 100%);
-            border-radius: 100% 0 0 0;
-            transform-origin: 0 0;
+            content: ''; position: absolute; top: 50%; left: 50%; width: 50%; height: 50%;
+            background: linear-gradient(45deg, transparent 50%, #22d3ee 100%);
+            border-radius: 100% 0 0 0; transform-origin: 0 0;
             animation: radarSpin 1.5s linear infinite;
         }
         @keyframes radarSpin { 100% { transform: rotate(360deg); } }
-        @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(14,165,233, 0.4); } 70% { box-shadow: 0 0 0 20px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+        @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); } 100% { box-shadow: 0 0 0 20px transparent; } }
 
-        /* --- TOAST --- */
-        .custom-toast {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid var(--accent-neon);
-            color: var(--text-glow);
-            font-family: 'Roboto Mono', monospace;
-            padding: 10px 20px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: fixed;
-            bottom: 30px; left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
-            font-size: 0.9rem;
-        }
-
-        @media (max-width: 768px) {
-            .edu-grid { flex-direction: column; width: 100%; padding: 10px 15px; }
-            .edu-col { width: 100%; }
-            .page-header h1 { font-size: 2.2rem; }
-        }
     </style>
 </head>
 
@@ -370,26 +278,23 @@
     <canvas id="hero-canvas"></canvas>
 
     <div class="page-header">
-        <div class="tech-badge">SYSTEM: ONLINE</div>
+        <div class="tech-badge">SYSTEM V3.1</div>
         <h1>TỔ TOÁN - TIN</h1>
-        <p>KẾT NỐI TRI THỨC // KIẾN TẠO TƯƠNG LAI</p>
+        <p style="color:#94a3b8; margin-top:10px;">DATA HUB // SCIENCE DIVISION</p>
     </div>
 
-    <div class="dashboard-container" id="scroll-container">
+    <div class="dashboard-container">
         <div class="edu-grid" id="dynamic-grid">
-            <div style="width: 100vw; display:flex; flex-direction:column; align-items:center; color:white;">
+            <div style="grid-column: 1 / -1; padding: 40px 0; text-align: center;">
                 <div class="loader-radar"></div>
-                <div style="margin-top:15px; font-family:'Roboto Mono'; font-size:0.9rem; letter-spacing:1px;">INITIALIZING GALAXY DATABASE...</div>
+                <div style="margin-top:15px; font-family:'Roboto Mono'; color:white;">ACCESSING DATABASE...</div>
             </div>
         </div>
     </div>
 
     <div class="page-footer">
-        <div>DESIGNED BY <span>TO TOAN TIN</span> | VER 2.0</div>
-        <div style="margin-top:5px;">DATA DRIVEN EDUCATION</div>
+        <div>DESIGNED BY <span>TO TOAN TIN</span> | GRID LAYOUT 3xN</div>
     </div>
-
-    <div id="toast-box"></div>
 
     <script>
         // --- CONFIG ---
@@ -406,7 +311,7 @@
                 return parseData(json.table.rows);
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('dynamic-grid').innerHTML = '<div style="color:#ef4444; font-family:monospace; text-align:center;">[ERROR]: CONNECTION FAILED</div>';
+                document.getElementById('dynamic-grid').innerHTML = '<div style="color:red; text-align:center;">Load Failed</div>';
             }
         }
 
@@ -419,9 +324,8 @@
                 if (!c || !c[0]) return;
                 const level = c[0] ? c[0].v : 0;
                 const icon = c[1] ? c[1].v : 'fas fa-cube';
-                let color = c[2] ? c[2].v : '#0ea5e9';
+                let color = c[2] ? c[2].v : '#22d3ee';
                 if(color === '#000000') color = '#e2e8f0'; 
-
                 const label = c[3] ? c[3].v : 'Undefined';
                 const link = c[4] ? c[4].v : '#';
                 const note = c[5] ? c[5].v : '';
@@ -444,7 +348,7 @@
             cards.forEach((card, index) => {
                 const col = document.createElement('div');
                 col.className = 'edu-col';
-                col.style.animationDelay = `${index * 0.1}s`;
+                col.style.animationDelay = `${index * 0.05}s`; // Hiệu ứng xuất hiện lần lượt nhanh hơn chút
 
                 const cardColor = card.color;
                 
@@ -454,16 +358,21 @@
 
                 const headerHtml = `
                     <div class="card-header-block">
-                        <div class="edu-icon-box" style="color:${cardColor}; border-color:${cardColor}; box-shadow: 0 0 15px ${cardColor}40;">
+                        <div class="edu-icon-box" style="color:${cardColor}; border-color:${cardColor}50;">
                             <i class="${card.icon}"></i>
                         </div>
-                        <h3 class="edu-title" style="text-shadow: 0 0 15px ${cardColor}80;">${card.label}</h3>
+                        <h3 class="edu-title">${card.label}</h3>
                     </div>
                 `;
 
                 const menuContainer = document.createElement('div');
                 menuContainer.className = 'edu-menu';
-                card.children.forEach(child => menuContainer.appendChild(createMenuItem(child)));
+                // Render children
+                if(card.children && card.children.length > 0) {
+                    card.children.forEach(child => menuContainer.appendChild(createMenuItem(child)));
+                } else {
+                    menuContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#64748b; font-size:0.85rem;">Coming Soon</div>`;
+                }
 
                 cardHtml.innerHTML = headerHtml;
                 cardHtml.appendChild(menuContainer);
@@ -479,14 +388,13 @@
             let onClickAttr = '';
             if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
             else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
-            else onClickAttr = 'onclick="showToast()"';
 
             if (isLevel1) {
                 const div = document.createElement('div');
                 div.innerHTML = `
                     <div class="edu-menu-item" ${onClickAttr} title="${item.note || ''}">
                         <div class="menu-left">
-                            <i class="${item.icon}" style="color: ${item.color}; width:20px; text-align:center;"></i>
+                            <i class="${item.icon}" style="color: ${item.color}; width:20px; text-align:center; font-size:0.9rem;"></i>
                             <span>${item.label}</span>
                         </div>
                         ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
@@ -501,16 +409,15 @@
                 return div;
             } else {
                 const wrapper = document.createElement('div');
-                const content = `
+                wrapper.innerHTML = `
                     <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
                         <span style="display:flex; align-items:center; gap:8px;">
-                            ${item.level === 3 ? '<i class="fas fa-angle-right" style="font-size:0.7rem"></i>' : ''}
+                            ${item.level === 3 ? '<i class="fas fa-angle-right" style="font-size:0.6rem"></i>' : ''}
                             ${item.label}
                         </span>
                          ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
                     </div>
                 `;
-                wrapper.innerHTML = content;
                 if (hasChildren) {
                     const subSubDiv = document.createElement('div');
                     subSubDiv.className = 'submenu';
@@ -525,26 +432,15 @@
         function toggleSub(el) {
             let sub = el.nextElementSibling;
             if(!sub) sub = el.parentElement.querySelector('.submenu'); 
-            
             const icon = el.querySelector('.rotate-icon');
+            
             if (sub && sub.classList.contains('submenu')) {
                 sub.classList.toggle('active');
                 if (icon) icon.classList.toggle('active');
             }
         }
 
-        function showToast() {
-            const box = document.getElementById('toast-box');
-            if(box.childElementCount > 0) return;
-
-            const t = document.createElement('div');
-            t.className = 'custom-toast';
-            t.innerHTML = `<i class="fas fa-rocket"></i> NAVIGATING HYPERSPACE...`;
-            box.appendChild(t);
-            setTimeout(() => { t.style.opacity = 0; setTimeout(() => t.remove(), 300); }, 2000);
-        }
-
-        // --- CANVAS: STARDUST / SPACE (Hiệu ứng bụi sao) ---
+        // --- CANVAS BACKGROUND ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [];
@@ -553,65 +449,34 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             particles = [];
-            const count = Math.floor(width / 5); // Tăng số lượng hạt lên
-            
+            const count = Math.floor(width / 8); 
             for(let i=0; i<count; i++) {
                 particles.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.2, // Bay rất chậm
-                    vy: (Math.random() - 0.5) * 0.2, 
-                    size: Math.random() * 2, // Hạt kích thước ngẫu nhiên
-                    alpha: Math.random(), // Độ trong suốt
-                    flashSpeed: Math.random() * 0.02 + 0.005 // Tốc độ nhấp nháy
+                    vx: (Math.random() - 0.5) * 0.1, 
+                    vy: (Math.random() - 0.5) * 0.1, 
+                    size: Math.random() * 1.5,
+                    alpha: Math.random()
                 });
             }
         }
-
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
-            
-            // Không xóa hoàn toàn để tạo hiệu ứng đuôi nhẹ (tùy chọn, ở đây xóa hết cho sạch)
-            // ctx.fillStyle = 'rgba(2, 6, 23, 0.1)';
-            // ctx.fillRect(0,0,width,height);
-
             for(let i=0; i<particles.length; i++) {
                 let p = particles[i];
-                p.x += p.vx; 
-                p.y += p.vy;
-
-                // Hiệu ứng nhấp nháy (Twinkle)
-                p.alpha += p.flashSpeed;
-                if(p.alpha > 1 || p.alpha < 0.2) p.flashSpeed *= -1;
-
-                if(p.x < 0) p.x = width;
-                if(p.x > width) p.x = 0;
-                if(p.y < 0) p.y = height;
-                if(p.y > height) p.y = 0;
-
+                p.x += p.vx; p.y += p.vy;
+                if(p.x<0) p.x=width; if(p.x>width) p.x=0;
+                if(p.y<0) p.y=height; if(p.y>height) p.y=0;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                
-                // Vẽ sao màu trắng/xanh nhạt
-                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(p.alpha)})`;
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = "white"; // Hiệu ứng phát sáng
+                ctx.fillStyle = `rgba(200, 240, 255, ${p.alpha * 0.5})`;
                 ctx.fill();
             }
             requestAnimationFrame(animateCanvas);
         }
-
-        // --- SCROLL HANDLING ---
-        const scrollContainer = document.getElementById('scroll-container');
-        scrollContainer.addEventListener('wheel', (evt) => {
-            if (window.innerWidth > 768 && !evt.target.closest('.edu-menu')) {
-                evt.preventDefault();
-                scrollContainer.scrollLeft += evt.deltaY * 2; 
-            }
-        });
-
         window.addEventListener('resize', initCanvas);
-        
+
         // --- START ---
         initCanvas();
         animateCanvas();
