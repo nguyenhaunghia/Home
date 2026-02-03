@@ -4,424 +4,467 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TỔ TOÁN - TIN | Dashboard</title>
+    <title>TỔ TOÁN - TIN | Science & Tech Hub</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         :root {
-            /* Palette màu hiện đại, tươi sáng nhưng chuyên nghiệp */
-            --primary-color: #3b82f6;
-            --accent-color: #8b5cf6;
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --text-main: #1e293b;
-            --text-sub: #475569;
-            --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.12);
+            /* Palette Tech/Science */
+            --bg-deep: #020617;
+            /* Very Dark Blue */
+            --bg-panel: rgba(15, 23, 42, 0.6);
+            /* Slate 900 Glass */
+            --border-tech: rgba(56, 189, 248, 0.3);
+            /* Cyan low opacity */
+            --primary-neon: #0ea5e9;
+            /* Sky Blue */
+            --accent-neon: #8b5cf6;
+            /* Violet */
+            --text-glow: #e2e8f0;
+            --text-dim: #94a3b8;
+            --grid-color: rgba(56, 189, 248, 0.05);
         }
 
-        html, body {
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-glow);
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND LUNG LINH --- */
-        body {
-            /* Animated Gradient Background */
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-main);
+        /* --- BACKGROUND GRID & PARTICLES --- */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Hiệu ứng giấy ô ly kỹ thuật */
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+            pointer-events: none;
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Hiệu ứng Vignette tối góc màn hình */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-deep) 90%);
+            z-index: -2;
+            pointer-events: none;
         }
 
         #hero-canvas {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
-            /* Lớp phủ mờ nhẹ để tách biệt nội dung với các hạt */
-            /* backdrop-filter: blur(1px); */ 
         }
 
         /* --- HEADER --- */
         .page-header {
             text-align: center;
-            margin-top: 30px;
-            margin-bottom: 10px;
-            z-index: 10;
+            padding-top: 40px;
+            margin-bottom: 20px;
             position: relative;
+            z-index: 10;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--primary-neon);
+            border: 1px solid var(--border-tech);
+            padding: 4px 12px;
+            border-radius: 4px;
+            background: rgba(14, 165, 233, 0.1);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
         }
 
         .page-header h1 {
-            font-weight: 800;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
             font-size: 3.5rem;
             text-transform: uppercase;
             letter-spacing: 4px;
             color: white;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
             margin: 0;
-            /* Text Gradient on top of White text shadow looks cool */
-            background: linear-gradient(to right, #ffffff, #e0f2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
-            animation: float 6s ease-in-out infinite;
+            /* Text Shadow kiểu Neon */
+            text-shadow: 0 0 20px rgba(14, 165, 233, 0.6);
         }
 
         .page-header p {
-            color: rgba(255,255,255,0.9);
+            color: var(--text-dim);
             font-size: 1.1rem;
-            margin-top: 5px;
-            font-weight: 500;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        .header-line {
-            height: 4px;
-            width: 150px;
-            background: white;
-            margin: 10px auto 30px;
-            border-radius: 50px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        /* Hiệu ứng ánh sáng chạy qua line */
-        .header-line::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
-            animation: shimmerLine 3s infinite;
-        }
-
-        @keyframes shimmerLine {
-            100% { left: 100%; }
+            max-width: 600px;
+            margin: 10px auto 0;
+            font-weight: 400;
+            border-left: 2px solid var(--accent-neon);
+            padding-left: 15px;
+            text-align: left;
+            display: inline-block;
         }
 
         /* --- DASHBOARD CONTAINER --- */
         .dashboard-container {
             width: 100%;
-            padding: 10px 0 60px 0;
+            padding: 20px 0 60px 0;
             overflow-x: auto;
-            scroll-behavior: smooth;
-            /* Ẩn scrollbar mặc định của container chính để đẹp hơn */
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255,255,255,0.5) transparent;
+            /* Ẩn scrollbar ngang của body */
         }
 
         .edu-grid {
             display: flex;
-            flex-wrap: nowrap;
-            gap: 25px;
-            padding: 20px 40px; /* Thêm padding 2 bên */
-            min-width: min-content; /* Đảm bảo grid không bị co lại */
+            gap: 30px;
+            padding: 20px 50px;
+            width: max-content;
+            /* Để scroll ngang tự nhiên */
+            margin: 0 auto;
         }
 
         .edu-col {
-            flex: 0 0 360px;
-            min-width: 360px;
-            opacity: 0; /* Ẩn để làm animation hiện ra */
-            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            width: 380px;
+            /* Rộng hơn chút để giống bảng điều khiển */
+            opacity: 0;
+            animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+                scale: 0.95;
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                scale: 1;
+            }
         }
 
-        /* --- CARD GLASSMORPHISM --- */
+        /* --- TECH CARD STYLE --- */
         .edu-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 25px;
-            height: 520px; /* Tăng chiều cao một chút */
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            /* Viền mỏng tinh tế */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            /* Bo góc ít hơn để nam tính/kỹ thuật hơn */
+            height: 550px;
             display: flex;
             flex-direction: column;
-            box-shadow: var(--shadow-light);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0;
+            /* Padding xử lý bên trong */
             position: relative;
             overflow: hidden;
-            /* Border top sẽ được set inline từ JS */
-            border-top: 5px solid transparent; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .edu-card::before {
+        /* Hiệu ứng quét sáng (Scanner effect) khi hover */
+        .edu-card::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: 24px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%);
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transform: skewX(-20deg);
+            transition: 0.5s;
             pointer-events: none;
-            z-index: 0;
+        }
+
+        .edu-card:hover::after {
+            left: 150%;
+            transition: 0.7s ease-in-out;
         }
 
         .edu-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-hover);
-            background: rgba(255, 255, 255, 0.85);
-            z-index: 5;
+            transform: translateY(-5px);
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.15);
         }
 
-        /* --- CARD CONTENT --- */
-        .card-header-inline {
+        /* Header của Card: Giống thanh tiêu đề cửa sổ phần mềm */
+        .card-header-block {
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             align-items: center;
             gap: 15px;
-            margin-bottom: 20px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
         }
 
-        .edu-icon-wrapper {
-            width: 50px; height: 50px;
-            border-radius: 16px;
+        .edu-icon-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
+            font-size: 1.2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
 
-        .edu-card:hover .edu-icon-wrapper {
-            transform: rotate(10deg) scale(1.1);
+        /* Chấm sáng nhỏ trang trí icon box */
+        .edu-icon-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 6px;
+            height: 6px;
+            border-top: 2px solid white;
+            border-left: 2px solid white;
+            border-radius: 2px 0 0 0;
+            opacity: 0.5;
+        }
+
+        .edu-icon-box::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 6px;
+            height: 6px;
+            border-bottom: 2px solid white;
+            border-right: 2px solid white;
+            border-radius: 0 0 2px 0;
+            opacity: 0.5;
         }
 
         .edu-title {
-            font-weight: 800;
-            font-size: 1.25rem;
-            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #fff;
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
         }
 
-        /* --- MENU SCROLLBAR --- */
+        /* --- CONTENT AREA --- */
         .edu-menu {
-            overflow-y: auto;
             flex-grow: 1;
-            padding-right: 8px;
-            position: relative;
-            z-index: 1;
+            overflow-y: auto;
+            padding: 15px 25px;
         }
 
+        /* Scrollbar mảnh kiểu tech */
         .edu-menu::-webkit-scrollbar {
-            width: 5px;
-        }
-        .edu-menu::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.02);
-            border-radius: 10px;
-        }
-        .edu-menu::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.15);
-            border-radius: 10px;
-        }
-        .edu-menu::-webkit-scrollbar-thumb:hover {
-            background: rgba(0,0,0,0.3);
+            width: 4px;
         }
 
-        /* --- MENU ITEMS --- */
+        .edu-menu::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .edu-menu::-webkit-scrollbar-thumb {
+            background: var(--border-tech);
+            border-radius: 2px;
+        }
+
         .edu-menu-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 10px;
-            color: var(--text-sub);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            border-radius: 12px;
-            transition: all 0.2s ease;
+            padding: 12px 0;
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            /* Đường kẻ đứt nét */
+            transition: 0.2s;
             cursor: pointer;
-            margin-bottom: 4px;
         }
 
         .edu-menu-item:hover {
-            background: rgba(255, 255, 255, 0.6);
-            color: var(--primary-color);
-            transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            color: var(--primary-neon);
+            padding-left: 10px;
+            border-bottom-color: var(--primary-neon);
         }
 
-        .menu-main-content {
+        .menu-left {
             display: flex;
             align-items: center;
-            flex-grow: 1;
+            gap: 12px;
         }
 
-        .edu-menu-item i:first-child {
-            width: 35px;
-            font-size: 1.1rem;
-            text-align: center;
-            margin-right: 5px;
-            transition: 0.2s;
-        }
-        
-        /* Hiệu ứng icon nhảy nhẹ khi hover */
-        .edu-menu-item:hover i:first-child {
-            transform: scale(1.2);
-        }
-
-        /* --- SUBMENU --- */
+        /* Cấu trúc cây thư mục (Submenu) */
         .submenu {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), margin 0.3s;
+            transition: max-height 0.4s ease, opacity 0.4s;
             margin-left: 10px;
-            border-left: 2px dashed rgba(0,0,0,0.1); /* Đường nối đứt nét kiểu sơ đồ */
-            padding-left: 5px;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
         }
 
         .submenu.active {
-            max-height: 1000px; /* Đủ lớn để hiện nội dung */
+            max-height: 800px;
+            opacity: 1;
             margin-bottom: 10px;
+            margin-top: 5px;
         }
 
         .submenu-item {
-            padding: 8px 10px 8px 15px;
-            font-size: 0.95rem;
-            color: var(--text-sub);
+            padding: 8px 0 8px 15px;
+            font-size: 0.9rem;
+            color: #94a3b8;
             cursor: pointer;
-            border-radius: 8px;
-            margin-top: 2px;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: 0.2s;
-            position: relative;
         }
-        
-        /* Dot chỉ dẫn */
+
+        /* Line nối ngang */
         .submenu-item::before {
             content: '';
             position: absolute;
-            left: -6px;
+            left: 0;
             top: 50%;
-            transform: translateY(-50%);
-            width: 6px; height: 6px;
-            background: #cbd5e1;
-            border-radius: 50%;
-            transition: 0.2s;
-        }
-
-        .submenu-item:hover::before {
-            background: var(--primary-color);
-            box-shadow: 0 0 5px var(--primary-color);
+            width: 10px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .submenu-item:hover {
-            color: var(--primary-color);
-            background: rgba(255,255,255,0.5);
-        }
-
-        .submenu .submenu {
-            margin-left: 15px;
-            border-left: 2px dotted rgba(0,0,0,0.15);
-        }
-        
-        .submenu .submenu .submenu-item {
-            font-size: 0.85rem;
+            color: #fff;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05), transparent);
         }
 
         .rotate-icon {
             transition: 0.3s;
-            font-size: 0.75rem;
-            opacity: 0.6;
+            font-size: 0.7rem;
+            opacity: 0.7;
         }
+
         .rotate-icon.active {
             transform: rotate(180deg);
-            opacity: 1;
-            color: var(--primary-color);
+            color: var(--primary-neon);
         }
 
         /* --- FOOTER --- */
         .page-footer {
             text-align: center;
-            padding: 20px;
-            color: white;
-            font-size: 0.95rem;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
             margin-top: auto;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
-        }
-        
-        /* --- TOAST --- */
-        .custom-toast {
-            background: rgba(255, 255, 255, 0.9);
-            color: #1e293b;
-            padding: 12px 30px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            position: fixed;
-            bottom: 40px; left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            z-index: 1000;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,1);
-            opacity: 0;
-            animation: toastUp 0.3s forwards;
-        }
-        
-        @keyframes toastUp {
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(2, 6, 23, 0.8);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
         }
 
-        /* LOADING SPINNER STYLE */
-        .loader-container {
-            width: 100%;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
+        .page-footer span {
+            color: var(--primary-neon);
         }
-        .spinner-ring {
-            width: 50px; height: 50px;
-            border: 5px solid rgba(255,255,255,0.3);
+
+        /* --- ANIMATED LOADER (RADAR) --- */
+        .loader-radar {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--border-tech);
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 15px;
+            position: relative;
+            animation: radarPulse 2s infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loader-radar::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 50%;
+            background: linear-gradient(45deg, transparent 50%, var(--primary-neon) 100%);
+            border-radius: 100% 0 0 0;
+            transform-origin: 0 0;
+            animation: radarSpin 1.5s linear infinite;
+        }
+
+        @keyframes radarSpin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes radarPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 20px transparent;
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 transparent;
+            }
+        }
+
+        /* --- TOAST --- */
+        .custom-toast {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--primary-neon);
+            color: var(--primary-neon);
+            font-family: 'Roboto Mono', monospace;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+            font-size: 0.9rem;
+        }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .page-header h1 { font-size: 2.5rem; }
-            .edu-grid { flex-wrap: wrap; justify-content: center; padding: 10px; }
-            .edu-col { flex: 0 0 100%; min-width: 100%; }
-            .edu-card { height: auto; min-height: 400px; }
+            .edu-grid {
+                flex-direction: column;
+                width: 100%;
+                padding: 10px 15px;
+            }
+
+            .edu-col {
+                width: 100%;
+            }
+
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
         }
     </style>
 </head>
@@ -429,45 +472,33 @@
 <body>
     <canvas id="hero-canvas"></canvas>
 
-    <div id="toast-box"></div>
-
     <div class="page-header">
+        <div class="tech-badge">SYSTEM: ONLINE</div>
         <h1>TỔ TOÁN - TIN</h1>
-        <p>Kho tàng tri thức & Tài nguyên số</p>
+        <p>KẾT NỐI TRI THỨC // KIẾN TẠO TƯƠNG LAI</p>
     </div>
-
-    <div class="header-line"></div>
 
     <div class="dashboard-container" id="scroll-container">
         <div class="edu-grid" id="dynamic-grid">
-            <div class="loader-container">
-                <div class="spinner-ring"></div>
-                <div>Đang kết nối cơ sở dữ liệu...</div>
+            <div style="width: 100vw; display:flex; flex-direction:column; align-items:center; color:white;">
+                <div class="loader-radar"></div>
+                <div style="margin-top:15px; font-family:'Roboto Mono'; font-size:0.9rem; letter-spacing:1px;">
+                    INITIALIZING DATABASE...</div>
             </div>
         </div>
     </div>
 
     <div class="page-footer">
-        <div><strong>DESIGN BY TO TOAN TIN</strong></div>
-        <div style="font-size: 0.85rem; opacity: 0.8; margin-top: 5px;">Hỗ trợ truy cập nhanh đến tài nguyên học tập</div>
+        <div>DESIGNED BY <span>TO TOAN TIN</span> | VER 2.0</div>
+        <div style="margin-top:5px;">DATA DRIVEN EDUCATION</div>
     </div>
+
+    <div id="toast-box"></div>
 
     <script>
         // --- CONFIG ---
         const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
         const SHEET_NAME = 'CSDL';
-
-        // --- UTILS ---
-        function hexToRgba(hex, alpha) {
-            let c;
-            if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-                c = hex.substring(1).split('');
-                if (c.length == 3) c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-                c = '0x' + c.join('');
-                return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
-            }
-            return hex;
-        }
 
         // --- FETCH DATA ---
         async function fetchSheetData() {
@@ -475,12 +506,11 @@
             try {
                 const response = await fetch(url);
                 const text = await response.text();
-                const jsonText = text.substring(47).slice(0, -2);
-                const json = JSON.parse(jsonText);
+                const json = JSON.parse(text.substring(47).slice(0, -2));
                 return parseData(json.table.rows);
             } catch (error) {
-                console.error('Lỗi:', error);
-                document.getElementById('dynamic-grid').innerHTML = '<div style="color:white; text-align:center;">Không thể tải dữ liệu. Vui lòng kiểm tra kết nối!</div>';
+                console.error('Error:', error);
+                document.getElementById('dynamic-grid').innerHTML = '<div style="color:#ef4444; font-family:monospace; text-align:center;">[ERROR]: CONNECTION FAILED</div>';
             }
         }
 
@@ -492,32 +522,21 @@
                 const c = row.c;
                 if (!c || !c[0]) return;
                 const level = c[0] ? c[0].v : 0;
-                const icon = c[1] ? c[1].v : 'fas fa-circle';
-                const color = c[2] ? c[2].v : '#333';
-                const label = c[3] ? c[3].v : 'No Name';
+                const icon = c[1] ? c[1].v : 'fas fa-cube';
+                // Nếu màu trong sheet là đen/tối, đổi sang màu sáng cho hợp dark mode
+                let color = c[2] ? c[2].v : '#0ea5e9';
+                if(color === '#000000') color = '#e2e8f0'; 
+
+                const label = c[3] ? c[3].v : 'Undefined';
                 const link = c[4] ? c[4].v : '#';
                 const note = c[5] ? c[5].v : '';
 
                 const item = { level, icon, color, label, link, note, children: [] };
 
-                if (level === 0) {
-                    currentCard = item;
-                    cards.push(currentCard);
-                    currentL1 = null;
-                } else if (level === 1) {
-                    if (currentCard) {
-                        currentL1 = item;
-                        currentCard.children.push(currentL1);
-                        currentL2 = null;
-                    }
-                } else if (level === 2) {
-                    if (currentL1) {
-                        currentL2 = item;
-                        currentL1.children.push(currentL2);
-                    }
-                } else if (level === 3) {
-                    if (currentL2) currentL2.children.push(item);
-                }
+                if (level === 0) { currentCard = item; cards.push(currentCard); currentL1 = null; }
+                else if (level === 1) { if (currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = null; } }
+                else if (level === 2) { if (currentL1) { currentL2 = item; currentL1.children.push(currentL2); } }
+                else if (level === 3) { if (currentL2) currentL2.children.push(item); }
             });
             return cards;
         }
@@ -530,29 +549,28 @@
             cards.forEach((card, index) => {
                 const col = document.createElement('div');
                 col.className = 'edu-col';
-                // Stagger Animation: Các card hiện ra lệch nhau 1 chút
-                col.style.animationDelay = `${index * 0.15}s`;
+                col.style.animationDelay = `${index * 0.1}s`;
 
-                const cardColor = card.color || '#3b82f6';
-                const bgIcon = hexToRgba(cardColor, 0.15);
-
+                const cardColor = card.color;
+                
+                // Style Card Header
                 const cardHtml = document.createElement('div');
                 cardHtml.className = 'edu-card';
-                // Border top màu đậm để nhấn mạnh
-                cardHtml.style.borderTopColor = cardColor;
+                // Tạo viền trên cùng màu theo môn học
+                cardHtml.style.borderTop = `3px solid ${cardColor}`;
 
                 const headerHtml = `
-                    <div class="card-header-inline">
-                        <div class="edu-icon-wrapper" style="background:${bgIcon}; color:${cardColor};">
+                    <div class="card-header-block">
+                        <div class="edu-icon-box" style="color:${cardColor}; border-color:${cardColor}; box-shadow: 0 0 10px ${cardColor}40;">
                             <i class="${card.icon}"></i>
                         </div>
-                        <h3 class="edu-title">${card.label}</h3>
+                        <h3 class="edu-title" style="text-shadow: 0 0 10px ${cardColor}80;">${card.label}</h3>
                     </div>
                 `;
 
                 const menuContainer = document.createElement('div');
                 menuContainer.className = 'edu-menu';
-                card.children.forEach(l1 => menuContainer.appendChild(createMenuItem(l1)));
+                card.children.forEach(child => menuContainer.appendChild(createMenuItem(child)));
 
                 cardHtml.innerHTML = headerHtml;
                 cardHtml.appendChild(menuContainer);
@@ -564,19 +582,24 @@
         function createMenuItem(item) {
             const hasChildren = item.children && item.children.length > 0;
             const isLevel1 = item.level === 1;
-            let onClickAttr = hasChildren ? 'onclick="toggleSub(this)"' : (item.link && item.link.length > 5 ? `onclick="window.open('${item.link}', '_blank')"` : 'onclick="updateNotify()"');
+            
+            // Logic click
+            let onClickAttr = '';
+            if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
+            else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
+            else onClickAttr = 'onclick="showToast()"';
 
             if (isLevel1) {
                 const div = document.createElement('div');
-                const itemHtml = `
+                div.innerHTML = `
                     <div class="edu-menu-item" ${onClickAttr} title="${item.note || ''}">
-                        <div class="menu-main-content">
-                            <i class="${item.icon}" style="color: ${item.color}"></i> ${item.label}
+                        <div class="menu-left">
+                            <i class="${item.icon}" style="color: ${item.color}; width:20px; text-align:center;"></i>
+                            <span>${item.label}</span>
                         </div>
-                        ${hasChildren ? '<i class="fas fa-caret-down rotate-icon"></i>' : ''}
+                        ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
                     </div>
                 `;
-                div.innerHTML = itemHtml;
                 if (hasChildren) {
                     const subDiv = document.createElement('div');
                     subDiv.className = 'submenu';
@@ -585,45 +608,32 @@
                 }
                 return div;
             } else {
-                // Logic chung cho Level 2 & 3
+                // Level 2 & 3
+                const wrapper = document.createElement('div');
+                const content = `
+                    <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            ${item.level === 3 ? '<i class="fas fa-angle-right" style="font-size:0.7rem"></i>' : ''}
+                            ${item.label}
+                        </span>
+                         ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
+                    </div>
+                `;
+                wrapper.innerHTML = content;
                 if (hasChildren) {
-                    const wrapper = document.createElement('div');
-                    wrapper.innerHTML = `
-                        <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
-                            <div style="display:flex; align-items:center;">
-                                <i class="${item.icon} menu-icon" style="color: ${item.color}; margin-right:8px; width:20px; text-align:center;"></i> ${item.label}
-                            </div>
-                            <i class="fas fa-caret-down rotate-icon"></i>
-                        </div>
-                    `;
                     const subSubDiv = document.createElement('div');
                     subSubDiv.className = 'submenu';
                     item.children.forEach(c => subSubDiv.appendChild(createMenuItem(c)));
                     wrapper.appendChild(subSubDiv);
-                    return wrapper;
-                } else {
-                    const el = document.createElement('div');
-                    el.className = 'submenu-item';
-                    el.title = item.note || '';
-                    el.onclick = hasChildren ? null : (item.link && item.link.length > 5 ? () => window.open(item.link, '_blank') : updateNotify);
-                    el.innerHTML = `
-                         <div style="display:flex; align-items:center;">
-                            <i class="${item.icon}" style="color: ${item.color}; margin-right:8px; width:20px; text-align:center;"></i> ${item.label}
-                        </div>
-                    `;
-                    return el;
                 }
+                return wrapper;
             }
         }
 
         // --- INTERACTION ---
         function toggleSub(el) {
-            // Tìm submenu sibling
             let sub = el.nextElementSibling;
-            if(!sub && el.parentElement.querySelector('.submenu')) {
-                // Trường hợp click text bên trong, tìm từ parent
-                sub = el.parentElement.querySelector('.submenu');
-            }
+            if(!sub) sub = el.parentElement.querySelector('.submenu'); // Fallback
             
             const icon = el.querySelector('.rotate-icon');
             if (sub && sub.classList.contains('submenu')) {
@@ -632,21 +642,18 @@
             }
         }
 
-        function updateNotify() {
+        function showToast() {
             const box = document.getElementById('toast-box');
-            if(box.children.length > 0) return; // Prevent spam
+            if(box.childElementCount > 0) return;
 
-            const toast = document.createElement('div');
-            toast.className = 'custom-toast';
-            toast.innerHTML = `<i class="fas fa-tools" style="color:#fbbf24"></i><span>Nội dung đang được cập nhật...</span>`;
-            box.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 2000);
+            const t = document.createElement('div');
+            t.className = 'custom-toast';
+            t.innerHTML = `<i class="fas fa-terminal"></i> SYSTEM: CONTENT UPDATING...`;
+            box.appendChild(t);
+            setTimeout(() => { t.style.opacity = 0; setTimeout(() => t.remove(), 300); }, 2000);
         }
 
-        // --- ANIMATED CONSTELLATION CANVAS (HIỆU ỨNG TOÁN HỌC) ---
+        // --- CANVAS: TECH NETWORK (Các nút mạng liên kết) ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, particles = [];
@@ -655,47 +662,46 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             particles = [];
-            // Số lượng hạt phụ thuộc vào màn hình
-            const count = width < 768 ? 40 : 80; 
-            for (let i = 0; i < count; i++) {
+            const count = Math.floor(width / 25); // Mật độ hạt
+            
+            for(let i=0; i<count; i++) {
                 particles.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
                     vx: (Math.random() - 0.5) * 0.5,
                     vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2 + 1
+                    size: Math.random() > 0.9 ? 2.5 : 1.5 // Có hạt to hạt nhỏ
                 });
             }
         }
 
         function animateCanvas() {
             ctx.clearRect(0, 0, width, height);
-            
-            // Vẽ các đường nối (Constellation effect)
-            for (let i = 0; i < particles.length; i++) {
+            ctx.fillStyle = '#38bdf8'; // Cyan color
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.15)'; // Line color
+
+            for(let i=0; i<particles.length; i++) {
                 let p = particles[i];
-                // Di chuyển
-                p.x += p.vx;
-                p.y += p.vy;
+                p.x += p.vx; p.y += p.vy;
 
-                // Dội tường
-                if (p.x < 0 || p.x > width) p.vx *= -1;
-                if (p.y < 0 || p.y > height) p.vy *= -1;
+                if(p.x < 0 || p.x > width) p.vx *= -1;
+                if(p.y < 0 || p.y > height) p.vy *= -1;
 
-                // Vẽ điểm
+                ctx.globalAlpha = 0.6;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
                 ctx.fill();
 
-                // Nối dây nếu gần nhau
-                for (let j = i + 1; j < particles.length; j++) {
+                // Draw connections
+                for(let j=i+1; j<particles.length; j++) {
                     let p2 = particles[j];
-                    let dist = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
-                    if (dist < 150) {
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+
+                    if(dist < 120) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.2 - dist/150})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.lineWidth = 1 - (dist/120);
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(p2.x, p2.y);
                         ctx.stroke();
@@ -705,24 +711,25 @@
             requestAnimationFrame(animateCanvas);
         }
 
-        // Mouse scroll horizontal fix
+        // --- SCROLL HANDLING ---
         const scrollContainer = document.getElementById('scroll-container');
         scrollContainer.addEventListener('wheel', (evt) => {
             if (window.innerWidth > 768 && !evt.target.closest('.edu-menu')) {
                 evt.preventDefault();
-                scrollContainer.scrollLeft += evt.deltaY * 1.5;
+                scrollContainer.scrollLeft += evt.deltaY * 2; // Tăng tốc độ scroll
             }
         });
 
         window.addEventListener('resize', initCanvas);
+        
+        // --- START ---
         initCanvas();
         animateCanvas();
-
-        // Start
         fetchSheetData().then(data => {
             if (data) renderDashboard(data);
         });
 
     </script>
 </body>
+
 </html>
