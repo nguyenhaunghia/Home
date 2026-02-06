@@ -39,12 +39,10 @@ function checkAuthAndRenderUI() {
 function renderUserProfile(user) {
     const container = document.getElementById('user-profile-container');
     if (container) {
+        // CHỈ HIỂN THỊ TÊN VÀ AVATAR
         container.innerHTML = `
             <div class="user-profile">
-                <div class="user-info-text">
-                    <span class="user-name">${user.name}</span>
-                    <span class="user-account">${user.account}</span>
-                </div>
+                <span class="user-name">${user.name}</span>
                 <img src="${user.avatar || 'https://via.placeholder.com/36'}" class="user-avatar" alt="User">
                 <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
             </div>
@@ -61,7 +59,7 @@ function logout() {
 async function loadDataByPrivilege(user) {
     let finalCards = [];
     
-    // A. Nếu là Admin -> Lấy NHN trước
+    // A. Nếu là Admin -> Lấy NHN trước (CHECK NGẦM)
     if (user.account && user.account.trim().toLowerCase() === ADMIN_EMAIL.trim().toLowerCase()) {
         console.log('Admin detected: Loading NHN data...');
         const nhnData = await fetchSheetData('NHN');
