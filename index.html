@@ -80,31 +80,36 @@
 
     <script src="script.js"></script>
     <script>
-        // Logic bổ sung để hiển thị thông tin user và load dữ liệu theo account
-        window.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            const userInfoArea = document.getElementById('user-info-area');
+    window.addEventListener('DOMContentLoaded', () => {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        const userInfoArea = document.getElementById('user-info-area');
 
-            if (localStorage.getItem('isLoggedIn') === 'true' && userData) {
-                userInfoArea.innerHTML = `
-                    <div class="user-profile">
-                        <img src="${userData.avatar || 'https://via.placeholder.com/32'}" class="user-avatar">
+        if (localStorage.getItem('isLoggedIn') === 'true' && userData) {
+            userInfoArea.innerHTML = `
+                <div class="user-profile">
+                    <img src="${userData.avatar || 'https://via.placeholder.com/32'}" class="user-avatar">
+                    <div class="user-details" style="display: flex; flex-direction: column; line-height: 1.2;">
                         <span class="user-name">${userData.name}</span>
-                        <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
+                        <span class="user-acc-debug" style="font-size: 0.65rem; color: var(--primary-neon); opacity: 0.8;">
+                            ${userData.account}
+                        </span>
                     </div>
-                `;
-            }
-
-            // Gọi hàm load dữ liệu phân quyền trong script.js
-            if (typeof loadDataWithPrivilege === "function") {
-                loadDataWithPrivilege(userData);
-            }
-        });
-
-        function logout() {
-            localStorage.clear();
-            window.location.reload();
+                    <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()" style="margin-left: 10px;"></i>
+                </div>
+            `;
         }
-    </script>
+
+        // Khởi chạy logic tải dữ liệu ưu tiên
+        if (typeof loadDataWithPrivilege === "function") {
+            loadDataWithPrivilege(userData);
+        }
+    });
+
+    function logout() {
+        localStorage.clear();
+        window.location.reload();
+    }
+</script>
 </body>
 </html>
+
