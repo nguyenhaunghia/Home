@@ -187,3 +187,39 @@ function animateCanvas() {
 }
 
 window.addEventListener('resize', initCanvas);
+
+
+
+
+// Hàm load dữ liệu có ưu tiên cho tài khoản nguyenhaunghia@gmail.com
+async function loadDataWithPrivilege(userData) {
+    let combinedData = [];
+
+    // 1. Kiểm tra nếu là account đặc biệt
+    if (userData && userData.account === 'nguyenhaunghia@gmail.com') {
+        const nhnData = await fetchSheetData('NHN'); // fetchSheetData là hàm fetch cũ của bạn
+        if (nhnData) {
+            nhnData.forEach(item => item.isSpecial = true);
+            combinedData = [...nhnData];
+        }
+    }
+
+    // 2. Load dữ liệu từ CSDL chung (Luôn thực hiện)
+    const csdlData = await fetchSheetData('CSDL');
+    if (csdlData) {
+        combinedData = [...combinedData, ...csdlData];
+    }
+
+    // 3. Render ra grid
+    renderDashboard(combinedData);
+}
+
+
+
+
+
+
+
+
+
+
