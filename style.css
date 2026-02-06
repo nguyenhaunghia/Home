@@ -59,11 +59,11 @@ body {
     margin: 0;
 }
 
-/* USER PROFILE (TOP RIGHT) */
+/* USER PROFILE (GÓC PHẢI) - Đã ẩn Account */
 .user-profile {
     position: fixed; top: 20px; right: 20px; z-index: 1000;
     display: flex; align-items: center; gap: 12px;
-    padding: 8px 15px;
+    padding: 6px 15px; /* Padding gọn hơn */
     background: rgba(15, 23, 42, 0.9);
     border: 1px solid var(--border-tech);
     border-radius: 50px;
@@ -71,20 +71,13 @@ body {
     box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
     transition: 0.3s;
 }
-.user-info-text {
-    display: flex; flex-direction: column;
-    line-height: 1.2; text-align: right;
-}
 .user-name {
     font-family: 'Rajdhani', sans-serif; font-weight: 700;
-    color: white; font-size: 0.9rem;
-}
-.user-account {
-    font-family: 'Roboto Mono', monospace; font-size: 0.65rem;
-    color: var(--primary-neon); opacity: 0.8;
+    color: white; font-size: 0.9rem; letter-spacing: 0.5px;
+    margin-right: 5px;
 }
 .user-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
+    width: 32px; height: 32px; border-radius: 50%;
     border: 1.5px solid var(--primary-neon); object-fit: cover;
 }
 .btn-logout {
@@ -194,16 +187,20 @@ body {
 @keyframes radarSpin { 100% { transform: rotate(360deg); } }
 @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); } 100% { box-shadow: 0 0 0 20px transparent; } }
 
-/* LOGIN SPECIFIC */
+/* LOGIN SPECIFIC - BALANCED */
 .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .login-card {
-    width: 100%; max-width: 420px; background: rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(25px); border: 1px solid var(--border-tech);
-    border-radius: 20px; padding: 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    width: 100%; max-width: 440px; /* Tối ưu độ rộng */
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(25px); 
+    border: 1px solid var(--border-tech);
+    border-radius: 20px; 
+    padding: 60px 40px; /* Padding trên dưới rộng hơn để cân đối */
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     position: relative; overflow: hidden;
 }
 .login-card::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
     background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
 }
 .input-group-custom { margin-bottom: 25px; position: relative; }
