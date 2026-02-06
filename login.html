@@ -109,13 +109,19 @@
                     }
                 }
 
+
+
+
+
+
+                // Trong login.html, đoạn xử lý login thành công:
                 if (authUser) {
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('userData', JSON.stringify({
                         name: authUser.realName,
                         avatar: authUser.avatar,
                         perms: authUser.perms,
-                        account: authUser.acc
+                        account: authUser.acc // Đây là giá trị từ c[6].v trong sheet User
                     }));
                     msg.innerText = "> ACCESS GRANTED. REDIRECTING..."; msg.style.color = "#4ade80";
                     setTimeout(() => window.location.href = 'index.html', 1000);
