@@ -1,80 +1,98 @@
-
-
-
-
-
-
-
-
-
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
-const SHEET_NAME = 'CSDL';
-const ADMIN_ACCOUNT = 'nguyenhaunghia@gmail.com';
+const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
 
-async function loadDataWithPrivilege(userData) {
-    const grid = document.getElementById('dynamic-grid');
-    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:white;">SYSTEM INITIALIZING...</div>';
-    
-    let finalData = [];
+// --- INITIALIZE ---
+window.addEventListener('DOMContentLoaded', () => {
+    // 1. Check Login & Render UI
+    const userData = checkAuthAndRenderUI();
 
-    // BƯỚC 1: Nếu là tài khoản NHN, lấy dữ liệu từ sheet NHN trước
-    if (userData && userData.account.toLowerCase() === ADMIN_ACCOUNT.toLowerCase()) {
-        console.log("Admin detected: Loading NHN Data...");
-        const nhnData = await fetchSheetData('NHN');
-        if (nhnData && nhnData.length > 0) {
-            nhnData.forEach(item => item.isSpecial = true); // Đánh dấu để dùng style riêng nếu muốn
-            finalData = [...nhnData];
+    // 2. Start Canvas Animation
+    initCanvas();
+    animateCanvas();
+
+    // 3. Load Data based on User Privilege
+    if (userData) {
+        loadDataByPrivilege(userData);
+    }
+});
+
+// --- AUTH & UI LOGIC ---
+function checkAuthAndRenderUI() {
+    // Only run if NOT on login page
+    if (!window.location.href.includes('login.html')) {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userDataString = localStorage.getItem('userData');
+        
+        if (isLoggedIn !== 'true' || !userDataString) {
+            window.location.href = 'login.html';
+            return null;
         }
-    }
 
-    // BƯỚC 2: Lấy dữ liệu từ sheet CSDL chung (Luôn thực hiện)
-    const csdlData = await fetchSheetData('CSDL');
-    if (csdlData && csdlData.length > 0) {
-        finalData = [...finalData, ...csdlData];
+        const userData = JSON.parse(userDataString);
+        renderUserProfile(userData);
+        return userData;
     }
+    return null;
+}
 
-    // BƯỚC 3: Render toàn bộ dữ liệu đã gộp theo đúng thứ tự
-    if (finalData.length > 0) {
-        renderDashboard(finalData);
-    } else {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:white;">NO DATA FOUND</div>';
+function renderUserProfile(user) {
+    const container = document.getElementById('user-profile-container');
+    if (container) {
+        container.innerHTML = `
+            <div class="user-profile">
+                <div class="user-info-text">
+                    <span class="user-name">${user.name}</span>
+                    <span class="user-account">${user.account}</span>
+                </div>
+                <img src="${user.avatar || 'https://via.placeholder.com/36'}" class="user-avatar" alt="User">
+                <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
+            </div>
+        `;
     }
 }
 
+function logout() {
+    localStorage.clear();
+    window.location.href = 'login.html';
+}
+
+// --- DATA LOADING LOGIC (LOGIC MỚI) ---
+async function loadDataByPrivilege(user) {
+    let finalCards = [];
+    
+    // A. Nếu là Admin -> Lấy NHN trước
+    if (user.account && user.account.trim().toLowerCase() === ADMIN_EMAIL.trim().toLowerCase()) {
+        console.log('Admin detected: Loading NHN data...');
+        const nhnData = await fetchSheetData('NHN');
+        if (nhnData) {
+            nhnData.forEach(card => card.isSpecial = true);
+            finalCards = [...finalCards, ...nhnData];
+        }
+    }
+
+    // B. Lấy CSDL (Luôn thực hiện)
+    console.log('Loading Standard Database...');
+    const csdlData = await fetchSheetData('CSDL');
+    if (csdlData) {
+        finalCards = [...finalCards, ...csdlData];
+    }
+
+    // C. Render
+    renderDashboard(finalCards);
+}
+
+// --- GOOGLE SHEET FETCHING ---
 async function fetchSheetData(sheetName) {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
     try {
         const response = await fetch(url);
         const text = await response.text();
         const json = JSON.parse(text.substring(47).slice(0, -2));
-        return parseData(json.table.rows); // parseData là hàm xử lý row cũ của bạn
-    } catch (error) {
-        console.error(`Error fetching sheet ${sheetName}:`, error);
-        return [];
-    }
-}
-
-// --- INITIALIZE ---
-window.addEventListener('DOMContentLoaded', () => {
-    initCanvas();
-    animateCanvas();
-    fetchSheetData().then(data => {
-        if (data) renderDashboard(data);
-    });
-});
-
-// --- FETCH DATA ---
-async function fetchSheetData() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
-    try {
-        const response = await fetch(url);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
         return parseData(json.table.rows);
     } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('dynamic-grid').innerHTML = '<div style="color:red; text-align:center;">Load Failed</div>';
+        console.error(`Error loading sheet ${sheetName}:`, error);
+        return [];
     }
 }
 
@@ -85,20 +103,27 @@ function parseData(rows) {
     rows.forEach(row => {
         const c = row.c;
         if (!c || !c[0]) return;
+        
         const level = c[0] ? c[0].v : 0;
         const icon = c[1] ? c[1].v : 'fas fa-cube';
         let color = c[2] ? c[2].v : '#22d3ee';
         if (color === '#000000') color = '#e2e8f0';
+        
         const label = c[3] ? c[3].v : 'Undefined';
         const link = c[4] ? c[4].v : '#';
         const note = c[5] ? c[5].v : '';
 
         const item = { level, icon, color, label, link, note, children: [] };
 
-        if (level === 0) { currentCard = item; cards.push(currentCard); currentL1 = null; }
-        else if (level === 1) { if (currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = null; } }
-        else if (level === 2) { if (currentL1) { currentL2 = item; currentL1.children.push(currentL2); } }
-        else if (level === 3) { if (currentL2) currentL2.children.push(item); }
+        if (level === 0) { 
+            currentCard = item; cards.push(currentCard); currentL1 = null; 
+        } else if (level === 1) { 
+            if (currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = null; } 
+        } else if (level === 2) { 
+            if (currentL1) { currentL2 = item; currentL1.children.push(currentL2); } 
+        } else if (level === 3) { 
+            if (currentL2) { currentL2.children.push(item); }
+        }
     });
     return cards;
 }
@@ -108,13 +133,17 @@ function renderDashboard(cards) {
     const grid = document.getElementById('dynamic-grid');
     grid.innerHTML = '';
 
+    if (cards.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8;">NO DATA AVAILABLE</div>';
+        return;
+    }
+
     cards.forEach((card, index) => {
         const col = document.createElement('div');
         col.className = 'edu-col';
         col.style.animationDelay = `${index * 0.05}s`;
 
         const cardColor = card.color;
-
         const cardHtml = document.createElement('div');
         cardHtml.className = 'edu-card';
         cardHtml.style.borderTop = `3px solid ${cardColor}`;
@@ -147,7 +176,6 @@ function renderDashboard(cards) {
 function createMenuItem(item) {
     const hasChildren = item.children && item.children.length > 0;
     const isLevel1 = item.level === 1;
-
     let onClickAttr = '';
     if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
     else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
@@ -195,14 +223,13 @@ function toggleSub(el) {
     let sub = el.nextElementSibling;
     if (!sub) sub = el.parentElement.querySelector('.submenu');
     const icon = el.querySelector('.rotate-icon');
-
     if (sub && sub.classList.contains('submenu')) {
         sub.classList.toggle('active');
         if (icon) icon.classList.toggle('active');
     }
 }
 
-// --- CANVAS BACKGROUND ---
+// --- CANVAS ---
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let width, height, particles = [];
@@ -214,16 +241,12 @@ function initCanvas() {
     const count = Math.floor(width / 9);
     for (let i = 0; i < count; i++) {
         particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.15,
-            vy: (Math.random() - 0.5) * 0.15,
-            size: Math.random() * 1.8,
-            alpha: Math.random()
+            x: Math.random() * width, y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
+            size: Math.random() * 1.8, alpha: Math.random()
         });
     }
 }
-
 function animateCanvas() {
     ctx.clearRect(0, 0, width, height);
     for (let i = 0; i < particles.length; i++) {
@@ -238,5 +261,4 @@ function animateCanvas() {
     }
     requestAnimationFrame(animateCanvas);
 }
-
 window.addEventListener('resize', initCanvas);
