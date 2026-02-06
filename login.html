@@ -7,50 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .login-card {
-            width: 100%; max-width: 420px; background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(25px); border: 1px solid var(--border-tech);
-            border-radius: 20px; padding: 50px 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            position: relative; overflow: hidden;
-        }
-        .login-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
-        }
-        .login-header { text-align: center; margin-bottom: 35px; }
-        .login-header h2 { 
-            font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 2.2rem; 
-            letter-spacing: 3px; color: white; text-transform: uppercase;
-        }
-        .input-group-custom { margin-bottom: 25px; position: relative; }
-        .input-group-custom label { 
-            display: block; font-size: 0.75rem; color: var(--primary-neon); 
-            margin-bottom: 10px; font-family: 'Roboto Mono', monospace; letter-spacing: 1px;
-        }
-        .input-group-custom i { position: absolute; left: 15px; top: 42px; color: var(--text-dim); }
-        .input-group-custom input { 
-            width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 10px; padding: 12px 15px 12px 45px; color: white; outline: none; transition: 0.3s; 
-        }
-        .input-group-custom input:focus { border-color: var(--primary-neon); background: rgba(255, 255, 255, 0.08); }
-        .btn-login { 
-            width: 100%; padding: 14px; background: var(--primary-neon); border: none; border-radius: 10px; 
-            color: white; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.1rem; 
-            cursor: pointer; transition: 0.3s; letter-spacing: 1px;
-        }
-        .btn-login:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3); }
-        #login-msg { text-align: center; margin-top: 20px; font-size: 0.85rem; min-height: 20px; font-family: 'Roboto Mono'; }
-    </style>
 </head>
 <body>
     <canvas id="hero-canvas"></canvas>
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="tech-badge" style="margin-bottom: 10px;">AUTHORIZED ONLY</div>
-                <h2>LOGIN</h2>
+                <div class="tech-badge">AUTHORIZED ONLY</div>
+                <h2 style="font-family:'Rajdhani'; color:white; font-size:2.2rem; margin-top:10px;">LOGIN</h2>
             </div>
             <form id="login-form">
                 <div class="input-group-custom">
@@ -63,14 +27,15 @@
                     <i class="fas fa-key"></i>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn-login" id="btn-submit">INITIALIZE LOGIN</button>
-                <div id="login-msg"></div>
+                <button type="submit" class="btn-login" style="width:100%; padding:14px; background:var(--primary-neon); border:none; border-radius:10px; color:white; font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; cursor:pointer;" id="btn-submit">INITIALIZE LOGIN</button>
+                <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
             </form>
         </div>
     </div>
 
     <script src="script.js"></script>
     <script>
+        // Override lại hành vi submit chỉ cho trang Login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const userInp = document.getElementById('username').value.trim().toLowerCase();
@@ -82,6 +47,7 @@
             btn.disabled = true;
 
             try {
+                // Fetch dữ liệu từ sheet User
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=User`;
                 const response = await fetch(url);
                 const text = await response.text();
@@ -93,6 +59,8 @@
                     const c = row.c;
                     if (!c) continue;
                     
+                    // Cấu trúc cột theo yêu cầu
+                    // 0:UserID, 1:Name, 2:ReminiscentName, 5:Avatar, 6:Account, 7:Permissions, 9:Password
                     const data = {
                         uID: c[0] ? String(c[0].v).toLowerCase() : '',
                         name: c[1] ? String(c[1].v).toLowerCase() : '',
@@ -101,27 +69,23 @@
                         pass: c[9] ? String(c[9].v) : '',
                         realName: c[1] ? c[1].v : 'User',
                         avatar: c[5] ? c[5].v : '',
-                        perms: c[7] ? c[7].v : 'Member'
+                        perms: c[7] ? c[7].v : 'Member',
+                        realAcc: c[6] ? c[6].v : ''
                     };
 
+                    // Kiểm tra đa định danh
                     if ((userInp === data.uID || userInp === data.name || userInp === data.rem || userInp === data.acc) && passInp === data.pass) {
                         authUser = data; break;
                     }
                 }
 
-
-
-
-
-
-                // Trong login.html, đoạn xử lý login thành công:
                 if (authUser) {
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('userData', JSON.stringify({
                         name: authUser.realName,
                         avatar: authUser.avatar,
                         perms: authUser.perms,
-                        account: authUser.acc // Đây là giá trị từ c[6].v trong sheet User
+                        account: authUser.realAcc // Lưu account thật để check bên index.html
                     }));
                     msg.innerText = "> ACCESS GRANTED. REDIRECTING..."; msg.style.color = "#4ade80";
                     setTimeout(() => window.location.href = 'index.html', 1000);
@@ -130,7 +94,8 @@
                     btn.disabled = false;
                 }
             } catch (err) {
-                msg.innerText = "> SYSTEM ERROR CONTACT ADMIN"; btn.disabled = false;
+                console.error(err);
+                msg.innerText = "> SYSTEM ERROR"; btn.disabled = false;
             }
         });
     </script>
