@@ -1,6 +1,59 @@
+
+
+
+
+
+
+
+
+
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const SHEET_NAME = 'CSDL';
+const ADMIN_ACCOUNT = 'nguyenhaunghia@gmail.com';
+
+async function loadDataWithPrivilege(userData) {
+    const grid = document.getElementById('dynamic-grid');
+    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:white;">SYSTEM INITIALIZING...</div>';
+    
+    let finalData = [];
+
+    // BƯỚC 1: Nếu là tài khoản NHN, lấy dữ liệu từ sheet NHN trước
+    if (userData && userData.account.toLowerCase() === ADMIN_ACCOUNT.toLowerCase()) {
+        console.log("Admin detected: Loading NHN Data...");
+        const nhnData = await fetchSheetData('NHN');
+        if (nhnData && nhnData.length > 0) {
+            nhnData.forEach(item => item.isSpecial = true); // Đánh dấu để dùng style riêng nếu muốn
+            finalData = [...nhnData];
+        }
+    }
+
+    // BƯỚC 2: Lấy dữ liệu từ sheet CSDL chung (Luôn thực hiện)
+    const csdlData = await fetchSheetData('CSDL');
+    if (csdlData && csdlData.length > 0) {
+        finalData = [...finalData, ...csdlData];
+    }
+
+    // BƯỚC 3: Render toàn bộ dữ liệu đã gộp theo đúng thứ tự
+    if (finalData.length > 0) {
+        renderDashboard(finalData);
+    } else {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:white;">NO DATA FOUND</div>';
+    }
+}
+
+async function fetchSheetData(sheetName) {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        return parseData(json.table.rows); // parseData là hàm xử lý row cũ của bạn
+    } catch (error) {
+        console.error(`Error fetching sheet ${sheetName}:`, error);
+        return [];
+    }
+}
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -187,39 +240,3 @@ function animateCanvas() {
 }
 
 window.addEventListener('resize', initCanvas);
-
-
-
-
-// Hàm load dữ liệu có ưu tiên cho tài khoản nguyenhaunghia@gmail.com
-async function loadDataWithPrivilege(userData) {
-    let combinedData = [];
-
-    // 1. Kiểm tra nếu là account đặc biệt
-    if (userData && userData.account === 'nguyenhaunghia@gmail.com') {
-        const nhnData = await fetchSheetData('NHN'); // fetchSheetData là hàm fetch cũ của bạn
-        if (nhnData) {
-            nhnData.forEach(item => item.isSpecial = true);
-            combinedData = [...nhnData];
-        }
-    }
-
-    // 2. Load dữ liệu từ CSDL chung (Luôn thực hiện)
-    const csdlData = await fetchSheetData('CSDL');
-    if (csdlData) {
-        combinedData = [...combinedData, ...csdlData];
-    }
-
-    // 3. Render ra grid
-    renderDashboard(combinedData);
-}
-
-
-
-
-
-
-
-
-
-
