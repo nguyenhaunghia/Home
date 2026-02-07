@@ -1,20 +1,19 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
+// Admin Email constant giữ lại để tham chiếu nếu cần, nhưng logic hiển thị NHN giờ dựa vào trạng thái Login
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Check Login & Render UI
+    // 1. Check Login & Render UI (Không bắt buộc login nữa)
     const userData = checkAuthAndRenderUI();
 
     // 2. Start Canvas Animation
     initCanvas();
     animateCanvas();
 
-    // 3. Load Data based on User Privilege
-    if (userData) {
-        loadDataByPrivilege(userData);
-    }
+    // 3. Load Data based on User Status (Guest or Member)
+    loadDataByPrivilege(userData);
 });
 
 // --- AUTH & UI LOGIC ---
@@ -24,13 +23,14 @@ function checkAuthAndRenderUI() {
         const isLoggedIn = localStorage.getItem('isLoggedIn');
         const userDataString = localStorage.getItem('userData');
         
+        // UPDATE: Nếu chưa login, không redirect nữa, chỉ return null (Chế độ Guest)
         if (isLoggedIn !== 'true' || !userDataString) {
-            window.location.href = 'login.html';
+            renderUserProfile(null); // Render trạng thái Guest (trống)
             return null;
         }
 
         const userData = JSON.parse(userDataString);
-        renderUserProfile(userData);
+        renderUserProfile(userData); // Render thông tin User
         return userData;
     }
     return null;
@@ -39,48 +39,57 @@ function checkAuthAndRenderUI() {
 function renderUserProfile(user) {
     const container = document.getElementById('user-profile-container');
     if (container) {
-        // CHỈ HIỂN THỊ TÊN VÀ AVATAR
-        container.innerHTML = `
-            <div class="user-profile">
-                <span class="user-name">${user.name}</span>
-                <img src="${user.avatar || 'https://via.placeholder.com/36'}" class="user-avatar" alt="User">
-                <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
-            </div>
-        `;
+        if (user) {
+            // ĐÃ ĐĂNG NHẬP: Hiển thị Profile
+            container.innerHTML = `
+                <div class="user-profile">
+                    <span class="user-name">${user.name}</span>
+                    <img src="${user.avatar || 'https://via.placeholder.com/36'}" class="user-avatar" alt="User">
+                    <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
+                </div>
+            `;
+        } else {
+            // CHƯA ĐĂNG NHẬP (GUEST): Ẩn profile hoặc để trống
+            container.innerHTML = ''; 
+        }
     }
 }
 
 function logout() {
     localStorage.clear();
-    window.location.href = 'login.html';
+    // Reload lại trang index để về chế độ Guest (chỉ hiện CSDL)
+    window.location.href = 'index.html';
 }
 
-// --- DATA LOADING LOGIC (LOGIC MỚI) ---
+// --- DATA LOADING LOGIC (LOGIC MỚI UPDATE) ---
 async function loadDataByPrivilege(user) {
     let finalCards = [];
     
-    // A. Nếu là Admin -> Lấy NHN trước (CHECK NGẦM)
-    if (user.account && user.account.trim().toLowerCase() === ADMIN_EMAIL.trim().toLowerCase()) {
-        console.log('Admin detected: Loading NHN data...');
+    // UPDATE: Logic hiển thị theo yêu cầu mới
+    
+    // 1. Nếu đã đăng nhập (User tồn tại) -> Load sheet NHN trước
+    if (user) {
+        console.log('User detected: Loading NHN data...');
         const nhnData = await fetchSheetData('NHN');
         if (nhnData) {
-            nhnData.forEach(card => card.isSpecial = true);
+            // Có thể đánh dấu hoặc xử lý đặc biệt nếu cần, ở đây chỉ cần push vào trước
             finalCards = [...finalCards, ...nhnData];
         }
     }
 
-    // B. Lấy CSDL (Luôn thực hiện)
+    // 2. Load sheet CSDL (Luôn thực hiện cho cả Guest và User)
+    // Các card này sẽ nằm sau card NHN (nếu có)
     console.log('Loading Standard Database...');
     const csdlData = await fetchSheetData('CSDL');
     if (csdlData) {
         finalCards = [...finalCards, ...csdlData];
     }
 
-    // C. Render
+    // 3. Render toàn bộ
     renderDashboard(finalCards);
 }
 
-// --- GOOGLE SHEET FETCHING ---
+// --- GOOGLE SHEET FETCHING (GIỮ NGUYÊN) ---
 async function fetchSheetData(sheetName) {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
     try {
@@ -126,13 +135,13 @@ function parseData(rows) {
     return cards;
 }
 
-// --- RENDER ---
+// --- RENDER (GIỮ NGUYÊN) ---
 function renderDashboard(cards) {
     const grid = document.getElementById('dynamic-grid');
     grid.innerHTML = '';
 
     if (cards.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8;">NO DATA AVAILABLE</div>';
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8; font-family:\'Roboto Mono\'">NO DATA AVAILABLE</div>';
         return;
     }
 
@@ -227,7 +236,7 @@ function toggleSub(el) {
     }
 }
 
-// --- CANVAS ---
+// --- CANVAS (GIỮ NGUYÊN) ---
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let width, height, particles = [];
