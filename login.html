@@ -13,21 +13,20 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <div class="tech-badge">AUTHORIZED ONLY</div>
-                <h2 style="font-family:'Rajdhani'; color:white; font-size:2.2rem; margin-top:10px;">LOGIN</h2>
+                <h2 style="font-family:'Rajdhani'; color:white; font-size:2.2rem; margin-top:10px;">ĐĂNG NHẬP HỆ THỐNG</h2>
             </div>
             <form id="login-form">
                 <div class="input-group-custom">
-                    <label>SYSTEM IDENTIFIER</label>
+                    <label>TÊN ĐĂNG NHẬP</label>
                     <i class="fas fa-user-circle"></i>
                     <input type="text" id="username" placeholder="UserID, Name or Account" required>
                 </div>
                 <div class="input-group-custom">
-                    <label>ACCESS KEY</label>
+                    <label>PASSWORD</label>
                     <i class="fas fa-key"></i>
                     <input type="password" id="password" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn-login" style="width:100%; padding:14px; background:var(--primary-neon); border:none; border-radius:10px; color:white; font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; cursor:pointer;" id="btn-submit">INITIALIZE LOGIN</button>
+                <button type="submit" class="btn-login" style="width:100%; padding:14px; background:var(--primary-neon); border:none; border-radius:10px; color:white; font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; cursor:pointer;" id="btn-submit">ĐĂNG NHẬP</button>
                 <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
             </form>
         </div>
@@ -43,7 +42,7 @@
             const msg = document.getElementById('login-msg');
             const btn = document.getElementById('btn-submit');
 
-            msg.innerText = "> VERIFYING..."; msg.style.color = "var(--primary-neon)";
+            msg.innerText = "> XÁC MINH ..."; msg.style.color = "var(--primary-neon)";
             btn.disabled = true;
 
             try {
@@ -85,9 +84,9 @@
                         name: authUser.realName,
                         avatar: authUser.avatar,
                         perms: authUser.perms,
-                        account: authUser.realAcc // Lưu account thật để check bên index.html
+                        account: authUser.realAcc
                     }));
-                    msg.innerText = "> ACCESS GRANTED. REDIRECTING..."; msg.style.color = "#4ade80";
+                    msg.innerText = "> CÁP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; msg.style.color = "#4ade80";
                     setTimeout(() => window.location.href = 'index.html', 1000);
                 } else {
                     msg.innerText = "> ERROR: INVALID CREDENTIALS"; msg.style.color = "#f87171";
