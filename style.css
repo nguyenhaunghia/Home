@@ -95,7 +95,7 @@ body {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 25px; width: 100%;
 }
-@media (max-width: 1100px) { .edu-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1100px) { .edu-grid { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 768px) { 
     .edu-grid { grid-template-columns: 1fr; }
     .page-header h1 { font-size: 2.2rem; }
@@ -210,7 +210,7 @@ body {
 }
 .input-group-custom i { position: absolute; left: 15px; top: 42px; color: var(--text-dim); }
 .input-group-custom input { 
-    width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 10px; padding: 12px 15px 12px 45px; color: white; outline: none; transition: 0.3s; 
+    width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
+    border-radius: 10px; padding: 12px 0px 12px 45px; color: white; outline: none; transition: 0.3s; 
 }
 .input-group-custom input:focus { border-color: var(--primary-neon); background: rgba(255, 255, 255, 0.08); }
