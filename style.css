@@ -59,7 +59,7 @@ body {
     margin: 0;
 }
 
-/* USER PROFILE (GÓC PHẢI) - Đã ẩn Account */
+/* USER PROFILE (GÓC PHẢI) */
 .user-profile {
     position: fixed; top: 20px; right: 20px; z-index: 1000;
     display: flex; align-items: center; gap: 12px;
@@ -92,7 +92,7 @@ body {
     margin: 0 auto; padding: 0 20px 60px 20px;
 }
 .edu-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
+    display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 25px; width: 100%;
 }
 @media (max-width: 1100px) { .edu-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -139,13 +139,13 @@ body {
 }
 
 /* MENU SCROLL */
-.edu-menu { padding: 10px 15px; height: 230px; overflow-y: auto; }
+.edu-menu { padding: 10px 15px; height: 260px; overflow-y: auto; }
 .edu-menu::-webkit-scrollbar { width: 4px; }
 .edu-menu::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
 .edu-menu::-webkit-scrollbar-thumb { background: rgba(34, 211, 238, 0.5); border-radius: 2px; }
 .edu-menu-item {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 5px; color: var(--text-dim); font-size: 0.9rem;
+    padding: 6px 5px; color: var(--text-dim); font-size: 0.9rem;
     border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
     transition: 0.2s; cursor: pointer;
 }
@@ -187,15 +187,15 @@ body {
 @keyframes radarSpin { 100% { transform: rotate(360deg); } }
 @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); } 100% { box-shadow: 0 0 0 20px transparent; } }
 
-/* LOGIN SPECIFIC - BALANCED */
+/* LOGIN SPECIFIC */
 .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .login-card {
-    width: 100%; max-width: 440px; /* Tối ưu độ rộng */
+    width: 100%; max-width: 440px; 
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(25px); 
     border: 1px solid var(--border-tech);
     border-radius: 20px; 
-    padding: 60px 40px; /* Padding trên dưới rộng hơn để cân đối */
+    padding: 60px 40px; 
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     position: relative; overflow: hidden;
 }
