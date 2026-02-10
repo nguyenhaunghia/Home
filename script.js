@@ -1,36 +1,34 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
-// Admin Email constant giữ lại để tham chiếu nếu cần, nhưng logic hiển thị NHN giờ dựa vào trạng thái Login
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Check Login & Render UI (Không bắt buộc login nữa)
+    // 1. Check Login & Render UI
     const userData = checkAuthAndRenderUI();
 
     // 2. Start Canvas Animation
     initCanvas();
     animateCanvas();
 
-    // 3. Load Data based on User Status (Guest or Member)
+    // 3. Load Data based on User Status
     loadDataByPrivilege(userData);
 });
 
 // --- AUTH & UI LOGIC ---
 function checkAuthAndRenderUI() {
-    // Only run if NOT on login page
     if (!window.location.href.includes('login.html')) {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const userDataString = localStorage.getItem('userData');
+        // UPDATE: Đổi localStorage -> sessionStorage để tắt trình duyệt là out
+        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+        const userDataString = sessionStorage.getItem('userData');
         
-        // UPDATE: Nếu chưa login, không redirect nữa, chỉ return null (Chế độ Guest)
         if (isLoggedIn !== 'true' || !userDataString) {
-            renderUserProfile(null); // Render trạng thái Guest (trống)
+            renderUserProfile(null); 
             return null;
         }
 
         const userData = JSON.parse(userDataString);
-        renderUserProfile(userData); // Render thông tin User
+        renderUserProfile(userData); 
         return userData;
     }
     return null;
@@ -40,7 +38,6 @@ function renderUserProfile(user) {
     const container = document.getElementById('user-profile-container');
     if (container) {
         if (user) {
-            // ĐÃ ĐĂNG NHẬP: Hiển thị Profile
             container.innerHTML = `
                 <div class="user-profile">
                     <span class="user-name">${user.name}</span>
@@ -49,47 +46,38 @@ function renderUserProfile(user) {
                 </div>
             `;
         } else {
-            // CHƯA ĐĂNG NHẬP (GUEST): Ẩn profile hoặc để trống
             container.innerHTML = ''; 
         }
     }
 }
 
 function logout() {
-    localStorage.clear();
-    // Reload lại trang index để về chế độ Guest (chỉ hiện CSDL)
+    // UPDATE: Xóa sessionStorage
+    sessionStorage.clear();
     window.location.href = 'index.html';
 }
 
-// --- DATA LOADING LOGIC (LOGIC MỚI UPDATE) ---
+// --- DATA LOADING LOGIC ---
 async function loadDataByPrivilege(user) {
     let finalCards = [];
     
-    // UPDATE: Logic hiển thị theo yêu cầu mới
-    
-    // 1. Nếu đã đăng nhập (User tồn tại) -> Load sheet NHN trước
+    // 1. Load sheet NHN (Nếu user login)
     if (user) {
         console.log('User detected: Loading NHN data...');
         const nhnData = await fetchSheetData('NHN');
-        if (nhnData) {
-            // Có thể đánh dấu hoặc xử lý đặc biệt nếu cần, ở đây chỉ cần push vào trước
-            finalCards = [...finalCards, ...nhnData];
-        }
+        if (nhnData) finalCards = [...finalCards, ...nhnData];
     }
 
-    // 2. Load sheet CSDL (Luôn thực hiện cho cả Guest và User)
-    // Các card này sẽ nằm sau card NHN (nếu có)
+    // 2. Load sheet CSDL (Luôn load)
     console.log('Loading Standard Database...');
     const csdlData = await fetchSheetData('CSDL');
-    if (csdlData) {
-        finalCards = [...finalCards, ...csdlData];
-    }
+    if (csdlData) finalCards = [...finalCards, ...csdlData];
 
-    // 3. Render toàn bộ
+    // 3. Render
     renderDashboard(finalCards);
 }
 
-// --- GOOGLE SHEET FETCHING (GIỮ NGUYÊN) ---
+// --- GOOGLE SHEET FETCHING ---
 async function fetchSheetData(sheetName) {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
     try {
@@ -103,9 +91,14 @@ async function fetchSheetData(sheetName) {
     }
 }
 
+// --- PARSE DATA (LEVEL 0->5) ---
 function parseData(rows) {
     const cards = [];
-    let currentCard = null, currentL1 = null, currentL2 = null;
+    let currentCard = null; // Level 0
+    let currentL1 = null;   // Level 1
+    let currentL2 = null;   // Level 2
+    let currentL3 = null;   // Level 3
+    let currentL4 = null;   // Level 4
 
     rows.forEach(row => {
         const c = row.c;
@@ -123,19 +116,47 @@ function parseData(rows) {
         const item = { level, icon, color, label, link, note, children: [] };
 
         if (level === 0) { 
-            currentCard = item; cards.push(currentCard); currentL1 = null; 
-        } else if (level === 1) { 
-            if (currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = null; } 
-        } else if (level === 2) { 
-            if (currentL1) { currentL2 = item; currentL1.children.push(currentL2); } 
-        } else if (level === 3) { 
-            if (currentL2) { currentL2.children.push(item); }
+            currentCard = item; 
+            cards.push(currentCard); 
+            currentL1 = null; currentL2 = null; currentL3 = null; currentL4 = null;
+        } 
+        else if (level === 1) { 
+            if (currentCard) { 
+                currentL1 = item; 
+                currentCard.children.push(currentL1); 
+                currentL2 = null; currentL3 = null; currentL4 = null;
+            } 
+        } 
+        else if (level === 2) { 
+            if (currentL1) { 
+                currentL2 = item; 
+                currentL1.children.push(currentL2); 
+                currentL3 = null; currentL4 = null;
+            } 
+        } 
+        else if (level === 3) { 
+            if (currentL2) { 
+                currentL3 = item;
+                currentL2.children.push(currentL3);
+                currentL4 = null;
+            }
+        }
+        else if (level === 4) {
+            if (currentL3) {
+                currentL4 = item;
+                currentL3.children.push(currentL4);
+            }
+        }
+        else if (level === 5) {
+            if (currentL4) {
+                currentL4.children.push(item);
+            }
         }
     });
     return cards;
 }
 
-// --- RENDER (GIỮ NGUYÊN) ---
+// --- RENDER ---
 function renderDashboard(cards) {
     const grid = document.getElementById('dynamic-grid');
     grid.innerHTML = '';
@@ -184,6 +205,7 @@ function createMenuItem(item) {
     const hasChildren = item.children && item.children.length > 0;
     const isLevel1 = item.level === 1;
     let onClickAttr = '';
+    
     if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
     else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
 
@@ -205,12 +227,16 @@ function createMenuItem(item) {
             div.appendChild(subDiv);
         }
         return div;
-    } else {
+    } 
+    else {
+        // Icon và màu cho tất cả cấp con
+        const iconHtml = `<i class="${item.icon}" style="color:${item.color}; font-size:0.75rem; width:18px; text-align:center; margin-right:4px;"></i>`;
+
         const wrapper = document.createElement('div');
         wrapper.innerHTML = `
             <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
-                <span style="display:flex; align-items:center; gap:8px;">
-                    ${item.level === 3 ? '<i class="fas fa-angle-right" style="font-size:0.6rem"></i>' : ''}
+                <span style="display:flex; align-items:center; gap:6px;">
+                    ${iconHtml}
                     ${item.label}
                 </span>
                  ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
@@ -236,7 +262,7 @@ function toggleSub(el) {
     }
 }
 
-// --- CANVAS (GIỮ NGUYÊN) ---
+// --- CANVAS ---
 const canvas = document.getElementById('hero-canvas');
 const ctx = canvas.getContext('2d');
 let width, height, particles = [];
