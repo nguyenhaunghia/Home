@@ -47,6 +47,7 @@
 
             try {
                 // Fetch dữ liệu từ sheet User
+                // Lưu ý: SHEET_ID được lấy từ file script.js
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=User`;
                 const response = await fetch(url);
                 const text = await response.text();
@@ -79,14 +80,18 @@
                 }
 
                 if (authUser) {
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('userData', JSON.stringify({
+                    // --- UPDATE QUAN TRỌNG ---
+                    // Sử dụng sessionStorage thay cho localStorage
+                    // Dữ liệu sẽ mất khi đóng tab/trình duyệt -> Tự động logout
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('userData', JSON.stringify({
                         name: authUser.realName,
                         avatar: authUser.avatar,
                         perms: authUser.perms,
                         account: authUser.realAcc
                     }));
-                    msg.innerText = "> CÁP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; msg.style.color = "#4ade80";
+                    
+                    msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; msg.style.color = "#4ade80";
                     setTimeout(() => window.location.href = 'index.html', 1000);
                 } else {
                     msg.innerText = "> ERROR: INVALID CREDENTIALS"; msg.style.color = "#f87171";
