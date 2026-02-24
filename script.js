@@ -1,339 +1,229 @@
-// --- CONFIG ---
-const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
-const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-
-// --- INITIALIZE ---
-window.addEventListener('DOMContentLoaded', () => {
-    const userData = checkAuthAndRenderUI();
-    initCanvas();
-    animateCanvas();
-    loadDataByPrivilege(userData);
-});
-
-// --- AUTH & UI LOGIC ---
-function checkAuthAndRenderUI() {
-    if (!window.location.href.includes('login.html')) {
-        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-        const userDataString = sessionStorage.getItem('userData');
-        
-        if (isLoggedIn !== 'true' || !userDataString) {
-            renderUserProfile(null); 
-            return null;
-        }
-
-        const userData = JSON.parse(userDataString);
-        renderUserProfile(userData); 
-        return userData;
-    }
-    return null;
-}
-
-function renderUserProfile(user) {
-    const container = document.getElementById('user-profile-container');
-    if (container) {
-        if (user) {
-            container.innerHTML = `
-                <div class="user-profile">
-                    <span class="user-name">${user.name}</span>
-                    <img src="${user.avatar || 'https://via.placeholder.com/36'}" class="user-avatar" alt="User">
-                    <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
-                </div>
-            `;
-        } else {
-            container.innerHTML = ''; 
-        }
-    }
-}
-
-function logout() {
-    sessionStorage.clear();
-    window.location.href = 'index.html';
-}
-
-// --- DATA LOADING LOGIC ---
-async function loadDataByPrivilege(user) {
-    console.log('User status:', user);
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - TOÁN TIN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     
-    let loadNHN = false;
-    let loadHocSinh = false;
-
-    if (user) {
-        // Kiểm tra Admin
-        if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-            loadNHN = true;
-            loadHocSinh = true; 
-        } 
+    <style>
+        .input-group-custom { position: relative; }
+        .autocomplete-items {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 99;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid var(--primary-neon); border-radius: 8px;
+            max-height: 250px; overflow-y: auto; display: none;
+            margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .autocomplete-items div {
+            padding: 12px 15px; cursor: pointer; color: var(--text-dim);
+            font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.1);
+            display: flex; align-items: center; transition: 0.2s; gap: 8px;
+        }
+        .autocomplete-items div:hover {
+            background: rgba(34, 211, 238, 0.15); border-left: 3px solid var(--primary-neon);
+        }
+        .autocomplete-items::-webkit-scrollbar { width: 6px; }
+        .autocomplete-items::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 5px; }
         
-        // Kiểm tra Object là Học sinh
-        if (user.object) {
-            const objStr = String(user.object).toLowerCase();
-            if (objStr.includes('học sinh') || objStr.includes('hoc sinh')) {
-                loadHocSinh = true;
-            }
+        .password-toggle {
+            position: absolute; right: 15px; top: 42px; cursor: pointer; 
+            color: var(--text-dim); transition: 0.3s;
         }
-    }
-
-    // Tải dữ liệu các sheet (Sử dụng đúng tên Sheet)
-    const [nhnData, csdlData, hocSinhData] = await Promise.all([
-        loadNHN ? fetchSheetData('NHN') : Promise.resolve([]),
-        fetchSheetData('CSDL'), 
-        loadHocSinh ? fetchSheetData('Hoc_Sinh') : Promise.resolve([])
-    ]);
-
-    // Ghép dữ liệu theo thứ tự NHN -> CSDL -> Hoc_Sinh
-    let finalCards = [];
-    if (nhnData && nhnData.length > 0) finalCards = [...finalCards, ...nhnData];
-    if (csdlData && csdlData.length > 0) finalCards = [...finalCards, ...csdlData];
-    if (hocSinhData && hocSinhData.length > 0) finalCards = [...finalCards, ...hocSinhData];
-
-    renderDashboard(finalCards);
-}
-
-// --- GOOGLE SHEET FETCHING ---
-async function fetchSheetData(sheetName) {
-    // Thêm &headers=1 để API tự động tách dòng 1 làm tên cột
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}`;
-    try {
-        const response = await fetch(url);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        return parseData(json);
-    } catch (error) {
-        console.error(`Error loading sheet ${sheetName}:`, error);
-        return [];
-    }
-}
-
-// --- PARSE DATA (HOÀN TOÀN TÌM THEO TÊN CỘT) ---
-function parseData(json) {
-    let colMap = {};
-    let startRow = 0;
-    const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
-    
-    // Quét toàn bộ để tạo bản đồ cột
-    const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
-    
-    if (hasLabels) {
-        json.table.cols.forEach((col, idx) => {
-            if (col && col.label) colMap[cleanKey(col.label)] = idx;
-        });
-    } else if (json.table.rows && json.table.rows.length > 0) {
-        json.table.rows[0].c.forEach((cell, idx) => {
-            if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
-        });
-        startRow = 1;
-    }
-
-    const getVal = (row, colName, defaultVal = '') => {
-        const idx = colMap[cleanKey(colName)];
-        if (idx !== undefined && row.c[idx]) {
-            const cell = row.c[idx];
-            return cell.v !== null ? cell.v : (cell.f || defaultVal);
-        }
-        return defaultVal;
-    };
-
-    const cards = [];
-    let currentCard = null;
-    let currentL1 = null;
-    let currentL2 = null;
-    let currentL3 = null;
-    let currentL4 = null;
-
-    for (let i = startRow; i < json.table.rows.length; i++) {
-        const row = json.table.rows[i];
-        if (!row || !row.c) continue;
-
-        const levelRaw = getVal(row, 'Level', null);
-        if (levelRaw === null && !getVal(row, 'Label')) continue;
-
-        const level = levelRaw !== null ? Number(levelRaw) : 0;
-        const icon = getVal(row, 'Icon', 'fas fa-cube');
-        let color = getVal(row, 'Color', '#22d3ee');
-        if (color === '#000000') color = '#e2e8f0';
-        
-        const label = getVal(row, 'Label', 'Undefined');
-        const link = getVal(row, 'Link', '#');
-        const note = getVal(row, 'Note', '');
-
-        const item = { level, icon, color, label, link, note, children: [] };
-
-        if (level === 0) { 
-            currentCard = item; 
-            cards.push(currentCard); 
-            currentL1 = null; currentL2 = null; currentL3 = null; currentL4 = null;
-        } 
-        else if (level === 1) { 
-            if (currentCard) { 
-                currentL1 = item; 
-                currentCard.children.push(currentL1); 
-                currentL2 = null; currentL3 = null; currentL4 = null;
-            } 
-        } 
-        else if (level === 2) { 
-            if (currentL1) { 
-                currentL2 = item; 
-                currentL1.children.push(currentL2); 
-                currentL3 = null; currentL4 = null;
-            } 
-        } 
-        else if (level === 3) { 
-            if (currentL2) { 
-                currentL3 = item;
-                currentL2.children.push(currentL3);
-                currentL4 = null;
-            }
-        }
-        else if (level === 4) {
-            if (currentL3) {
-                currentL4 = item;
-                currentL3.children.push(currentL4);
-            }
-        }
-        else if (level === 5) {
-            if (currentL4) {
-                currentL4.children.push(item);
-            }
-        }
-    }
-    return cards;
-}
-
-// --- RENDER ---
-function renderDashboard(cards) {
-    const grid = document.getElementById('dynamic-grid');
-    grid.innerHTML = '';
-
-    if (cards.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8; font-family:\'Roboto Mono\'">NO DATA AVAILABLE</div>';
-        return;
-    }
-
-    cards.forEach((card, index) => {
-        const col = document.createElement('div');
-        col.className = 'edu-col';
-        col.style.animationDelay = `${index * 0.05}s`;
-
-        const cardColor = card.color;
-        const cardHtml = document.createElement('div');
-        cardHtml.className = 'edu-card';
-        cardHtml.style.borderTop = `3px solid ${cardColor}`;
-
-        const headerHtml = `
-            <div class="card-header-block">
-                <div class="edu-icon-box" style="color:${cardColor}; border-color:${cardColor}50;">
-                    <i class="${card.icon}"></i>
-                </div>
-                <h3 class="edu-title">${card.label}</h3>
+        .password-toggle:hover { color: var(--primary-neon); }
+    </style>
+</head>
+<body>
+    <canvas id="hero-canvas"></canvas>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2 style="font-family:'Rajdhani'; color:white; font-size:2.2rem; margin-top:10px;">ĐĂNG NHẬP HỆ THỐNG</h2>
             </div>
-        `;
-
-        const menuContainer = document.createElement('div');
-        menuContainer.className = 'edu-menu';
-        
-        if (card.children && card.children.length > 0) {
-            card.children.forEach(child => menuContainer.appendChild(createMenuItem(child)));
-        } else {
-            menuContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.85rem;">Coming Soon</div>`;
-        }
-
-        cardHtml.innerHTML = headerHtml;
-        cardHtml.appendChild(menuContainer);
-        col.appendChild(cardHtml);
-        grid.appendChild(col);
-    });
-}
-
-function createMenuItem(item) {
-    const hasChildren = item.children && item.children.length > 0;
-    const isLevel1 = item.level === 1;
-    let onClickAttr = '';
-    
-    if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
-    else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
-
-    if (isLevel1) {
-        const div = document.createElement('div');
-        div.innerHTML = `
-            <div class="edu-menu-item" ${onClickAttr} title="${item.note || ''}">
-                <div class="menu-left">
-                    <i class="${item.icon}" style="color: ${item.color}; width:20px; text-align:center; font-size:0.9rem;"></i>
-                    <span>${item.label}</span>
+            <form id="login-form">
+                <div class="input-group-custom">
+                    <label>TÊN ĐĂNG NHẬP</label>
+                    <i class="fas fa-user-circle"></i>
+                    <input type="text" id="username" placeholder="Nhập tên hoặc chọn từ danh sách..." autocomplete="off" required>
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
                 </div>
-                ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
-            </div>
-        `;
-        if (hasChildren) {
-            const subDiv = document.createElement('div');
-            subDiv.className = 'submenu';
-            item.children.forEach(c => subDiv.appendChild(createMenuItem(c)));
-            div.appendChild(subDiv);
-        }
-        return div;
-    } 
-    else {
-        const iconHtml = `<i class="${item.icon}" style="color:${item.color}; font-size:0.75rem; width:18px; text-align:center; margin-right:4px;"></i>`;
+                <div class="input-group-custom">
+                    <label>PASSWORD</label>
+                    <i class="fas fa-key" style="left:15px"></i>
+                    <input type="password" id="password" placeholder="••••••••" required style="padding-right: 40px;">
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+                <button type="submit" class="btn-login" style="width:100%; padding:14px; background:var(--primary-neon); border:none; border-radius:10px; color:white; font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; cursor:pointer;" id="btn-submit">ĐĂNG NHẬP</button>
+                <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
+            </form>
+        </div>
+    </div>
 
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = `
-            <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
-                <span style="display:flex; align-items:center; gap:6px;">
-                    ${iconHtml}
-                    ${item.label}
-                </span>
-                 ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
-            </div>
-        `;
-        if (hasChildren) {
-            const subSubDiv = document.createElement('div');
-            subSubDiv.className = 'submenu';
-            item.children.forEach(c => subSubDiv.appendChild(createMenuItem(c)));
-            wrapper.appendChild(subSubDiv);
-        }
-        return wrapper;
-    }
-}
+    <script src="script.js"></script>
+    <script>
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
 
-function toggleSub(el) {
-    let sub = el.nextElementSibling;
-    if (!sub) sub = el.parentElement.querySelector('.submenu');
-    const icon = el.querySelector('.rotate-icon');
-    if (sub && sub.classList.contains('submenu')) {
-        sub.classList.toggle('active');
-        if (icon) icon.classList.toggle('active');
-    }
-}
-
-// --- CANVAS ---
-const canvas = document.getElementById('hero-canvas');
-const ctx = canvas.getContext('2d');
-let width, height, particles = [];
-
-function initCanvas() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    particles = [];
-    const count = Math.floor(width / 9);
-    for (let i = 0; i < count; i++) {
-        particles.push({
-            x: Math.random() * width, y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
-            size: Math.random() * 1.8, alpha: Math.random()
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
         });
-    }
-}
-function animateCanvas() {
-    ctx.clearRect(0, 0, width, height);
-    for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(224, 242, 254, ${p.alpha * 0.6})`;
-        ctx.fill();
-    }
-    requestAnimationFrame(animateCanvas);
-}
-window.addEventListener('resize', initCanvas);
+
+        const input = document.getElementById('username');
+        const listContainer = document.getElementById('autocomplete-list');
+        const msg = document.getElementById('login-msg');
+        let usersData = []; 
+
+        const fetchUsersPromise = fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=User`)
+            .then(res => res.text())
+            .then(text => {
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                let colMap = {};
+                let startRow = 0;
+                const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
+                
+                const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
+                if (hasLabels) {
+                    json.table.cols.forEach((col, idx) => {
+                        if (col && col.label) colMap[cleanKey(col.label)] = idx;
+                    });
+                } else if (json.table.rows && json.table.rows.length > 0) {
+                    json.table.rows[0].c.forEach((cell, idx) => {
+                        if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
+                    });
+                    startRow = 1;
+                }
+
+                const getVal = (row, colName) => {
+                    const idx = colMap[cleanKey(colName)];
+                    if (idx !== undefined && row.c[idx]) {
+                        const cell = row.c[idx];
+                        return cell.f ? cell.f : (cell.v !== null ? cell.v : '');
+                    }
+                    return '';
+                };
+
+                let loadedUsers = [];
+                for (let i = startRow; i < json.table.rows.length; i++) {
+                    const row = json.table.rows[i];
+                    if (!row || !row.c) continue;
+                    
+                    loadedUsers.push({
+                        uID: String(getVal(row, 'UserID')).toLowerCase(),
+                        name: String(getVal(row, 'Full Name')).toLowerCase(),
+                        rem: String(getVal(row, 'ReminiscentName')).toLowerCase(),
+                        acc: String(getVal(row, 'Email')).toLowerCase(),
+                        pass: String(getVal(row, 'Password')),
+                        realID: getVal(row, 'UserID'),
+                        realName: getVal(row, 'Full Name'),
+                        realRem: getVal(row, 'ReminiscentName'),
+                        avatar: getVal(row, 'Avatar'),
+                        perms: getVal(row, 'Permissions'),
+                        realAcc: getVal(row, 'Email'),
+                        object: getVal(row, 'Object'),
+                        dob: String(getVal(row, 'BirthDay')) 
+                    });
+                }
+                usersData = loadedUsers; 
+                return loadedUsers;
+            }).catch(err => { return []; });
+
+        function renderSuggestions(val) {
+            val = val.trim().toLowerCase();
+            listContainer.innerHTML = '';
+            
+            let matches = usersData;
+            if (val) {
+                matches = usersData.filter(u => 
+                    u.name.includes(val) || 
+                    u.uID.includes(val) || 
+                    u.rem.includes(val) || 
+                    u.acc.includes(val)
+                );
+            }
+
+            if (matches.length > 0) {
+                listContainer.style.display = 'block';
+                matches.slice(0, 30).forEach(match => {
+                    const item = document.createElement('div');
+                    const idHtml = match.realID ? `<span style="color:var(--primary-neon); font-family:'Roboto Mono';">ID:${match.realID}</span>` : '';
+                    const nameHtml = `<span style="color:#fff; font-weight:600; font-size:1.05rem;">${match.realName}</span>`;
+                    const dobHtml = match.dob ? `<span style="color:#94a3b8; font-size:0.85rem; margin-left:auto;"><i class="fas fa-calendar-alt"></i> ${match.dob}</span>` : '';
+
+                    item.innerHTML = `${idHtml} <span style="color:#475569">|</span> ${nameHtml} ${dobHtml}`;
+                    
+                    item.addEventListener('click', function() {
+                        input.value = match.realName; 
+                        listContainer.style.display = 'none';
+                    });
+                    listContainer.appendChild(item);
+                });
+            } else {
+                listContainer.style.display = 'none';
+            }
+        }
+
+        input.addEventListener('focus', function() { renderSuggestions(this.value); });
+        input.addEventListener('input', function() { renderSuggestions(this.value); });
+        document.addEventListener('click', function(e) {
+            if (e.target !== input) listContainer.style.display = 'none';
+        });
+
+        // --- SUBMIT FORM ---
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userInp = input.value.trim().toLowerCase();
+            const passInp = document.getElementById('password').value;
+            const btn = document.getElementById('btn-submit');
+
+            msg.innerText = "> XÁC MINH HỆ THỐNG ..."; 
+            msg.style.color = "var(--primary-neon)";
+            btn.disabled = true;
+
+            try {
+                const users = await fetchUsersPromise;
+                
+                let authUser = users.find(u => 
+                    (userInp === u.uID || userInp === u.name || userInp === u.rem || userInp === u.acc) 
+                    && passInp === u.pass && passInp !== ''
+                );
+
+                if (authUser) {
+                    const nickName = authUser.realRem || authUser.realName; // Ưu tiên lưu NickName
+
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('userData', JSON.stringify({
+                        uid: authUser.realID, // Lấy ID để ghi log
+                        nickname: nickName,   // Lấy Nickname để ghi log
+                        name: authUser.realName || 'User',
+                        avatar: authUser.avatar,
+                        perms: authUser.perms,
+                        account: authUser.realAcc,
+                        object: authUser.object
+                    }));
+
+                    // GHI LOG ĐĂNG NHẬP
+                    if (typeof logActivity === 'function') {
+                        logActivity(authUser.realID, nickName, 'Đăng nhập');
+                    }
+                    
+                    msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; 
+                    msg.style.color = "#4ade80";
+                    setTimeout(() => window.location.href = 'index.html', 800);
+                } else {
+                    msg.innerText = "> ERROR: TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG!"; 
+                    msg.style.color = "#f87171";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                msg.innerText = "> SYSTEM ERROR"; 
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
