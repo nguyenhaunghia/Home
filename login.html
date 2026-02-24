@@ -7,6 +7,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .input-group-custom { position: relative; }
+        .autocomplete-items {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 99;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid var(--primary-neon); border-radius: 8px;
+            max-height: 250px; overflow-y: auto; display: none;
+            margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .autocomplete-items div {
+            padding: 12px 15px; cursor: pointer; color: var(--text-dim);
+            font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.1);
+            display: flex; align-items: center; transition: 0.2s; gap: 8px;
+        }
+        .autocomplete-items div:hover {
+            background: rgba(34, 211, 238, 0.15); border-left: 3px solid var(--primary-neon);
+        }
+        .autocomplete-items::-webkit-scrollbar { width: 6px; }
+        .autocomplete-items::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 5px; }
+    </style>
 </head>
 <body>
     <canvas id="hero-canvas"></canvas>
@@ -19,7 +40,8 @@
                 <div class="input-group-custom">
                     <label>TÊN ĐĂNG NHẬP</label>
                     <i class="fas fa-user-circle"></i>
-                    <input type="text" id="username" placeholder="UserID, Name or Email" required>
+                    <input type="text" id="username" placeholder="Nhập tên hoặc chọn từ danh sách..." autocomplete="off" required>
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
                 </div>
                 <div class="input-group-custom">
                     <label>PASSWORD</label>
@@ -34,31 +56,22 @@
 
     <script src="script.js"></script>
     <script>
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const userInp = document.getElementById('username').value.trim().toLowerCase();
-            const passInp = document.getElementById('password').value;
-            const msg = document.getElementById('login-msg');
-            const btn = document.getElementById('btn-submit');
+        const input = document.getElementById('username');
+        const listContainer = document.getElementById('autocomplete-list');
+        const msg = document.getElementById('login-msg');
+        let usersData = []; 
 
-            msg.innerText = "> XÁC MINH ..."; msg.style.color = "var(--primary-neon)";
-            btn.disabled = true;
-
-            try {
-                // Thêm &headers=1 để ép Google Sheet xuất chuẩn tên cột
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=User`;
-                const response = await fetch(url);
-                const text = await response.text();
+        // 1. TẢI NGẦM DỮ LIỆU
+        const fetchUsersPromise = fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=User`)
+            .then(res => res.text())
+            .then(text => {
                 const json = JSON.parse(text.substring(47).slice(0, -2));
                 
-                // --- XỬ LÝ TÊN CỘT TỰ ĐỘNG (HOÀN TOÀN KHÔNG DÙNG INDEX) ---
                 let colMap = {};
                 let startRow = 0;
                 const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
-
-                // Quét qua mọi cột để gom tên cột lại
-                const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
                 
+                const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
                 if (hasLabels) {
                     json.table.cols.forEach((col, idx) => {
                         if (col && col.label) colMap[cleanKey(col.label)] = idx;
@@ -67,44 +80,109 @@
                     json.table.rows[0].c.forEach((cell, idx) => {
                         if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
                     });
-                    startRow = 1; 
+                    startRow = 1;
                 }
 
-                // Hàm trích xuất dữ liệu bằng đúng tên cột
                 const getVal = (row, colName) => {
                     const idx = colMap[cleanKey(colName)];
                     if (idx !== undefined && row.c[idx]) {
                         const cell = row.c[idx];
-                        // Lấy giá trị v (value) hoặc f (formatted text) nếu có
-                        return cell.v !== null ? cell.v : (cell.f || '');
+                        // Lấy giá trị định dạng hiển thị trên sheet (cell.f) trước, nếu không có mới lấy giá trị gốc (cell.v)
+                        return cell.f ? cell.f : (cell.v !== null ? cell.v : '');
                     }
                     return '';
                 };
 
-                let authUser = null;
+                let loadedUsers = [];
                 for (let i = startRow; i < json.table.rows.length; i++) {
                     const row = json.table.rows[i];
                     if (!row || !row.c) continue;
                     
-                    const data = {
+                    loadedUsers.push({
                         uID: String(getVal(row, 'UserID')).toLowerCase(),
                         name: String(getVal(row, 'Full Name')).toLowerCase(),
                         rem: String(getVal(row, 'ReminiscentName')).toLowerCase(),
                         acc: String(getVal(row, 'Email')).toLowerCase(),
                         pass: String(getVal(row, 'Password')),
-                        
                         realName: getVal(row, 'Full Name'),
                         avatar: getVal(row, 'Avatar'),
                         perms: getVal(row, 'Permissions'),
                         realAcc: getVal(row, 'Email'),
-                        object: getVal(row, 'Object') // Lấy chính xác cột Object
-                    };
-
-                    if ((userInp === data.uID || userInp === data.name || userInp === data.rem || userInp === data.acc) && passInp === data.pass && passInp !== '') {
-                        authUser = data; 
-                        break;
-                    }
+                        object: getVal(row, 'Object'),
+                        dob: String(getVal(row, 'BirthDay')) // Lấy chuẩn tên cột BirthDay
+                    });
                 }
+                usersData = loadedUsers; 
+                return loadedUsers;
+            })
+            .catch(err => {
+                console.error("Lỗi tải dữ liệu User:", err);
+                return [];
+            });
+
+        // 2. GỢI Ý NGƯỜI DÙNG (AUTOCOMPLETE)
+        function renderSuggestions(val) {
+            val = val.trim().toLowerCase();
+            listContainer.innerHTML = '';
+            
+            let matches = usersData;
+            if (val) {
+                matches = usersData.filter(u => 
+                    u.name.includes(val) || 
+                    u.uID.includes(val) || 
+                    u.rem.includes(val) || 
+                    u.acc.includes(val)
+                );
+            }
+
+            if (matches.length > 0) {
+                listContainer.style.display = 'block';
+                matches.slice(0, 30).forEach(match => {
+                    const item = document.createElement('div');
+                    
+                    // Thiết kế: [ID] - Tên đầy đủ - Ngày sinh (canh lề phải)
+                    const idHtml = match.uID ? `<span style="color:var(--primary-neon); font-family:'Roboto Mono';">ID:${match.uID}</span>` : '';
+                    const nameHtml = `<span style="color:#fff; font-weight:600; font-size:1.05rem;">${match.realName}</span>`;
+                    const dobHtml = match.dob ? `<span style="color:#94a3b8; font-size:0.85rem; margin-left:auto;"><i class="fas fa-calendar-alt"></i> ${match.dob}</span>` : '';
+
+                    item.innerHTML = `${idHtml} <span style="color:#475569">|</span> ${nameHtml} ${dobHtml}`;
+                    
+                    // Khi click chọn -> Điền Full Name vào ô input
+                    item.addEventListener('click', function() {
+                        input.value = match.realName; 
+                        listContainer.style.display = 'none';
+                    });
+                    listContainer.appendChild(item);
+                });
+            } else {
+                listContainer.style.display = 'none';
+            }
+        }
+
+        input.addEventListener('focus', function() { renderSuggestions(this.value); });
+        input.addEventListener('input', function() { renderSuggestions(this.value); });
+        document.addEventListener('click', function(e) {
+            if (e.target !== input) listContainer.style.display = 'none';
+        });
+
+        // 3. XÁC MINH ĐĂNG NHẬP
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userInp = input.value.trim().toLowerCase();
+            const passInp = document.getElementById('password').value;
+            const btn = document.getElementById('btn-submit');
+
+            msg.innerText = "> XÁC MINH HỆ THỐNG ..."; 
+            msg.style.color = "var(--primary-neon)";
+            btn.disabled = true;
+
+            try {
+                const users = await fetchUsersPromise;
+                
+                let authUser = users.find(u => 
+                    (userInp === u.uID || userInp === u.name || userInp === u.rem || userInp === u.acc) 
+                    && passInp === u.pass && passInp !== ''
+                );
 
                 if (authUser) {
                     sessionStorage.setItem('isLoggedIn', 'true');
@@ -113,18 +191,21 @@
                         avatar: authUser.avatar,
                         perms: authUser.perms,
                         account: authUser.realAcc,
-                        object: authUser.object // Lưu Object Học sinh vào phiên
+                        object: authUser.object
                     }));
                     
-                    msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; msg.style.color = "#4ade80";
-                    setTimeout(() => window.location.href = 'index.html', 1000);
+                    msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; 
+                    msg.style.color = "#4ade80";
+                    setTimeout(() => window.location.href = 'index.html', 800);
                 } else {
-                    msg.innerText = "> ERROR: INVALID CREDENTIALS"; msg.style.color = "#f87171";
+                    msg.innerText = "> ERROR: TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG!"; 
+                    msg.style.color = "#f87171";
                     btn.disabled = false;
                 }
             } catch (err) {
                 console.error(err);
-                msg.innerText = "> SYSTEM ERROR"; btn.disabled = false;
+                msg.innerText = "> SYSTEM ERROR"; 
+                btn.disabled = false;
             }
         });
     </script>
