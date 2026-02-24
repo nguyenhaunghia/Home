@@ -19,7 +19,7 @@
                 <div class="input-group-custom">
                     <label>TÊN ĐĂNG NHẬP</label>
                     <i class="fas fa-user-circle"></i>
-                    <input type="text" id="username" placeholder="UserID, Name or Account" required>
+                    <input type="text" id="username" placeholder="UserID, Name or Email" required>
                 </div>
                 <div class="input-group-custom">
                     <label>PASSWORD</label>
@@ -34,7 +34,6 @@
 
     <script src="script.js"></script>
     <script>
-        // Override lại hành vi submit chỉ cho trang Login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const userInp = document.getElementById('username').value.trim().toLowerCase();
@@ -46,49 +45,75 @@
             btn.disabled = true;
 
             try {
-                // Fetch dữ liệu từ sheet User
-                // Lưu ý: SHEET_ID được lấy từ file script.js
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=User`;
+                // Thêm &headers=1 để ép Google Sheet xuất chuẩn tên cột
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=User`;
                 const response = await fetch(url);
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47).slice(0, -2));
-                const rows = json.table.rows;
+                
+                // --- XỬ LÝ TÊN CỘT TỰ ĐỘNG (HOÀN TOÀN KHÔNG DÙNG INDEX) ---
+                let colMap = {};
+                let startRow = 0;
+                const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
+
+                // Quét qua mọi cột để gom tên cột lại
+                const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
+                
+                if (hasLabels) {
+                    json.table.cols.forEach((col, idx) => {
+                        if (col && col.label) colMap[cleanKey(col.label)] = idx;
+                    });
+                } else if (json.table.rows && json.table.rows.length > 0) {
+                    json.table.rows[0].c.forEach((cell, idx) => {
+                        if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
+                    });
+                    startRow = 1; 
+                }
+
+                // Hàm trích xuất dữ liệu bằng đúng tên cột
+                const getVal = (row, colName) => {
+                    const idx = colMap[cleanKey(colName)];
+                    if (idx !== undefined && row.c[idx]) {
+                        const cell = row.c[idx];
+                        // Lấy giá trị v (value) hoặc f (formatted text) nếu có
+                        return cell.v !== null ? cell.v : (cell.f || '');
+                    }
+                    return '';
+                };
 
                 let authUser = null;
-                for (let row of rows) {
-                    const c = row.c;
-                    if (!c) continue;
+                for (let i = startRow; i < json.table.rows.length; i++) {
+                    const row = json.table.rows[i];
+                    if (!row || !row.c) continue;
                     
-                    // Cấu trúc cột theo yêu cầu
-                    // 0:UserID, 1:Name, 2:ReminiscentName, 5:Avatar, 6:Account, 7:Permissions, 9:Password
                     const data = {
-                        uID: c[0] ? String(c[0].v).toLowerCase() : '',
-                        name: c[1] ? String(c[1].v).toLowerCase() : '',
-                        rem: c[2] ? String(c[2].v).toLowerCase() : '',
-                        acc: c[6] ? String(c[6].v).toLowerCase() : '',
-                        pass: c[9] ? String(c[9].v) : '',
-                        realName: c[1] ? c[1].v : 'User',
-                        avatar: c[5] ? c[5].v : '',
-                        perms: c[7] ? c[7].v : 'Member',
-                        realAcc: c[6] ? c[6].v : ''
+                        uID: String(getVal(row, 'UserID')).toLowerCase(),
+                        name: String(getVal(row, 'Full Name')).toLowerCase(),
+                        rem: String(getVal(row, 'ReminiscentName')).toLowerCase(),
+                        acc: String(getVal(row, 'Email')).toLowerCase(),
+                        pass: String(getVal(row, 'Password')),
+                        
+                        realName: getVal(row, 'Full Name'),
+                        avatar: getVal(row, 'Avatar'),
+                        perms: getVal(row, 'Permissions'),
+                        realAcc: getVal(row, 'Email'),
+                        object: getVal(row, 'Object') // Lấy chính xác cột Object
                     };
 
-                    // Kiểm tra đa định danh
-                    if ((userInp === data.uID || userInp === data.name || userInp === data.rem || userInp === data.acc) && passInp === data.pass) {
-                        authUser = data; break;
+                    if ((userInp === data.uID || userInp === data.name || userInp === data.rem || userInp === data.acc) && passInp === data.pass && passInp !== '') {
+                        authUser = data; 
+                        break;
                     }
                 }
 
                 if (authUser) {
-                    // --- UPDATE QUAN TRỌNG ---
-                    // Sử dụng sessionStorage thay cho localStorage
-                    // Dữ liệu sẽ mất khi đóng tab/trình duyệt -> Tự động logout
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('userData', JSON.stringify({
-                        name: authUser.realName,
+                        name: authUser.realName || 'User',
                         avatar: authUser.avatar,
                         perms: authUser.perms,
-                        account: authUser.realAcc
+                        account: authUser.realAcc,
+                        object: authUser.object // Lưu Object Học sinh vào phiên
                     }));
                     
                     msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; msg.style.color = "#4ade80";
