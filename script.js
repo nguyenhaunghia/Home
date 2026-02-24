@@ -4,21 +4,15 @@ const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com';
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Check Login & Render UI
     const userData = checkAuthAndRenderUI();
-
-    // 2. Start Canvas Animation
     initCanvas();
     animateCanvas();
-
-    // 3. Load Data based on User Status
     loadDataByPrivilege(userData);
 });
 
 // --- AUTH & UI LOGIC ---
 function checkAuthAndRenderUI() {
     if (!window.location.href.includes('login.html')) {
-        // UPDATE: Đổi localStorage -> sessionStorage để tắt trình duyệt là out
         const isLoggedIn = sessionStorage.getItem('isLoggedIn');
         const userDataString = sessionStorage.getItem('userData');
         
@@ -52,66 +46,115 @@ function renderUserProfile(user) {
 }
 
 function logout() {
-    // UPDATE: Xóa sessionStorage
     sessionStorage.clear();
     window.location.href = 'index.html';
 }
 
 // --- DATA LOADING LOGIC ---
 async function loadDataByPrivilege(user) {
-    let finalCards = [];
+    console.log('User status:', user);
     
-    // 1. Load sheet NHN (Nếu user login)
+    let loadNHN = false;
+    let loadHocSinh = false;
+
     if (user) {
-        console.log('User detected: Loading NHN data...');
-        const nhnData = await fetchSheetData('NHN');
-        if (nhnData) finalCards = [...finalCards, ...nhnData];
+        // Kiểm tra Admin
+        if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+            loadNHN = true;
+            loadHocSinh = true; 
+        } 
+        
+        // Kiểm tra Object là Học sinh
+        if (user.object) {
+            const objStr = String(user.object).toLowerCase();
+            if (objStr.includes('học sinh') || objStr.includes('hoc sinh')) {
+                loadHocSinh = true;
+            }
+        }
     }
 
-    // 2. Load sheet CSDL (Luôn load)
-    console.log('Loading Standard Database...');
-    const csdlData = await fetchSheetData('CSDL');
-    if (csdlData) finalCards = [...finalCards, ...csdlData];
+    // Tải dữ liệu các sheet (Sử dụng đúng tên Sheet)
+    const [nhnData, csdlData, hocSinhData] = await Promise.all([
+        loadNHN ? fetchSheetData('NHN') : Promise.resolve([]),
+        fetchSheetData('CSDL'), 
+        loadHocSinh ? fetchSheetData('Hoc_Sinh') : Promise.resolve([])
+    ]);
 
-    // 3. Render
+    // Ghép dữ liệu theo thứ tự NHN -> CSDL -> Hoc_Sinh
+    let finalCards = [];
+    if (nhnData && nhnData.length > 0) finalCards = [...finalCards, ...nhnData];
+    if (csdlData && csdlData.length > 0) finalCards = [...finalCards, ...csdlData];
+    if (hocSinhData && hocSinhData.length > 0) finalCards = [...finalCards, ...hocSinhData];
+
     renderDashboard(finalCards);
 }
 
 // --- GOOGLE SHEET FETCHING ---
 async function fetchSheetData(sheetName) {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+    // Thêm &headers=1 để API tự động tách dòng 1 làm tên cột
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}`;
     try {
         const response = await fetch(url);
         const text = await response.text();
         const json = JSON.parse(text.substring(47).slice(0, -2));
-        return parseData(json.table.rows);
+        return parseData(json);
     } catch (error) {
         console.error(`Error loading sheet ${sheetName}:`, error);
         return [];
     }
 }
 
-// --- PARSE DATA (LEVEL 0->5) ---
-function parseData(rows) {
-    const cards = [];
-    let currentCard = null; // Level 0
-    let currentL1 = null;   // Level 1
-    let currentL2 = null;   // Level 2
-    let currentL3 = null;   // Level 3
-    let currentL4 = null;   // Level 4
+// --- PARSE DATA (HOÀN TOÀN TÌM THEO TÊN CỘT) ---
+function parseData(json) {
+    let colMap = {};
+    let startRow = 0;
+    const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
+    
+    // Quét toàn bộ để tạo bản đồ cột
+    const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
+    
+    if (hasLabels) {
+        json.table.cols.forEach((col, idx) => {
+            if (col && col.label) colMap[cleanKey(col.label)] = idx;
+        });
+    } else if (json.table.rows && json.table.rows.length > 0) {
+        json.table.rows[0].c.forEach((cell, idx) => {
+            if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
+        });
+        startRow = 1;
+    }
 
-    rows.forEach(row => {
-        const c = row.c;
-        if (!c || !c[0]) return;
-        
-        const level = c[0] ? c[0].v : 0;
-        const icon = c[1] ? c[1].v : 'fas fa-cube';
-        let color = c[2] ? c[2].v : '#22d3ee';
+    const getVal = (row, colName, defaultVal = '') => {
+        const idx = colMap[cleanKey(colName)];
+        if (idx !== undefined && row.c[idx]) {
+            const cell = row.c[idx];
+            return cell.v !== null ? cell.v : (cell.f || defaultVal);
+        }
+        return defaultVal;
+    };
+
+    const cards = [];
+    let currentCard = null;
+    let currentL1 = null;
+    let currentL2 = null;
+    let currentL3 = null;
+    let currentL4 = null;
+
+    for (let i = startRow; i < json.table.rows.length; i++) {
+        const row = json.table.rows[i];
+        if (!row || !row.c) continue;
+
+        const levelRaw = getVal(row, 'Level', null);
+        if (levelRaw === null && !getVal(row, 'Label')) continue;
+
+        const level = levelRaw !== null ? Number(levelRaw) : 0;
+        const icon = getVal(row, 'Icon', 'fas fa-cube');
+        let color = getVal(row, 'Color', '#22d3ee');
         if (color === '#000000') color = '#e2e8f0';
         
-        const label = c[3] ? c[3].v : 'Undefined';
-        const link = c[4] ? c[4].v : '#';
-        const note = c[5] ? c[5].v : '';
+        const label = getVal(row, 'Label', 'Undefined');
+        const link = getVal(row, 'Link', '#');
+        const note = getVal(row, 'Note', '');
 
         const item = { level, icon, color, label, link, note, children: [] };
 
@@ -152,7 +195,7 @@ function parseData(rows) {
                 currentL4.children.push(item);
             }
         }
-    });
+    }
     return cards;
 }
 
@@ -229,7 +272,6 @@ function createMenuItem(item) {
         return div;
     } 
     else {
-        // Icon và màu cho tất cả cấp con
         const iconHtml = `<i class="${item.icon}" style="color:${item.color}; font-size:0.75rem; width:18px; text-align:center; margin-right:4px;"></i>`;
 
         const wrapper = document.createElement('div');
