@@ -1,7 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlx5H04eMFd5mhJ3KVNEe4R0oCY6zpNn-5wlHpq8YzwsxMRvElsVCM3xkTzr13K8NX7Q/exec'; // Đã cập nhật URL Ghi Log
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSeiJbdCn58ZDfZrGfB48PesLnpD03w5ouRIMIH2Y1A8HrjqWYWdQwkwN6-OKgEncT7A/exec'; // Đã cập nhật URL Ghi Log
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -365,3 +365,4 @@ function animateCanvas() {
     requestAnimationFrame(animateCanvas);
 }
 window.addEventListener('resize', initCanvas);
+
