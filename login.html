@@ -27,6 +27,13 @@
         }
         .autocomplete-items::-webkit-scrollbar { width: 6px; }
         .autocomplete-items::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 5px; }
+        
+        /* CSS cho icon ẩn/hiện mật khẩu */
+        .password-toggle {
+            position: absolute; right: 15px; top: 42px; cursor: pointer; 
+            color: var(--text-dim); transition: 0.3s;
+        }
+        .password-toggle:hover { color: var(--primary-neon); }
     </style>
 </head>
 <body>
@@ -45,8 +52,9 @@
                 </div>
                 <div class="input-group-custom">
                     <label>PASSWORD</label>
-                    <i class="fas fa-key"></i>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <i class="fas fa-key" style="left:15px"></i>
+                    <input type="password" id="password" placeholder="••••••••" required style="padding-right: 40px;">
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 </div>
                 <button type="submit" class="btn-login" style="width:100%; padding:14px; background:var(--primary-neon); border:none; border-radius:10px; color:white; font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; cursor:pointer;" id="btn-submit">ĐĂNG NHẬP</button>
                 <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
@@ -54,8 +62,20 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=3"></script>
     <script>
+        // --- LOGIC ẨN/HIỆN MẬT KHẨU ---
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            // Chuyển đổi type giữa password và text
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Đổi icon con mắt
+            this.classList.toggle('fa-eye-slash');
+        });
+
         const input = document.getElementById('username');
         const listContainer = document.getElementById('autocomplete-list');
         const msg = document.getElementById('login-msg');
@@ -104,7 +124,9 @@
                         rem: String(getVal(row, 'ReminiscentName')).toLowerCase(),
                         acc: String(getVal(row, 'Email')).toLowerCase(),
                         pass: String(getVal(row, 'Password')),
+                        realID: getVal(row, 'UserID'),
                         realName: getVal(row, 'Full Name'),
+                        realRem: getVal(row, 'ReminiscentName'),
                         avatar: getVal(row, 'Avatar'),
                         perms: getVal(row, 'Permissions'),
                         realAcc: getVal(row, 'Email'),
@@ -141,7 +163,7 @@
                     const item = document.createElement('div');
                     
                     // Thiết kế: [ID] - Tên đầy đủ - Ngày sinh (canh lề phải)
-                    const idHtml = match.uID ? `<span style="color:var(--primary-neon); font-family:'Roboto Mono';">ID:${match.uID}</span>` : '';
+                    const idHtml = match.realID ? `<span style="color:var(--primary-neon); font-family:'Roboto Mono';">ID:${match.realID}</span>` : '';
                     const nameHtml = `<span style="color:#fff; font-weight:600; font-size:1.05rem;">${match.realName}</span>`;
                     const dobHtml = match.dob ? `<span style="color:#94a3b8; font-size:0.85rem; margin-left:auto;"><i class="fas fa-calendar-alt"></i> ${match.dob}</span>` : '';
 
@@ -185,18 +207,27 @@
                 );
 
                 if (authUser) {
+                    // Ưu tiên lấy Nickname (ReminiscentName), nếu rỗng thì lấy Full Name
+                    const nickName = authUser.realRem || authUser.realName;
+
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('userData', JSON.stringify({
+                        nickname: nickName, // Lưu Nickname để dùng cho log Đăng xuất
                         name: authUser.realName || 'User',
                         avatar: authUser.avatar,
                         perms: authUser.perms,
                         account: authUser.realAcc,
                         object: authUser.object
                     }));
+
+                    // GHI LOG ĐĂNG NHẬP (Chỉ truyền Nickname và Action)
+                    if (typeof logActivity === 'function') {
+                        logActivity(nickName, 'Đăng nhập');
+                    }
                     
                     msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; 
                     msg.style.color = "#4ade80";
-                    setTimeout(() => window.location.href = 'index.html', 800);
+                    setTimeout(() => window.location.href = 'index.html', 1000); // Tăng thời gian chờ lên 1s để kịp gửi log
                 } else {
                     msg.innerText = "> ERROR: TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG!"; 
                     msg.style.color = "#f87171";
