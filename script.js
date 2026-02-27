@@ -1,7 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlx5H04eMFd5mhJ3KVNEe4R0oCY6zpNn-5wlHpq8YzwsxMRvElsVCM3xkTzr13K8NX7Q/exec'; // <--- CẬP NHẬT URL Ở ĐÂY ĐỂ GHI LOG
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlx5H04eMFd5mhJ3KVNEe4R0oCY6zpNn-5wlHpq8YzwsxMRvElsVCM3xkTzr13K8NX7Q/exec'; // Đã cập nhật URL Ghi Log
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -12,13 +12,14 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- GHI LOG HOẠT ĐỘNG ---
-function logActivity(uid, nickname, action) {
+function logActivity(nickname, action) {
     if (!WEB_APP_URL || WEB_APP_URL.includes('DÁN_URL')) return;
     fetch(WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors', 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ uid: uid, nickname: nickname, action: action })
+        // Chỉ gửi nickname và action lên server
+        body: JSON.stringify({ nickname: nickname, action: action })
     }).catch(err => console.log('Log Error:', err));
 }
 
@@ -62,7 +63,8 @@ function logout() {
     const userDataString = sessionStorage.getItem('userData');
     if (userDataString) {
         const user = JSON.parse(userDataString);
-        logActivity(user.uid || 'Khách', user.nickname || user.name, 'Đăng xuất');
+        // Ghi log Đăng xuất (chỉ truyền nickname và action)
+        logActivity(user.nickname || user.name, 'Đăng xuất');
     }
     
     sessionStorage.clear();
