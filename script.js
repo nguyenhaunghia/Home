@@ -1,6 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlx5H04eMFd5mhJ3KVNEe4R0oCY6zpNn-5wlHpq8YzwsxMRvElsVCM3xkTzr13K8NX7Q/exec'; // <--- CẬP NHẬT URL Ở ĐÂY ĐỂ GHI LOG
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -9,6 +10,17 @@ window.addEventListener('DOMContentLoaded', () => {
     animateCanvas();
     loadDataByPrivilege(userData);
 });
+
+// --- GHI LOG HOẠT ĐỘNG ---
+function logActivity(uid, nickname, action) {
+    if (!WEB_APP_URL || WEB_APP_URL.includes('DÁN_URL')) return;
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ uid: uid, nickname: nickname, action: action })
+    }).catch(err => console.log('Log Error:', err));
+}
 
 // --- AUTH & UI LOGIC ---
 function checkAuthAndRenderUI() {
@@ -46,8 +58,18 @@ function renderUserProfile(user) {
 }
 
 function logout() {
+    // Lấy thông tin phiên để ghi log trước khi xóa
+    const userDataString = sessionStorage.getItem('userData');
+    if (userDataString) {
+        const user = JSON.parse(userDataString);
+        logActivity(user.uid || 'Khách', user.nickname || user.name, 'Đăng xuất');
+    }
+    
     sessionStorage.clear();
-    window.location.href = 'index.html';
+    // Chờ log gửi đi thành công rồi mới chuyển trang
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 300);
 }
 
 // --- DATA LOADING LOGIC ---
@@ -64,10 +86,16 @@ async function loadDataByPrivilege(user) {
             loadHocSinh = true; 
         } 
         
-        // Kiểm tra Object là Học sinh
+        // --- CHỐNG LỖI TIẾNG VIỆT KHI ĐẨY LÊN GITHUB PAGES ---
         if (user.object) {
-            const objStr = String(user.object).toLowerCase();
-            if (objStr.includes('học sinh') || objStr.includes('hoc sinh')) {
+            // Chuẩn hóa chuỗi: Lột bỏ toàn bộ dấu tiếng Việt
+            const objStr = String(user.object)
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+                
+            // Kiểm tra theo chuỗi "hoc sinh" không dấu
+            if (objStr.includes('hoc sinh')) {
                 loadHocSinh = true;
             }
         }
@@ -91,7 +119,6 @@ async function loadDataByPrivilege(user) {
 
 // --- GOOGLE SHEET FETCHING ---
 async function fetchSheetData(sheetName) {
-    // Thêm &headers=1 để API tự động tách dòng 1 làm tên cột
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}`;
     try {
         const response = await fetch(url);
@@ -110,7 +137,6 @@ function parseData(json) {
     let startRow = 0;
     const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
     
-    // Quét toàn bộ để tạo bản đồ cột
     const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
     
     if (hasLabels) {
@@ -337,4 +363,3 @@ function animateCanvas() {
     requestAnimationFrame(animateCanvas);
 }
 window.addEventListener('resize', initCanvas);
-
