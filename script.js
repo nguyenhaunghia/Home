@@ -1,7 +1,6 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz2whEofxqxpho2-eWh55RPouKATFbLfdvJd2s-8ulT449bohKZK5vnh8tLNbgCHqptBw/exec'; // <--- CẬP NHẬT URL Ở ĐÂY
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -10,17 +9,6 @@ window.addEventListener('DOMContentLoaded', () => {
     animateCanvas();
     loadDataByPrivilege(userData);
 });
-
-// --- GHI LOG HOẠT ĐỘNG ---
-function logActivity(uid, nickname, action) {
-    if (!WEB_APP_URL || WEB_APP_URL.includes('DÁN_URL')) return;
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors', // Tránh lỗi CORS từ Google
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ uid: uid, nickname: nickname, action: action })
-    }).catch(err => console.log('Log Error:', err));
-}
 
 // --- AUTH & UI LOGIC ---
 function checkAuthAndRenderUI() {
@@ -58,45 +46,41 @@ function renderUserProfile(user) {
 }
 
 function logout() {
-    // Ghi log trước khi xóa phiên làm việc
-    const userDataString = sessionStorage.getItem('userData');
-    if (userDataString) {
-        const user = JSON.parse(userDataString);
-        // Gửi UID, Nickname và Action
-        logActivity(user.uid, user.nickname, 'Đăng xuất');
-    }
-    
     sessionStorage.clear();
-    // Đợi 300ms để fetch gửi log lên server thành công trước khi chuyển trang
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 300);
+    window.location.href = 'index.html';
 }
 
 // --- DATA LOADING LOGIC ---
 async function loadDataByPrivilege(user) {
+    console.log('User status:', user);
+    
     let loadNHN = false;
     let loadHocSinh = false;
 
     if (user) {
+        // Kiểm tra Admin
         if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
             loadNHN = true;
             loadHocSinh = true; 
         } 
+        
+        // Kiểm tra Object là Học sinh
         if (user.object) {
             const objStr = String(user.object).toLowerCase();
-            if (objStr.includes('pupil')) {
+            if (objStr.includes('học sinh') || objStr.includes('hoc sinh')) {
                 loadHocSinh = true;
             }
         }
     }
 
+    // Tải dữ liệu các sheet (Sử dụng đúng tên Sheet)
     const [nhnData, csdlData, hocSinhData] = await Promise.all([
         loadNHN ? fetchSheetData('NHN') : Promise.resolve([]),
         fetchSheetData('CSDL'), 
         loadHocSinh ? fetchSheetData('Hoc_Sinh') : Promise.resolve([])
     ]);
 
+    // Ghép dữ liệu theo thứ tự NHN -> CSDL -> Hoc_Sinh
     let finalCards = [];
     if (nhnData && nhnData.length > 0) finalCards = [...finalCards, ...nhnData];
     if (csdlData && csdlData.length > 0) finalCards = [...finalCards, ...csdlData];
@@ -107,6 +91,7 @@ async function loadDataByPrivilege(user) {
 
 // --- GOOGLE SHEET FETCHING ---
 async function fetchSheetData(sheetName) {
+    // Thêm &headers=1 để API tự động tách dòng 1 làm tên cột
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}`;
     try {
         const response = await fetch(url);
@@ -114,16 +99,18 @@ async function fetchSheetData(sheetName) {
         const json = JSON.parse(text.substring(47).slice(0, -2));
         return parseData(json);
     } catch (error) {
+        console.error(`Error loading sheet ${sheetName}:`, error);
         return [];
     }
 }
 
-// --- PARSE DATA ---
+// --- PARSE DATA (HOÀN TOÀN TÌM THEO TÊN CỘT) ---
 function parseData(json) {
     let colMap = {};
     let startRow = 0;
     const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
     
+    // Quét toàn bộ để tạo bản đồ cột
     const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
     
     if (hasLabels) {
@@ -172,25 +159,41 @@ function parseData(json) {
         const item = { level, icon, color, label, link, note, children: [] };
 
         if (level === 0) { 
-            currentCard = item; cards.push(currentCard); 
+            currentCard = item; 
+            cards.push(currentCard); 
             currentL1 = null; currentL2 = null; currentL3 = null; currentL4 = null;
         } 
-        else if (level === 1 && currentCard) { 
-            currentL1 = item; currentCard.children.push(currentL1); 
-            currentL2 = null; currentL3 = null; currentL4 = null;
+        else if (level === 1) { 
+            if (currentCard) { 
+                currentL1 = item; 
+                currentCard.children.push(currentL1); 
+                currentL2 = null; currentL3 = null; currentL4 = null;
+            } 
         } 
-        else if (level === 2 && currentL1) { 
-            currentL2 = item; currentL1.children.push(currentL2); 
-            currentL3 = null; currentL4 = null;
+        else if (level === 2) { 
+            if (currentL1) { 
+                currentL2 = item; 
+                currentL1.children.push(currentL2); 
+                currentL3 = null; currentL4 = null;
+            } 
         } 
-        else if (level === 3 && currentL2) { 
-            currentL3 = item; currentL2.children.push(currentL3); currentL4 = null;
+        else if (level === 3) { 
+            if (currentL2) { 
+                currentL3 = item;
+                currentL2.children.push(currentL3);
+                currentL4 = null;
+            }
         }
-        else if (level === 4 && currentL3) { 
-            currentL4 = item; currentL3.children.push(currentL4);
+        else if (level === 4) {
+            if (currentL3) {
+                currentL4 = item;
+                currentL3.children.push(currentL4);
+            }
         }
-        else if (level === 5 && currentL4) { 
-            currentL4.children.push(item);
+        else if (level === 5) {
+            if (currentL4) {
+                currentL4.children.push(item);
+            }
         }
     }
     return cards;
@@ -270,6 +273,7 @@ function createMenuItem(item) {
     } 
     else {
         const iconHtml = `<i class="${item.icon}" style="color:${item.color}; font-size:0.75rem; width:18px; text-align:center; margin-right:4px;"></i>`;
+
         const wrapper = document.createElement('div');
         wrapper.innerHTML = `
             <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
