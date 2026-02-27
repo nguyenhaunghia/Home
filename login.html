@@ -62,17 +62,15 @@
         </div>
     </div>
 
-    <script src="script.js?v=3"></script>
+    <script src="script.js?v=4"></script>
     <script>
         // --- LOGIC ẨN/HIỆN MẬT KHẨU ---
         const togglePassword = document.getElementById('togglePassword');
         const password = document.getElementById('password');
 
         togglePassword.addEventListener('click', function () {
-            // Chuyển đổi type giữa password và text
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
             password.setAttribute('type', type);
-            // Đổi icon con mắt
             this.classList.toggle('fa-eye-slash');
         });
 
@@ -107,7 +105,6 @@
                     const idx = colMap[cleanKey(colName)];
                     if (idx !== undefined && row.c[idx]) {
                         const cell = row.c[idx];
-                        // Lấy giá trị định dạng hiển thị trên sheet (cell.f) trước, nếu không có mới lấy giá trị gốc (cell.v)
                         return cell.f ? cell.f : (cell.v !== null ? cell.v : '');
                     }
                     return '';
@@ -131,7 +128,7 @@
                         perms: getVal(row, 'Permissions'),
                         realAcc: getVal(row, 'Email'),
                         object: getVal(row, 'Object'),
-                        dob: String(getVal(row, 'BirthDay')) // Lấy chuẩn tên cột BirthDay
+                        dob: String(getVal(row, 'BirthDay')) 
                     });
                 }
                 usersData = loadedUsers; 
@@ -162,14 +159,12 @@
                 matches.slice(0, 30).forEach(match => {
                     const item = document.createElement('div');
                     
-                    // Thiết kế: [ID] - Tên đầy đủ - Ngày sinh (canh lề phải)
                     const idHtml = match.realID ? `<span style="color:var(--primary-neon); font-family:'Roboto Mono';">ID:${match.realID}</span>` : '';
                     const nameHtml = `<span style="color:#fff; font-weight:600; font-size:1.05rem;">${match.realName}</span>`;
                     const dobHtml = match.dob ? `<span style="color:#94a3b8; font-size:0.85rem; margin-left:auto;"><i class="fas fa-calendar-alt"></i> ${match.dob}</span>` : '';
 
                     item.innerHTML = `${idHtml} <span style="color:#475569">|</span> ${nameHtml} ${dobHtml}`;
                     
-                    // Khi click chọn -> Điền Full Name vào ô input
                     item.addEventListener('click', function() {
                         input.value = match.realName; 
                         listContainer.style.display = 'none';
@@ -207,12 +202,13 @@
                 );
 
                 if (authUser) {
-                    // Ưu tiên lấy Nickname (ReminiscentName), nếu rỗng thì lấy Full Name
                     const nickName = authUser.realRem || authUser.realName;
 
+                    // Lưu đủ uid, nickname vào session
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('userData', JSON.stringify({
-                        nickname: nickName, // Lưu Nickname để dùng cho log Đăng xuất
+                        uid: authUser.realID,
+                        nickname: nickName, 
                         name: authUser.realName || 'User',
                         avatar: authUser.avatar,
                         perms: authUser.perms,
@@ -220,14 +216,14 @@
                         object: authUser.object
                     }));
 
-                    // GHI LOG ĐĂNG NHẬP (Chỉ truyền Nickname và Action)
+                    // GHI LOG ĐĂNG NHẬP (Truyền đủ 3 biến)
                     if (typeof logActivity === 'function') {
-                        logActivity(nickName, 'Đăng nhập');
+                        logActivity(authUser.realID, nickName, 'Đăng nhập');
                     }
                     
                     msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; 
                     msg.style.color = "#4ade80";
-                    setTimeout(() => window.location.href = 'index.html', 1000); // Tăng thời gian chờ lên 1s để kịp gửi log
+                    setTimeout(() => window.location.href = 'index.html', 1000); 
                 } else {
                     msg.innerText = "> ERROR: TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG!"; 
                     msg.style.color = "#f87171";
