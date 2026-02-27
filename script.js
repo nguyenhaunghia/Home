@@ -1,7 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlx5H04eMFd5mhJ3KVNEe4R0oCY6zpNn-5wlHpq8YzwsxMRvElsVCM3xkTzr13K8NX7Q/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx4rFeRy7TUA2mKZCc0t0fdCy4HkkTAt-9efgaLBlRm2BZPoyol03VYo5NSavGUNyWEJQ/exec';
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -357,3 +357,4 @@ function animateCanvas() {
     requestAnimationFrame(animateCanvas);
 }
 window.addEventListener('resize', initCanvas);
+
