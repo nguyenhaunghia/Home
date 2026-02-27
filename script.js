@@ -1,7 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzSeiJbdCn58ZDfZrGfB48PesLnpD03w5ouRIMIH2Y1A8HrjqWYWdQwkwN6-OKgEncT7A/exec'; // Đã cập nhật URL Ghi Log
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwlx5H04eMFd5mhJ3KVNEe4R0oCY6zpNn-5wlHpq8YzwsxMRvElsVCM3xkTzr13K8NX7Q/exec';
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -12,14 +12,14 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- GHI LOG HOẠT ĐỘNG ---
-function logActivity(nickname, action) {
+// Nhận thêm biến uid
+function logActivity(uid, nickname, action) {
     if (!WEB_APP_URL || WEB_APP_URL.includes('DÁN_URL')) return;
     fetch(WEB_APP_URL, {
         method: 'POST',
         mode: 'no-cors', 
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        // Chỉ gửi nickname và action lên server
-        body: JSON.stringify({ nickname: nickname, action: action })
+        body: JSON.stringify({ uid: uid, nickname: nickname, action: action })
     }).catch(err => console.log('Log Error:', err));
 }
 
@@ -59,16 +59,14 @@ function renderUserProfile(user) {
 }
 
 function logout() {
-    // Lấy thông tin phiên để ghi log trước khi xóa
     const userDataString = sessionStorage.getItem('userData');
     if (userDataString) {
         const user = JSON.parse(userDataString);
-        // Ghi log Đăng xuất (chỉ truyền nickname và action)
-        logActivity(user.nickname || user.name, 'Đăng xuất');
+        // Bắn cả UID lên Google Sheet
+        logActivity(user.uid || 'Khách', user.nickname || user.name, 'Đăng xuất');
     }
     
     sessionStorage.clear();
-    // Chờ log gửi đi thành công rồi mới chuyển trang
     setTimeout(() => {
         window.location.href = 'index.html';
     }, 300);
@@ -82,35 +80,29 @@ async function loadDataByPrivilege(user) {
     let loadHocSinh = false;
 
     if (user) {
-        // Kiểm tra Admin
         if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
             loadNHN = true;
             loadHocSinh = true; 
         } 
         
-        // --- CHỐNG LỖI TIẾNG VIỆT KHI ĐẨY LÊN GITHUB PAGES ---
         if (user.object) {
-            // Chuẩn hóa chuỗi: Lột bỏ toàn bộ dấu tiếng Việt
             const objStr = String(user.object)
                 .toLowerCase()
                 .normalize("NFD")
                 .replace(/[\u0300-\u036f]/g, "");
                 
-            // Kiểm tra theo chuỗi "hoc sinh" không dấu
             if (objStr.includes('hoc sinh')) {
                 loadHocSinh = true;
             }
         }
     }
 
-    // Tải dữ liệu các sheet (Sử dụng đúng tên Sheet)
     const [nhnData, csdlData, hocSinhData] = await Promise.all([
         loadNHN ? fetchSheetData('NHN') : Promise.resolve([]),
         fetchSheetData('CSDL'), 
         loadHocSinh ? fetchSheetData('Hoc_Sinh') : Promise.resolve([])
     ]);
 
-    // Ghép dữ liệu theo thứ tự NHN -> CSDL -> Hoc_Sinh
     let finalCards = [];
     if (nhnData && nhnData.length > 0) finalCards = [...finalCards, ...nhnData];
     if (csdlData && csdlData.length > 0) finalCards = [...finalCards, ...csdlData];
@@ -365,4 +357,3 @@ function animateCanvas() {
     requestAnimationFrame(animateCanvas);
 }
 window.addEventListener('resize', initCanvas);
-
