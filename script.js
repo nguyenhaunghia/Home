@@ -337,3 +337,4 @@ function animateCanvas() {
     requestAnimationFrame(animateCanvas);
 }
 window.addEventListener('resize', initCanvas);
+
