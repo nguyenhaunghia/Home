@@ -4,12 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - TOÁN TIN</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     
     <style>
-        .input-group-custom { position: relative; }
+        /* --- BẮT ĐẦU PHẦN UPDATE VỊ TRÍ ICON --- */
+        .input-group-custom { 
+            position: relative; 
+            margin-bottom: 25px; 
+        }
+        
+        .input-group-custom label {
+            display: none; 
+        }
+
+        .input-group-custom > i:first-of-type {
+            position: absolute;
+            left: 15px;      
+            top: 50%;        
+            transform: translateY(-50%); 
+            color: var(--text-dim); 
+            z-index: 10;     
+            font-size: 1.1rem;
+            pointer-events: none; 
+        }
+
+        .input-group-custom input {
+            width: 100%; box-sizing: border-box; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 10px; 
+            padding: 18px 45px 18px 45px !important; 
+            color: white; outline: none; transition: 0.3s; 
+        }
+        
+        .input-group-custom input:focus { 
+            border-color: var(--primary-neon); 
+            background: rgba(255, 255, 255, 0.08); 
+        }
+
+        .password-toggle {
+            position: absolute; 
+            right: 15px; 
+            left: auto !important; 
+            top: 50% !important; 
+            transform: translateY(-50%); 
+            cursor: pointer; 
+            color: var(--text-dim); 
+            transition: 0.3s;
+            z-index: 10;
+        }
+        .password-toggle:hover { color: var(--primary-neon); }
+        /* --- KẾT THÚC PHẦN UPDATE --- */
+
+
         .autocomplete-items {
             position: absolute; top: 100%; left: 0; right: 0; z-index: 99;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
@@ -27,13 +79,53 @@
         }
         .autocomplete-items::-webkit-scrollbar { width: 6px; }
         .autocomplete-items::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 5px; }
-        
-        /* CSS cho icon ẩn/hiện mật khẩu */
-        .password-toggle {
-            position: absolute; right: 15px; top: 42px; cursor: pointer; 
-            color: var(--text-dim); transition: 0.3s;
+
+        /* Style cho 2 link Quên pass & Đăng ký */
+        .form-links {
+            display: flex; justify-content: space-between; 
+            margin-top: 20px; font-size: 0.85rem; font-family: 'Inter', sans-serif;
         }
-        .password-toggle:hover { color: var(--primary-neon); }
+        .form-links a {
+            color: #94a3b8; text-decoration: none; transition: 0.3s;
+        }
+        .form-links a:hover {
+            color: var(--primary-neon); text-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+        }
+        
+        /* === BỔ SUNG CSS CHO 2 NÚT TRÊN 1 DÒNG === */
+        .action-buttons-container {
+            display: flex;
+            align-items: stretch; /* Đảm bảo 2 nút cao bằng nhau */
+            gap: 15px; /* Khoảng cách giữa 2 nút */
+            width: 100%;
+            margin-top: 10px;
+        }
+        .action-buttons-container .btn-login {
+            flex: 1; /* Chiếm 50% */
+            height: 40px; /* Chiều cao chuẩn khớp với nút Google */
+            padding: 0; 
+            background: var(--primary-neon); 
+            border: none; 
+            border-radius: 4px; /* Bo góc chuẩn khớp với nút Google dạng rectangular */
+            color: white; 
+            font-family: 'Inter', sans-serif;
+            font-weight: 100; 
+            font-size: 1rem; 
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .action-buttons-container .btn-login:hover {
+            background: #0284c7;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        .action-buttons-container #googleBtnWrapper {
+            flex: 1; /* Chiếm 50% */
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -41,32 +133,99 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h2 style="font-family:'Rajdhani'; color:white; font-size:2.2rem; margin-top:10px;">ĐĂNG NHẬP HỆ THỐNG</h2>
+                <h2 style="font-family:'Rajdhani'; color:white; font-size:2.2rem; margin-top:10px; margin-bottom: 50px; text-align: center;">ĐĂNG NHẬP HỆ THỐNG</h2>
+                
             </div>
+            
             <form id="login-form">
                 <div class="input-group-custom">
-                    <label>TÊN ĐĂNG NHẬP</label>
-                    <i class="fas fa-user-circle"></i>
+                    <label>TÊN ĐĂNG NHẬP</label> <i class="fas fa-user-circle"></i>
                     <input type="text" id="username" placeholder="Nhập tên hoặc chọn từ danh sách..." autocomplete="off" required>
                     <div id="autocomplete-list" class="autocomplete-items"></div>
                 </div>
+                
                 <div class="input-group-custom">
-                    <label>PASSWORD</label>
-                    <i class="fas fa-key" style="left:15px"></i>
-                    <input type="password" id="password" placeholder="••••••••" required style="padding-right: 40px;">
+                    <label>PASSWORD</label> <i class="fas fa-key"></i>
+                    <input type="password" id="password" placeholder="••••••••" required>
                     <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 </div>
-                <button type="submit" class="btn-login" style="width:100%; padding:14px; background:var(--primary-neon); border:none; border-radius:10px; color:white; font-family:'Rajdhani'; font-weight:700; font-size:1.1rem; cursor:pointer;" id="btn-submit">ĐĂNG NHẬP</button>
-                <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
+                
+                <div class="action-buttons-container" id="action-buttons">
+                    <button type="submit" class="btn-login" id="btn-submit">Đăng nhập</button>
+                    
+                    <div id="googleBtnWrapper">
+                        <div id="buttonDiv"></div>
+                    </div>
+                </div>
+                
+                <div class="form-links">
+                    <a href="#">Quên mật khẩu?</a>
+                    <a href="#">Đăng ký mới</a>
+                </div>
             </form>
+
+            <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
+
+            <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: #64748b; font-family: 'Roboto Mono', monospace; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+                <div style="margin-top: 20px;">&copy; Copyright N's Softwave || nguyenhaunghia@gmail.com</div>
+                <div style="margin-top: 5px; margin-bottom: 5px; ">Phiên bản: <span style="color: var(--primary-neon); font-weight: 600; text-shadow: 0 0 8px rgba(14, 165, 233, 0.5);">Ver 3.0 2026</span></div>
+            </div>
         </div>
     </div>
 
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=7"></script>
     <script>
-        // --- LOGIC ẨN/HIỆN MẬT KHẨU ---
+        // =========================================================
+        const GOOGLE_CLIENT_ID = "834940004336-755h6t11fq21femvdip5u024m8vb45ob.apps.googleusercontent.com"; 
+        // =========================================================
+
         const togglePassword = document.getElementById('togglePassword');
         const password = document.getElementById('password');
+        const input = document.getElementById('username');
+        const listContainer = document.getElementById('autocomplete-list');
+        const msg = document.getElementById('login-msg');
+        let usersData = []; 
+
+        // Khởi tạo các dịch vụ khi trang web tải xong
+        window.onload = function() {
+            if (typeof google !== 'undefined' && GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.includes("ĐIỀN_CLIENT_ID")) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleLogin
+                });
+                
+                // === THUẬT TOÁN ĐO CHIỀU RỘNG TỰ ĐỘNG ===
+                // Lấy thẻ container bao bọc 2 nút
+                let container = document.getElementById("action-buttons");
+                
+                // Hàm vẽ nút Google với chiều rộng chính xác
+                function renderGoogleBtn() {
+                    let containerWidth = container.offsetWidth;
+                    // Trừ đi khoảng gap (15px) và chia đôi để lấy width chuẩn cho mỗi nút
+                    let halfWidth = (containerWidth - 15) / 2;
+                    
+                    google.accounts.id.renderButton(
+                        document.getElementById("buttonDiv"),
+                        { 
+                            theme: "outline", 
+                            size: "large", 
+                            text: "signin_with", 
+                            shape: "rectangular", // Hình chữ nhật bo góc nhẹ
+                            width: halfWidth 
+                        }
+                    );
+                }
+                
+                // Vẽ lần đầu
+                renderGoogleBtn();
+                
+                // Tự động vẽ lại kích thước khi người dùng thu phóng trình duyệt
+                window.addEventListener('resize', function() {
+                    document.getElementById("buttonDiv").innerHTML = ""; // Xóa nút cũ
+                    renderGoogleBtn(); // Vẽ nút mới với width mới
+                });
+            }
+        };
 
         togglePassword.addEventListener('click', function () {
             const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -74,70 +233,26 @@
             this.classList.toggle('fa-eye-slash');
         });
 
-        const input = document.getElementById('username');
-        const listContainer = document.getElementById('autocomplete-list');
-        const msg = document.getElementById('login-msg');
-        let usersData = []; 
-
-        // 1. TẢI NGẦM DỮ LIỆU
-        const fetchUsersPromise = fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=User`)
-            .then(res => res.text())
-            .then(text => {
-                const json = JSON.parse(text.substring(47).slice(0, -2));
-                
-                let colMap = {};
-                let startRow = 0;
-                const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
-                
-                const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
-                if (hasLabels) {
-                    json.table.cols.forEach((col, idx) => {
-                        if (col && col.label) colMap[cleanKey(col.label)] = idx;
-                    });
-                } else if (json.table.rows && json.table.rows.length > 0) {
-                    json.table.rows[0].c.forEach((cell, idx) => {
-                        if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
-                    });
-                    startRow = 1;
-                }
-
-                const getVal = (row, colName) => {
-                    const idx = colMap[cleanKey(colName)];
-                    if (idx !== undefined && row.c[idx]) {
-                        const cell = row.c[idx];
-                        return cell.f ? cell.f : (cell.v !== null ? cell.v : '');
-                    }
-                    return '';
-                };
-
-                let loadedUsers = [];
-                for (let i = startRow; i < json.table.rows.length; i++) {
-                    const row = json.table.rows[i];
-                    if (!row || !row.c) continue;
-                    
-                    loadedUsers.push({
-                        uID: String(getVal(row, 'UserID')).toLowerCase(),
-                        name: String(getVal(row, 'Full Name')).toLowerCase(),
-                        rem: String(getVal(row, 'ReminiscentName')).toLowerCase(),
-                        acc: String(getVal(row, 'Email')).toLowerCase(),
-                        pass: String(getVal(row, 'Password')),
-                        realID: getVal(row, 'UserID'),
-                        realName: getVal(row, 'Full Name'),
-                        realRem: getVal(row, 'ReminiscentName'),
-                        avatar: getVal(row, 'Avatar'),
-                        perms: getVal(row, 'Permissions'),
-                        realAcc: getVal(row, 'Email'),
-                        object: getVal(row, 'Object'),
-                        dob: String(getVal(row, 'BirthDay')) 
-                    });
-                }
-                usersData = loadedUsers; 
-                return loadedUsers;
-            })
-            .catch(err => {
-                console.error("Lỗi tải dữ liệu User:", err);
+        // 1. TẢI NGẦM DỮ LIỆU TỪ WEB APP
+        const fetchUsersPromise = fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'getAllUsersForLogin' })
+        })
+        .then(res => res.json())
+        .then(json => {
+            if (json.success) {
+                usersData = json.data;
+                return json.data;
+            } else {
+                console.error("Lỗi từ Server:", json.error);
                 return [];
-            });
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi kết nối Web App:", err);
+            return [];
+        });
 
         // 2. GỢI Ý NGƯỜI DÙNG (AUTOCOMPLETE)
         function renderSuggestions(val) {
@@ -182,7 +297,50 @@
             if (e.target !== input) listContainer.style.display = 'none';
         });
 
-        // 3. XÁC MINH ĐĂNG NHẬP
+        // 3. XỬ LÝ ĐĂNG NHẬP GOOGLE
+        function handleGoogleLogin(response) {
+            msg.innerText = "> ĐANG XÁC THỰC DỮ LIỆU GOOGLE...";
+            msg.style.color = "var(--primary-neon)";
+
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                const googleEmail = payload.email.toLowerCase();
+
+                let authUser = usersData.find(u => u.acc === googleEmail);
+
+                if (authUser) {
+                    const nickName = authUser.realRem || authUser.realName;
+
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('userData', JSON.stringify({
+                        uid: authUser.realID,
+                        nickname: nickName, 
+                        name: authUser.realName || 'User',
+                        avatar: authUser.avatar || payload.picture, 
+                        perms: authUser.perms,
+                        account: authUser.realAcc,
+                        object: authUser.object
+                    }));
+
+                    if (typeof logActivity === 'function') {
+                        logActivity(authUser.realID, nickName, 'Đăng nhập Google');
+                    }
+                    
+                    msg.innerText = "> XÁC THỰC THÀNH CÔNG. ĐANG CHUYỂN HƯỚNG..."; 
+                    msg.style.color = "#4ade80";
+                    setTimeout(() => window.location.href = 'index.html', 1000); 
+                } else {
+                    msg.innerText = "> ERROR: EMAIL NÀY CHƯA ĐƯỢC CẤP QUYỀN TRUY CẬP!"; 
+                    msg.style.color = "#f87171";
+                }
+            } catch (error) {
+                console.error("Lỗi Google Auth:", error);
+                msg.innerText = "> LỖI GIẢI MÃ TOKEN GOOGLE!"; 
+                msg.style.color = "#f87171";
+            }
+        }
+
+        // 4. XÁC MINH ĐĂNG NHẬP BẰNG TÀI KHOẢN/MẬT KHẨU
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const userInp = input.value.trim().toLowerCase();
@@ -204,7 +362,6 @@
                 if (authUser) {
                     const nickName = authUser.realRem || authUser.realName;
 
-                    // Lưu đủ uid, nickname vào session
                     sessionStorage.setItem('isLoggedIn', 'true');
                     sessionStorage.setItem('userData', JSON.stringify({
                         uid: authUser.realID,
@@ -216,7 +373,6 @@
                         object: authUser.object
                     }));
 
-                    // GHI LOG ĐĂNG NHẬP (Truyền đủ 3 biến)
                     if (typeof logActivity === 'function') {
                         logActivity(authUser.realID, nickName, 'Đăng nhập');
                     }

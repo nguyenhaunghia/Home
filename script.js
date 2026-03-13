@@ -1,7 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx4rFeRy7TUA2mKZCc0t0fdCy4HkkTAt-9efgaLBlRm2BZPoyol03VYo5NSavGUNyWEJQ/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwt9YHB1exYZT946oTkzLBmdjx2QvyP-tW6JaQQwE2Y4FdP_Hy-MiqWF3WZPhhoffAd3A/exec';
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -45,15 +45,32 @@ function renderUserProfile(user) {
     const container = document.getElementById('user-profile-container');
     if (container) {
         if (user) {
+            // Tự động tạo Avatar hạt giống theo tên nếu người dùng chưa có
+            const avatarSrc = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`;
+            const userRole = user.object ? String(user.object).toUpperCase() : 'THÀNH VIÊN';
+            
             container.innerHTML = `
-                <div class="user-profile">
-                    <span class="user-name">${user.name}</span>
-                    <img src="${user.avatar || 'https://via.placeholder.com/36'}" class="user-avatar" alt="User">
-                    <i class="fas fa-power-off btn-logout" title="Đăng xuất" onclick="logout()"></i>
+                <div class="tech-user-card">
+                    <div class="avatar-crystal-ring" onclick="openProfileModal()" style="cursor:pointer;" title="Cập nhật thông tin">
+                        <img src="${avatarSrc}" class="user-avatar" alt="Avatar">
+                    </div>
+                    <div class="user-info" onclick="openProfileModal()" style="cursor:pointer;" title="Cập nhật thông tin">
+                        <div class="user-role"><i class="fas fa-shield-alt"></i> ${userRole}</div>
+                        <div class="user-name">${user.name}</div>
+                    </div>
+                    <div class="logout-btn-wrapper" onclick="logout()" title="Ngắt kết nối hệ thống">
+                        <i class="fas fa-power-off"></i>
+                    </div>
                 </div>
             `;
         } else {
-            container.innerHTML = ''; 
+            // ---> MỚI: NẾU CHƯA ĐĂNG NHẬP, HIỂN THỊ NÚT LOGIN NEON <---
+            container.innerHTML = `
+                <div class="tech-login-btn" onclick="window.location.href='login.html'" title="Kết nối vào hệ thống">
+                    <i class="fas fa-user-astronaut"></i>
+                    <span>ĐĂNG NHẬP</span>
+                </div>
+            `; 
         }
     }
 }
@@ -358,3 +375,220 @@ function animateCanvas() {
 }
 window.addEventListener('resize', initCanvas);
 
+// =================================================================
+// HỆ THỐNG MODAL CẬP NHẬT THÔNG TIN TÀI KHOẢN
+// =================================================================
+function injectModalHTML() {
+    if(document.getElementById('profile-modal')) return;
+    const modalHTML = `
+        <div id="profile-modal" class="tech-modal-overlay">
+            <div class="tech-modal-content">
+                <div class="tech-modal-header">
+                    <h3><i class="fas fa-user-astronaut"></i> HỒ SƠ TÀI KHOẢN</h3>
+                    <i class="fas fa-times close-modal" onclick="closeProfileModal()"></i>
+                </div>
+                <div class="tech-modal-body" id="profile-modal-body">
+                    <div style="text-align:center; color: var(--primary-neon);"><i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>
+                </div>
+                <div class="modal-footer-btn">
+                    <button class="btn-save-modal" onclick="saveProfileModal()" id="btn-save-profile" style="display:none;">LƯU THAY ĐỔI</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function openProfileModal() {
+    injectModalHTML();
+    const modal = document.getElementById('profile-modal');
+    modal.classList.add('active');
+    
+    const userStr = sessionStorage.getItem('userData');
+    if(!userStr) return;
+    const user = JSON.parse(userStr);
+    
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'getUserProfile', uid: user.uid })
+    })
+    .then(res => res.json())
+    .then(json => {
+        if(json.success) renderProfileForm(json.data);
+        else document.getElementById('profile-modal-body').innerHTML = `<div style="color:#f87171;">Lỗi: ${json.error}</div>`;
+    })
+    .catch(err => {
+        document.getElementById('profile-modal-body').innerHTML = `<div style="color:#f87171;">Lỗi kết nối máy chủ!</div>`;
+    });
+}
+
+function closeProfileModal() {
+    const modal = document.getElementById('profile-modal');
+    if(modal) modal.classList.remove('active');
+}
+
+// --- HÀM TẮT/MỞ HIỂN THỊ MẬT KHẨU TRONG MODAL ---
+function toggleModalPwd(inputId, iconEl) {
+    const inp = document.getElementById(inputId);
+    if(inp.type === 'password') {
+        inp.type = 'text';
+        iconEl.classList.remove('fa-eye');
+        iconEl.classList.add('fa-eye-slash');
+    } else {
+        inp.type = 'password';
+        iconEl.classList.remove('fa-eye-slash');
+        iconEl.classList.add('fa-eye');
+    }
+}
+
+// --- VẼ FORM VỚI BỐ CỤC MỚI TRÁI PHẢI ---
+function renderProfileForm(data) {
+    const body = document.getElementById('profile-modal-body');
+    const avatarSrc = data.Avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(data.FullName)}`;
+    
+    const formHtml = `
+        <div class="modal-layout">
+            <div class="modal-left-col">
+                <div class="avatar-preview-box">
+                    <img id="upd-avatar-img" src="${avatarSrc}">
+                </div>
+                <input type="file" id="upd-avatar-file" style="display:none" accept="image/png, image/jpeg, image/gif">
+                <button class="btn-change-avatar" onclick="document.getElementById('upd-avatar-file').click()"><i class="fas fa-camera"></i> ĐỔI ẢNH</button>
+            </div>
+
+            <div class="modal-right-col">
+                <input type="hidden" id="upd-uid" value="${data.uid}">
+                <input type="hidden" id="upd-avatar-base64" value="">
+                <input type="hidden" id="upd-avatar-old" value="${data.Avatar || ''}">
+
+                <div class="form-grid-2">
+                    <div class="form-group-modal"><label>HỌ VÀ TÊN</label><input type="text" id="upd-fullname" value="${data.FullName}"></div>
+                    <div class="form-group-modal"><label>NICKNAME (GỢI NHỚ)</label><input type="text" id="upd-nickname" value="${data.NickName}"></div>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-group-modal"><label>EMAIL LIÊN HỆ</label><input type="email" id="upd-email" value="${data.Email || ''}"></div>
+                    <div class="form-group-modal"><label>ĐIỆN THOẠI</label><input type="text" id="upd-phone" value="${data.Phone || ''}"></div>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-group-modal"><label>NGÀY SINH</label><input type="text" id="upd-birthday" placeholder="DD/MM/YYYY" value="${data.BirthDay}"></div>
+                    <div class="form-group-modal">
+                        <label>GIỚI TÍNH</label>
+                        <select id="upd-gender">
+                            <option value="Nam" ${data.Gender==='Nam'?'selected':''}>Nam</option>
+                            <option value="Nữ" ${data.Gender==='Nữ'?'selected':''}>Nữ</option>
+                            <option value="Khác" ${data.Gender==='Khác'?'selected':''}>Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-group-modal"><label>TRƯỜNG HỌC</label><input type="text" id="upd-school" value="${data.SchoolName || ''}"></div>
+                    <div class="form-group-modal"><label>LỚP</label><input type="text" id="upd-class" value="${data.ClassName || ''}"></div>
+                </div>
+                <div class="form-group-modal" style="margin-bottom:15px;"><label>ĐỊA CHỈ</label><input type="text" id="upd-address" value="${data.Address || ''}"></div>
+                
+                <div class="form-grid-2">
+                    <div class="form-group-modal pos-relative">
+                        <label>ĐỔI MẬT KHẨU</label>
+                        <input type="password" id="upd-password" placeholder="Bỏ trống nếu không đổi" style="padding-right:35px;">
+                        <i class="fas fa-eye modal-pwd-toggle" onclick="toggleModalPwd('upd-password', this)"></i>
+                    </div>
+                    <div class="form-group-modal pos-relative">
+                        <label>XÁC NHẬN MẬT KHẨU</label>
+                        <input type="password" id="upd-password-confirm" placeholder="Nhập lại mật khẩu mới" style="padding-right:35px;">
+                        <i class="fas fa-eye modal-pwd-toggle" onclick="toggleModalPwd('upd-password-confirm', this)"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="modal-msg" style="margin-top: 15px; font-size: 0.85rem; font-family:'Roboto Mono'; text-align:center;"></div>
+    `;
+    body.innerHTML = formHtml;
+    document.getElementById('btn-save-profile').style.display = 'block';
+
+    // XỬ LÝ SỰ KIỆN KHI CHỌN ẢNH XONG
+    document.getElementById('upd-avatar-file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(file) {
+            if(file.size > 2.5 * 1024 * 1024) { // Cấm ảnh lớn hơn 2.5MB chống tràn bộ nhớ Drive
+                alert('Vui lòng chọn ảnh có kích thước dưới 2.5MB để đảm bảo hiệu suất!');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                document.getElementById('upd-avatar-img').src = evt.target.result; // Hiện preview
+                document.getElementById('upd-avatar-base64').value = evt.target.result; // Lưu chuỗi Base64
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// --- GỬI DỮ LIỆU LÊN SERVER ---
+function saveProfileModal() {
+    const btn = document.getElementById('btn-save-profile');
+    const msg = document.getElementById('modal-msg');
+    
+    // Kiểm tra mật khẩu xác nhận
+    const pwd = document.getElementById('upd-password').value;
+    const pwdConf = document.getElementById('upd-password-confirm').value;
+    
+    if (pwd !== '' && pwd !== pwdConf) {
+        msg.style.color = "#f87171"; 
+        msg.innerText = "LỖI: Mật khẩu xác nhận không khớp!";
+        return;
+    }
+    
+    const profileData = {
+        uid: document.getElementById('upd-uid').value,
+        FullName: document.getElementById('upd-fullname').value,
+        NickName: document.getElementById('upd-nickname').value,
+        Email: document.getElementById('upd-email').value,
+        BirthDay: document.getElementById('upd-birthday').value,
+        Gender: document.getElementById('upd-gender').value,
+        Phone: document.getElementById('upd-phone').value,
+        Address: document.getElementById('upd-address').value,
+        SchoolName: document.getElementById('upd-school').value,
+        ClassName: document.getElementById('upd-class').value,
+        Avatar: document.getElementById('upd-avatar-old').value, // Link cũ
+        avatarBase64: document.getElementById('upd-avatar-base64').value, // Dữ liệu ảnh mới
+        Password: pwd,
+        AccountUpdate: JSON.parse(sessionStorage.getItem('userData')).account || 'Unknown'
+    };
+
+    btn.disabled = true; btn.innerText = "ĐANG TẢI LÊN...";
+    msg.style.color = "var(--primary-neon)"; msg.innerText = "Đang xử lý dữ liệu và Hình ảnh...";
+
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'updateUserProfile', profileData: profileData })
+    })
+    .then(res => res.json())
+    .then(json => {
+        if(json.success) {
+            msg.style.color = "#4ade80"; msg.innerText = "Cập nhật thành công!";
+            
+            // Cập nhật lại SessionStorage 
+            let userSession = JSON.parse(sessionStorage.getItem('userData'));
+            userSession.name = profileData.FullName;
+            userSession.nickname = profileData.NickName;
+            if(json.newAvatar) userSession.avatar = json.newAvatar; // Nhận link avatar Drive từ server trả về
+            
+            sessionStorage.setItem('userData', JSON.stringify(userSession));
+            
+            // Render lại góc trái Dashboard
+            renderUserProfile(userSession);
+            logActivity(profileData.uid, profileData.NickName, 'Cập nhật Profile');
+            
+            setTimeout(closeProfileModal, 1500);
+        } else {
+            msg.style.color = "#f87171"; msg.innerText = "Lỗi: " + json.error;
+            btn.disabled = false; btn.innerText = "LƯU THAY ĐỔI";
+        }
+    })
+    .catch(err => {
+        msg.style.color = "#f87171"; msg.innerText = "Lỗi kết nối máy chủ!";
+        btn.disabled = false; btn.innerText = "LƯU THAY ĐỔI";
+    });
+}

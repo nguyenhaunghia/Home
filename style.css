@@ -9,15 +9,16 @@
 }
 
 html, body {
-    min-height: 100%;
-    margin: 0; padding: 0;
+    min-height: 100%; margin: 0; padding: 0;
     font-family: 'Inter', sans-serif;
     color: var(--text-glow);
     background-color: var(--bg-deep);
     overflow-x: hidden;
 }
 
-/* BACKGROUND */
+/* =========================================
+   BACKGROUND & CANVAS
+   ========================================= */
 body {
     background-image:
         radial-gradient(circle at 50% 50%, transparent 40%, rgba(2, 6, 23, 0.6) 100%),
@@ -36,15 +37,16 @@ body {
     z-index: -1; pointer-events: none; opacity: 0.8;
 }
 
-/* HEADER */
+/* =========================================
+   HEADER & TYPOGRAPHY
+   ========================================= */
 .page-header {
     text-align: center; padding-top: 50px; margin-bottom: 40px;
     position: relative; z-index: 10;
 }
 
 .tech-badge {
-    display: inline-block;
-    font-family: 'Roboto Mono', monospace; font-size: 0.8rem;
+    display: inline-block; font-family: 'Roboto Mono', monospace; font-size: 0.8rem;
     color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.4);
     padding: 4px 12px; border-radius: 4px;
     background: rgba(34, 211, 238, 0.1); margin-bottom: 15px;
@@ -52,41 +54,87 @@ body {
     backdrop-filter: blur(4px);
 }
 
-.page-header h1 {
+.page-header h1, .logo-title {
     font-family: 'Rajdhani', sans-serif; font-weight: 700;
     font-size: 3.5rem; text-transform: uppercase; letter-spacing: 3px;
     color: white; text-shadow: 0 0 20px rgba(14, 165, 233, 0.8);
-    margin: 0;
+    margin: 0; transition: 0.3s; cursor: pointer;
 }
 
-/* USER PROFILE (GÓC PHẢI) */
-.user-profile {
-    position: fixed; top: 20px; right: 20px; z-index: 1000;
+.logo-title:hover {
+    text-shadow: 0 0 30px var(--primary-neon);
+}
+
+.version-text {
+    color: #cbd5e1; margin-top: 10px; font-weight: 300;
+}
+
+/* =========================================
+   USER PROFILE CARD (CRYSTAL TECH STYLE)
+   ========================================= */
+#user-profile-container { position: fixed; top: 25px; right: 25px; z-index: 1000; }
+
+.tech-user-card {
     display: flex; align-items: center; gap: 12px;
-    padding: 6px 15px; /* Padding gọn hơn */
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid var(--border-tech);
-    border-radius: 50px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 15px rgba(14, 165, 233, 0.2);
-    transition: 0.3s;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    border-right: 4px solid var(--primary-neon);
+    border-radius: 12px 4px 4px 12px; 
+    padding: 8px 16px 8px 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(34, 211, 238, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.tech-user-card:hover {
+    border-color: rgba(34, 211, 238, 0.8);
+    box-shadow: 0 8px 30px rgba(34, 211, 238, 0.3), inset 0 0 20px rgba(34, 211, 238, 0.15);
+    transform: translateY(-2px);
+}
+
+.avatar-crystal-ring {
+    position: relative; width: 44px; height: 44px;
+    border-radius: 50%; padding: 2px;
+    background: linear-gradient(135deg, #0ea5e9, #818cf8, #c084fc);
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
+    animation: crystalPulse 3s infinite alternate;
+}
+@keyframes crystalPulse {
+    0% { box-shadow: 0 0 8px rgba(14, 165, 233, 0.4); }
+    100% { box-shadow: 0 0 18px rgba(192, 132, 252, 0.8); }
+}
+.avatar-crystal-ring img {
+    width: 100%; height: 100%; border-radius: 50%;
+    object-fit: cover; border: 2px solid var(--bg-deep); background: #fff;
+}
+
+.user-info { display: flex; flex-direction: column; justify-content: center; margin-right: 15px; }
+.user-role {
+    font-family: 'Roboto Mono', monospace; font-size: 0.65rem;
+    color: var(--primary-neon); letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 2px;
+    display: flex; align-items: center; gap: 4px;
 }
 .user-name {
-    font-family: 'Rajdhani', sans-serif; font-weight: 700;
-    color: white; font-size: 0.9rem; letter-spacing: 0.5px;
-    margin-right: 5px;
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.15rem;
+    color: white; text-transform: uppercase; letter-spacing: 0.5px;
+    line-height: 1; text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
 }
-.user-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    border: 1.5px solid var(--primary-neon); object-fit: cover;
-}
-.btn-logout {
-    color: #f87171; cursor: pointer; margin-left: 5px;
-    font-size: 1rem; transition: 0.2s;
-}
-.btn-logout:hover { transform: scale(1.1); color: #ff4d4d; }
 
-/* GRID LAYOUT */
+.logout-btn-wrapper {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 8px;
+    background: rgba(248, 113, 113, 0.1); color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    cursor: pointer; transition: all 0.2s;
+}
+.logout-btn-wrapper:hover {
+    background: #ef4444; color: white;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); transform: scale(1.05);
+}
+
+/* =========================================
+   GRID LAYOUT & DASHBOARD
+   ========================================= */
 .dashboard-container {
     width: 100%; max-width: 1400px;
     margin: 0 auto; padding: 0 20px 60px 20px;
@@ -101,7 +149,9 @@ body {
     .page-header h1 { font-size: 2.2rem; }
 }
 
-/* CARD STYLE */
+/* =========================================
+   CARD STYLE
+   ========================================= */
 .edu-col { opacity: 0; animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -129,8 +179,7 @@ body {
     width: 36px; height: 36px; border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
     font-size: 1rem; background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 .edu-title {
     font-family: 'Rajdhani', sans-serif; font-weight: 700;
@@ -138,7 +187,9 @@ body {
     text-transform: uppercase; text-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
-/* MENU SCROLL */
+/* =========================================
+   MENU SCROLL
+   ========================================= */
 .edu-menu { padding: 10px 15px; height: 360px; overflow-y: auto; }
 .edu-menu::-webkit-scrollbar { width: 4px; }
 .edu-menu::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); border-radius: 2px; }
@@ -167,7 +218,9 @@ body {
 .rotate-icon { transition: 0.3s; font-size: 0.7rem; }
 .rotate-icon.active { transform: rotate(180deg); color: #22d3ee; }
 
-/* FOOTER & LOADER */
+/* =========================================
+   FOOTER & LOADER
+   ========================================= */
 .page-footer {
     text-align: center; margin-top: 40px; padding: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -187,15 +240,19 @@ body {
 @keyframes radarSpin { 100% { transform: rotate(360deg); } }
 @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); } 100% { box-shadow: 0 0 0 20px transparent; } }
 
-/* LOGIN SPECIFIC */
+.loading-container { grid-column: 1 / -1; padding: 40px 0; text-align: center; }
+.loading-text { margin-top: 15px; font-family: 'Roboto Mono', monospace; color: white; }
+
+/* =========================================
+   LOGIN SPECIFIC (Dồn từ HTML sang đây)
+   ========================================= */
 .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .login-card {
     width: 100%; max-width: 440px; 
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(25px); 
     border: 1px solid var(--border-tech);
-    border-radius: 20px; 
-    padding: 60px 40px; 
+    border-radius: 20px; padding: 60px 40px; 
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     position: relative; overflow: hidden;
 }
@@ -203,6 +260,9 @@ body {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
     background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
 }
+
+.login-title { font-family: 'Rajdhani', sans-serif; color: white; font-size: 2.2rem; margin-top: 10px; }
+
 .input-group-custom { margin-bottom: 25px; position: relative; }
 .input-group-custom label { 
     display: block; font-size: 0.75rem; color: var(--primary-neon); 
@@ -213,4 +273,192 @@ body {
     width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
     border-radius: 10px; padding: 12px 0px 12px 45px; color: white; outline: none; transition: 0.3s; 
 }
+.input-group-custom input[type="password"] { padding-right: 40px; }
 .input-group-custom input:focus { border-color: var(--primary-neon); background: rgba(255, 255, 255, 0.08); }
+
+.btn-login { 
+    width: 100%; padding: 14px; background: var(--primary-neon); 
+    border: none; border-radius: 10px; color: white; 
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.1rem; 
+    cursor: pointer; transition: 0.3s; 
+}
+.btn-login:hover { background: #0284c7; box-shadow: 0 0 15px rgba(14, 165, 233, 0.4); }
+
+.autocomplete-items {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 99;
+    background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+    border: 1px solid var(--primary-neon); border-radius: 8px;
+    max-height: 250px; overflow-y: auto; display: none;
+    margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.autocomplete-items div {
+    padding: 12px 15px; cursor: pointer; color: var(--text-dim);
+    font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.1);
+    display: flex; align-items: center; transition: 0.2s; gap: 8px;
+}
+.autocomplete-items div:hover {
+    background: rgba(34, 211, 238, 0.15); border-left: 3px solid var(--primary-neon);
+}
+.autocomplete-items::-webkit-scrollbar { width: 6px; }
+.autocomplete-items::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 5px; }
+
+.password-toggle {
+    position: absolute; right: 15px; left: auto !important; top: 42px; cursor: pointer; 
+    color: var(--text-dim); transition: 0.3s;
+}
+.password-toggle:hover { color: var(--primary-neon); }
+
+.divider-container { display: flex; align-items: center; margin: 20px 0 15px 0; }
+.divider-line { flex-grow: 1; border-top: 1px dashed rgba(255,255,255,0.2); }
+.divider-text { flex-shrink: 0; margin: 0 15px; color: #94a3b8; font-size: 0.8rem; font-family: 'Roboto Mono', monospace; }
+
+.google-btn-wrapper { display: flex; justify-content: center; width: 100%; }
+.login-msg { text-align: center; margin-top: 20px; font-family: 'Roboto Mono', monospace; font-size: 0.85rem; }
+
+/* Utilities */
+.no-underline { text-decoration: none; }
+
+
+/* =========================================
+   NÚT LOGIN NEON (KHI CHƯA ĐĂNG NHẬP)
+   ========================================= */
+.tech-login-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(34, 211, 238, 0.4);
+    border-radius: 50px;
+    padding: 8px 20px;
+    color: var(--primary-neon);
+    font-family: 'Montserrat', 'Rajdhani', sans-serif; 
+    font-weight: 700; 
+    font-size: 1rem;
+    cursor: pointer; 
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.tech-login-btn:hover {
+    background: rgba(34, 211, 238, 0.15);
+    box-shadow: 0 0 25px rgba(34, 211, 238, 0.5), inset 0 0 10px rgba(34, 211, 238, 0.2);
+    color: white;
+    border-color: rgba(34, 211, 238, 0.8);
+    transform: translateY(-2px);
+}
+
+.tech-login-btn i { 
+    font-size: 1.2rem; 
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* =========================================
+   [BỔ SUNG] CSS GỐC CHO OVERLAY VÀ KHUNG MODAL
+   ========================================= */
+.tech-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; opacity: 0; pointer-events: none; transition: 0.3s ease;
+}
+.tech-modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+.tech-modal-content {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+    border: 1px solid var(--border-tech); border-radius: 12px;
+    width: 90%; max-width: 800px; /* Đã cập nhật chiều rộng 800px cho layout 2 cột */
+    max-height: 90vh;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 15px rgba(34, 211, 238, 0.1);
+    transform: translateY(-30px); transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex; flex-direction: column; overflow: hidden;
+}
+.tech-modal-overlay.active .tech-modal-content { transform: translateY(0); }
+
+.tech-modal-header {
+    padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(0,0,0,0.2);
+}
+.tech-modal-header h3 {
+    margin: 0; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; color: #fff;
+}
+.close-modal {
+    color: var(--text-dim); cursor: pointer; font-size: 1.2rem; transition: 0.2s;
+}
+.close-modal:hover { color: #f87171; transform: scale(1.1); }
+
+.tech-modal-body {
+    padding: 20px; overflow-y: auto;
+}
+.tech-modal-body::-webkit-scrollbar { width: 5px; }
+.tech-modal-body::-webkit-scrollbar-thumb { background: var(--primary-neon); border-radius: 5px; }
+
+/* Grid form cho các input */
+.form-grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;
+}
+.form-group-modal label {
+    display: block; font-size: 0.75rem; color: var(--primary-neon);
+    font-family: 'Roboto Mono', monospace; margin-bottom: 5px;
+}
+.form-group-modal input, .form-group-modal select {
+    width: 100%; padding: 10px 12px; border-radius: 6px;
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+    color: white; outline: none; transition: 0.2s; box-sizing: border-box;
+}
+.form-group-modal input:focus, .form-group-modal select:focus {
+    border-color: var(--primary-neon); background: rgba(0,0,0,0.5);
+}
+
+.modal-footer-btn {
+    padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex; justify-content: flex-end; gap: 10px; background: rgba(0,0,0,0.2);
+}
+.btn-save-modal {
+    background: var(--primary-neon); color: #fff; padding: 8px 20px;
+    border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;
+}
+.btn-save-modal:hover { box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
+
+/* =========================================
+   CẬP NHẬT GIAO DIỆN MODAL MỚI (CÓ AVATAR TRÁI)
+   ========================================= */
+.modal-layout { display: flex; gap: 25px; }
+.modal-left-col { 
+    width: 160px; flex-shrink: 0; display: flex; 
+    flex-direction: column; align-items: center; 
+    border-right: 1px dashed rgba(255,255,255,0.1); padding-right: 25px;
+}
+.modal-right-col { flex-grow: 1; padding-right: 5px; }
+
+.avatar-preview-box { 
+    width: 140px; height: 140px; border-radius: 50%; overflow: hidden; 
+    border: 3px solid var(--primary-neon); margin-bottom: 15px; 
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.4); background: #000;
+}
+.avatar-preview-box img { width: 100%; height: 100%; object-fit: cover; }
+
+.btn-change-avatar { 
+    background: rgba(34, 211, 238, 0.1); border: 1px solid var(--primary-neon); 
+    color: var(--text-glow); padding: 8px 15px; border-radius: 6px; 
+    font-size: 0.8rem; cursor: pointer; transition: 0.3s; width: 100%;
+    font-family: 'Roboto Mono', monospace; font-weight: bold;
+}
+.btn-change-avatar:hover { background: var(--primary-neon); color: #fff; }
+
+.pos-relative { position: relative; }
+.modal-pwd-toggle { 
+    position: absolute; right: 12px; top: 35px; 
+    color: var(--text-dim); cursor: pointer; transition: 0.2s; z-index: 5;
+}
+.modal-pwd-toggle:hover { color: var(--primary-neon); }
+
+@media (max-width: 768px) {
+    .modal-layout { flex-direction: column; align-items: center; }
+    .modal-left-col { width: 100%; border-right: none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 25px; margin-bottom: 20px; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+}
