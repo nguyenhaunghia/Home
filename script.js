@@ -1,7 +1,7 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwt9YHB1exYZT946oTkzLBmdjx2QvyP-tW6JaQQwE2Y4FdP_Hy-MiqWF3WZPhhoffAd3A/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyRYVaA8nrL6_YDj-F9Gk1Sj6wT5Gcyhr2IbXhGiD9PQD-WouO9rj30dk0SMge5nTs4bA/exec';
 
 // --- INITIALIZE ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -11,8 +11,43 @@ window.addEventListener('DOMContentLoaded', () => {
     loadDataByPrivilege(userData);
 });
 
+
+
+
+// --- HỆ THỐNG TOAST THÔNG BÁO ---
+function showToast(message, type = 'success') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `tech-toast ${type}`;
+    
+    let icon = 'fa-info-circle';
+    if (type === 'success') icon = 'fa-check-circle';
+    if (type === 'error') icon = 'fa-exclamation-triangle';
+    if (type === 'warning') icon = 'fa-exclamation-circle';
+
+    toast.innerHTML = `<i class="fas ${icon}"></i> <div>${message}</div>`;
+    container.appendChild(toast);
+
+    // Kích hoạt hiệu ứng trượt vào
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    // Tự động xóa sau 4 giây
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 400); 
+    }, 4000);
+}
+
+
+
+
 // --- GHI LOG HOẠT ĐỘNG ---
-// Nhận thêm biến uid
 function logActivity(uid, nickname, action) {
     if (!WEB_APP_URL || WEB_APP_URL.includes('DÁN_URL')) return;
     fetch(WEB_APP_URL, {
@@ -45,7 +80,6 @@ function renderUserProfile(user) {
     const container = document.getElementById('user-profile-container');
     if (container) {
         if (user) {
-            // Tự động tạo Avatar hạt giống theo tên nếu người dùng chưa có
             const avatarSrc = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`;
             const userRole = user.object ? String(user.object).toUpperCase() : 'THÀNH VIÊN';
             
@@ -64,7 +98,6 @@ function renderUserProfile(user) {
                 </div>
             `;
         } else {
-            // ---> MỚI: NẾU CHƯA ĐĂNG NHẬP, HIỂN THỊ NÚT LOGIN NEON <---
             container.innerHTML = `
                 <div class="tech-login-btn" onclick="window.location.href='login.html'" title="Kết nối vào hệ thống">
                     <i class="fas fa-user-astronaut"></i>
@@ -79,38 +112,23 @@ function logout() {
     const userDataString = sessionStorage.getItem('userData');
     if (userDataString) {
         const user = JSON.parse(userDataString);
-        // Bắn cả UID lên Google Sheet
         logActivity(user.uid || 'Khách', user.nickname || user.name, 'Đăng xuất');
     }
-    
     sessionStorage.clear();
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 300);
+    setTimeout(() => { window.location.href = 'index.html'; }, 300);
 }
 
 // --- DATA LOADING LOGIC ---
 async function loadDataByPrivilege(user) {
-    console.log('User status:', user);
-    
-    let loadNHN = false;
-    let loadHocSinh = false;
+    let loadNHN = false; let loadHocSinh = false;
 
     if (user) {
         if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-            loadNHN = true;
-            loadHocSinh = true; 
+            loadNHN = true; loadHocSinh = true; 
         } 
-        
         if (user.object) {
-            const objStr = String(user.object)
-                .toLowerCase()
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "");
-                
-            if (objStr.includes('hoc sinh')) {
-                loadHocSinh = true;
-            }
+            const objStr = String(user.object).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (objStr.includes('hoc sinh')) loadHocSinh = true;
         }
     }
 
@@ -136,28 +154,19 @@ async function fetchSheetData(sheetName) {
         const text = await response.text();
         const json = JSON.parse(text.substring(47).slice(0, -2));
         return parseData(json);
-    } catch (error) {
-        console.error(`Error loading sheet ${sheetName}:`, error);
-        return [];
-    }
+    } catch (error) { return []; }
 }
 
-// --- PARSE DATA (HOÀN TOÀN TÌM THEO TÊN CỘT) ---
+// --- PARSE DATA ---
 function parseData(json) {
-    let colMap = {};
-    let startRow = 0;
+    let colMap = {}; let startRow = 0;
     const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
     
     const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
-    
     if (hasLabels) {
-        json.table.cols.forEach((col, idx) => {
-            if (col && col.label) colMap[cleanKey(col.label)] = idx;
-        });
+        json.table.cols.forEach((col, idx) => { if (col && col.label) colMap[cleanKey(col.label)] = idx; });
     } else if (json.table.rows && json.table.rows.length > 0) {
-        json.table.rows[0].c.forEach((cell, idx) => {
-            if (cell && cell.v) colMap[cleanKey(cell.v)] = idx;
-        });
+        json.table.rows[0].c.forEach((cell, idx) => { if (cell && cell.v) colMap[cleanKey(cell.v)] = idx; });
         startRow = 1;
     }
 
@@ -170,12 +179,7 @@ function parseData(json) {
         return defaultVal;
     };
 
-    const cards = [];
-    let currentCard = null;
-    let currentL1 = null;
-    let currentL2 = null;
-    let currentL3 = null;
-    let currentL4 = null;
+    const cards = []; let currentCard = null; let currentL1 = null; let currentL2 = null; let currentL3 = null; let currentL4 = null;
 
     for (let i = startRow; i < json.table.rows.length; i++) {
         const row = json.table.rows[i];
@@ -192,46 +196,14 @@ function parseData(json) {
         const label = getVal(row, 'Label', 'Undefined');
         const link = getVal(row, 'Link', '#');
         const note = getVal(row, 'Note', '');
-
         const item = { level, icon, color, label, link, note, children: [] };
 
-        if (level === 0) { 
-            currentCard = item; 
-            cards.push(currentCard); 
-            currentL1 = null; currentL2 = null; currentL3 = null; currentL4 = null;
-        } 
-        else if (level === 1) { 
-            if (currentCard) { 
-                currentL1 = item; 
-                currentCard.children.push(currentL1); 
-                currentL2 = null; currentL3 = null; currentL4 = null;
-            } 
-        } 
-        else if (level === 2) { 
-            if (currentL1) { 
-                currentL2 = item; 
-                currentL1.children.push(currentL2); 
-                currentL3 = null; currentL4 = null;
-            } 
-        } 
-        else if (level === 3) { 
-            if (currentL2) { 
-                currentL3 = item;
-                currentL2.children.push(currentL3);
-                currentL4 = null;
-            }
-        }
-        else if (level === 4) {
-            if (currentL3) {
-                currentL4 = item;
-                currentL3.children.push(currentL4);
-            }
-        }
-        else if (level === 5) {
-            if (currentL4) {
-                currentL4.children.push(item);
-            }
-        }
+        if (level === 0) { currentCard = item; cards.push(currentCard); currentL1 = null; currentL2 = null; currentL3 = null; currentL4 = null; } 
+        else if (level === 1) { if (currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = null; currentL3 = null; currentL4 = null; } } 
+        else if (level === 2) { if (currentL1) { currentL2 = item; currentL1.children.push(currentL2); currentL3 = null; currentL4 = null; } } 
+        else if (level === 3) { if (currentL2) { currentL3 = item; currentL2.children.push(currentL3); currentL4 = null; } }
+        else if (level === 4) { if (currentL3) { currentL4 = item; currentL3.children.push(currentL4); } }
+        else if (level === 5) { if (currentL4) { currentL4.children.push(item); } }
     }
     return cards;
 }
@@ -240,11 +212,7 @@ function parseData(json) {
 function renderDashboard(cards) {
     const grid = document.getElementById('dynamic-grid');
     grid.innerHTML = '';
-
-    if (cards.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8; font-family:\'Roboto Mono\'">NO DATA AVAILABLE</div>';
-        return;
-    }
+    if (cards.length === 0) { grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8; font-family:\'Roboto Mono\'">NO DATA AVAILABLE</div>'; return; }
 
     cards.forEach((card, index) => {
         const col = document.createElement('div');
@@ -268,11 +236,8 @@ function renderDashboard(cards) {
         const menuContainer = document.createElement('div');
         menuContainer.className = 'edu-menu';
         
-        if (card.children && card.children.length > 0) {
-            card.children.forEach(child => menuContainer.appendChild(createMenuItem(child)));
-        } else {
-            menuContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.85rem;">Coming Soon</div>`;
-        }
+        if (card.children && card.children.length > 0) { card.children.forEach(child => menuContainer.appendChild(createMenuItem(child))); } 
+        else { menuContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.85rem;">Coming Soon</div>`; }
 
         cardHtml.innerHTML = headerHtml;
         cardHtml.appendChild(menuContainer);
@@ -310,14 +275,10 @@ function createMenuItem(item) {
     } 
     else {
         const iconHtml = `<i class="${item.icon}" style="color:${item.color}; font-size:0.75rem; width:18px; text-align:center; margin-right:4px;"></i>`;
-
         const wrapper = document.createElement('div');
         wrapper.innerHTML = `
             <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
-                <span style="display:flex; align-items:center; gap:6px;">
-                    ${iconHtml}
-                    ${item.label}
-                </span>
+                <span style="display:flex; align-items:center; gap:6px;">${iconHtml} ${item.label}</span>
                  ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
             </div>
         `;
@@ -384,14 +345,14 @@ function injectModalHTML() {
         <div id="profile-modal" class="tech-modal-overlay">
             <div class="tech-modal-content">
                 <div class="tech-modal-header">
-                    <h3><i class="fas fa-user-astronaut"></i> HỒ SƠ TÀI KHOẢN</h3>
+                    <h3><i class="fas fa-user-astronaut"></i> CẬP NHẬT THÔNG TIN TÀI KHOẢN NGƯỜI DÙNG</h3>
                     <i class="fas fa-times close-modal" onclick="closeProfileModal()"></i>
                 </div>
                 <div class="tech-modal-body" id="profile-modal-body">
                     <div style="text-align:center; color: var(--primary-neon);"><i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>
                 </div>
                 <div class="modal-footer-btn">
-                    <button class="btn-save-modal" onclick="saveProfileModal()" id="btn-save-profile" style="display:none;">LƯU THAY ĐỔI</button>
+                    <button class="btn-save-modal" onclick="saveProfileModal()" id="btn-save-profile" style="display:none;">CẬP NHẬT</button>
                 </div>
             </div>
         </div>
@@ -428,19 +389,12 @@ function closeProfileModal() {
     if(modal) modal.classList.remove('active');
 }
 
-// --- HÀM TẮT/MỞ HIỂN THỊ MẬT KHẨU TRONG MODAL ---
 function toggleModalPwd(inputId, iconEl) {
     const inp = document.getElementById(inputId);
-    if(inp.type === 'password') {
-        inp.type = 'text';
-        iconEl.classList.remove('fa-eye');
-        iconEl.classList.add('fa-eye-slash');
-    } else {
-        inp.type = 'password';
-        iconEl.classList.remove('fa-eye-slash');
-        iconEl.classList.add('fa-eye');
-    }
+    if(inp.type === 'password') { inp.type = 'text'; iconEl.classList.remove('fa-eye'); iconEl.classList.add('fa-eye-slash'); } 
+    else { inp.type = 'password'; iconEl.classList.remove('fa-eye-slash'); iconEl.classList.add('fa-eye'); }
 }
+
 
 // --- VẼ FORM VỚI BỐ CỤC MỚI TRÁI PHẢI ---
 function renderProfileForm(data) {
@@ -454,7 +408,7 @@ function renderProfileForm(data) {
                     <img id="upd-avatar-img" src="${avatarSrc}">
                 </div>
                 <input type="file" id="upd-avatar-file" style="display:none" accept="image/png, image/jpeg, image/gif">
-                <button class="btn-change-avatar" onclick="document.getElementById('upd-avatar-file').click()"><i class="fas fa-camera"></i> ĐỔI ẢNH</button>
+                <button class="btn-change-avatar" id="btn-trigger-upload" onclick="document.getElementById('upd-avatar-file').click()"><i class="fas fa-camera"></i></button>
             </div>
 
             <div class="modal-right-col">
@@ -464,7 +418,7 @@ function renderProfileForm(data) {
 
                 <div class="form-grid-2">
                     <div class="form-group-modal"><label>HỌ VÀ TÊN</label><input type="text" id="upd-fullname" value="${data.FullName}"></div>
-                    <div class="form-group-modal"><label>NICKNAME (GỢI NHỚ)</label><input type="text" id="upd-nickname" value="${data.NickName}"></div>
+                    <div class="form-group-modal"><label>NICKNAME</label><input type="text" id="upd-nickname" value="${data.NickName}"></div>
                 </div>
                 <div class="form-grid-2">
                     <div class="form-group-modal"><label>EMAIL LIÊN HỆ</label><input type="email" id="upd-email" value="${data.Email || ''}"></div>
@@ -506,37 +460,57 @@ function renderProfileForm(data) {
     body.innerHTML = formHtml;
     document.getElementById('btn-save-profile').style.display = 'block';
 
-    // XỬ LÝ SỰ KIỆN KHI CHỌN ẢNH XONG
+    // XỬ LÝ ẢNH & BÁO HIỆU
     document.getElementById('upd-avatar-file').addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if(file) {
-            if(file.size > 2.5 * 1024 * 1024) { // Cấm ảnh lớn hơn 2.5MB chống tràn bộ nhớ Drive
-                alert('Vui lòng chọn ảnh có kích thước dưới 2.5MB để đảm bảo hiệu suất!');
-                return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                document.getElementById('upd-avatar-img').src = evt.target.result; // Hiện preview
-                document.getElementById('upd-avatar-base64').value = evt.target.result; // Lưu chuỗi Base64
-            }
-            reader.readAsDataURL(file);
+        if(!file) return;
+
+        // Thay vì alert, gọi showToast
+        if(file.size > 2.5 * 1024 * 1024) { 
+            showToast('Ảnh quá lớn. Vui lòng chọn ảnh dưới 2.5MB!', 'warning');
+            return; 
         }
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const img = new Image();
+            img.onload = function() {
+                const MAX_WIDTH = 300; const MAX_HEIGHT = 300;
+                let width = img.width; let height = img.height;
+                if (width > height && width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } 
+                else if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width; canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                document.getElementById('upd-avatar-img').src = dataUrl; 
+                document.getElementById('upd-avatar-base64').value = dataUrl; 
+                
+                const btn = document.getElementById('btn-trigger-upload');
+                btn.innerHTML = '<i class="fas fa-check-circle"></i>';
+                btn.style.background = '#4ade80';
+                btn.style.color = '#000';
+            }
+            img.src = evt.target.result;
+        }
+        reader.readAsDataURL(file);
     });
 }
 
-// --- GỬI DỮ LIỆU LÊN SERVER ---
-function saveProfileModal() {
+// --- GỬI DỮ LIỆU & BÁO TOAST ---
+async function saveProfileModal() {
     const btn = document.getElementById('btn-save-profile');
     const msg = document.getElementById('modal-msg');
     
-    // Kiểm tra mật khẩu xác nhận
     const pwd = document.getElementById('upd-password').value;
     const pwdConf = document.getElementById('upd-password-confirm').value;
     
-    if (pwd !== '' && pwd !== pwdConf) {
-        msg.style.color = "#f87171"; 
-        msg.innerText = "LỖI: Mật khẩu xác nhận không khớp!";
-        return;
+    if (pwd !== '' && pwd !== pwdConf) { 
+        showToast("Mật khẩu xác nhận không khớp!", "warning"); 
+        return; 
     }
     
     const profileData = {
@@ -550,45 +524,60 @@ function saveProfileModal() {
         Address: document.getElementById('upd-address').value,
         SchoolName: document.getElementById('upd-school').value,
         ClassName: document.getElementById('upd-class').value,
-        Avatar: document.getElementById('upd-avatar-old').value, // Link cũ
-        avatarBase64: document.getElementById('upd-avatar-base64').value, // Dữ liệu ảnh mới
+        Avatar: document.getElementById('upd-avatar-old').value, 
+        avatarBase64: document.getElementById('upd-avatar-base64').value, 
         Password: pwd,
         AccountUpdate: JSON.parse(sessionStorage.getItem('userData')).account || 'Unknown'
     };
 
-    btn.disabled = true; btn.innerText = "ĐANG TẢI LÊN...";
-    msg.style.color = "var(--primary-neon)"; msg.innerText = "Đang xử lý dữ liệu và Hình ảnh...";
+    try {
+        btn.disabled = true; btn.innerText = "ĐANG TẢI LÊN...";
+        msg.style.color = "var(--primary-neon)"; msg.innerText = "Hệ thống đang đồng bộ dữ liệu...";
 
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'updateUserProfile', profileData: profileData })
-    })
-    .then(res => res.json())
-    .then(json => {
-        if(json.success) {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'updateUserProfile', profileData: profileData })
+        });
+
+        const rawText = await response.text();
+
+        if (rawText.toLowerCase().includes("<!doctype html>") || rawText.toLowerCase().includes("<html")) {
+            showToast("Lỗi phân quyền hệ thống. Máy chủ từ chối kết nối.", "error");
+            throw new Error("Lỗi HTML");
+        }
+
+        let json;
+        try { json = JSON.parse(rawText); } 
+        catch (parseErr) {
+            showToast("Dữ liệu phản hồi bị lỗi định dạng.", "error");
+            throw new Error("Lỗi Parse JSON");
+        }
+
+        if (json.success) {
             msg.style.color = "#4ade80"; msg.innerText = "Cập nhật thành công!";
+            showToast("Hồ sơ đã được cập nhật thành công!", "success");
             
-            // Cập nhật lại SessionStorage 
             let userSession = JSON.parse(sessionStorage.getItem('userData'));
             userSession.name = profileData.FullName;
             userSession.nickname = profileData.NickName;
-            if(json.newAvatar) userSession.avatar = json.newAvatar; // Nhận link avatar Drive từ server trả về
-            
+            if(json.newAvatar) userSession.avatar = json.newAvatar; 
             sessionStorage.setItem('userData', JSON.stringify(userSession));
             
-            // Render lại góc trái Dashboard
             renderUserProfile(userSession);
             logActivity(profileData.uid, profileData.NickName, 'Cập nhật Profile');
-            
             setTimeout(closeProfileModal, 1500);
         } else {
-            msg.style.color = "#f87171"; msg.innerText = "Lỗi: " + json.error;
-            btn.disabled = false; btn.innerText = "LƯU THAY ĐỔI";
+            showToast(json.error, "error");
+            throw new Error(json.error);
         }
-    })
-    .catch(err => {
-        msg.style.color = "#f87171"; msg.innerText = "Lỗi kết nối máy chủ!";
-        btn.disabled = false; btn.innerText = "LƯU THAY ĐỔI";
-    });
+
+    } catch (err) {
+        msg.style.color = "#f87171"; msg.innerText = ""; // Xóa chữ chờ
+        if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
+            showToast("Lỗi kết nối mạng. Vui lòng thử lại sau!", "error");
+        }
+    } finally {
+        btn.disabled = false; btn.innerText = "CẬP NHẬT";
+    }
 }
