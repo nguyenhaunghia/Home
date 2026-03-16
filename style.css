@@ -460,7 +460,7 @@ body { padding-bottom: 110px !important; }
     border-top: 1px solid rgba(34, 211, 238, 0.3); 
     box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.6); z-index: 9999;
 }
-.split-ad { display: flex; width: 100%; max-width: 100%; margin: 0; height: 95px; }
+.split-ad { display: flex; width: 100%; max-width: 100%; margin: 0; height: 70px; }
 .ad-side { position: relative; display: flex; align-items: stretch; justify-content: center; padding: 5px 5px; }
 .ad-left-adsense { flex: 1; border-right: 1px solid rgba(255, 255, 255, 0.1); }
 .ad-right-aff { flex: 2; overflow: hidden; }
@@ -489,12 +489,12 @@ body { padding-bottom: 110px !important; }
 .aff-item {
     display: flex; align-items: stretch; justify-content: flex-start;
     background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px; padding: 6px;
+    border-radius: 8px; padding: 4px;
     transition: all 0.2s ease-in-out;
     
     /* Ép cứng chiều cao, không cho phép phình to khi có ảnh hoặc chữ dài */
-    height: 80px !important; 
-    max-height: 80px !important;
+    height: 60px !important; 
+    max-height: 50px !important;
     
     box-sizing: border-box; flex: 0 0 auto; min-width: 290px; max-width: 320px;
     scroll-snap-align: start; cursor: pointer;
@@ -506,9 +506,9 @@ body { padding-bottom: 110px !important; }
 
 /* CỘT TRÁI (Avatar/Icon) - KHÓA CỨNG ĐỘ RỘNG */
 .aff-left-col {
-    flex: 0 0 70px; /* Ép cứng bề ngang là 70px */
+    flex: 0 0 50px; /* Ép cứng bề ngang là 70px */
     width: 70px;
-    height: 100%;
+    height: 40px;
     display: flex; align-items: center; justify-content: center;
     background: rgba(14, 165, 233, 0.1); border-radius: 6px; overflow: hidden;
 }
@@ -545,7 +545,7 @@ body { padding-bottom: 110px !important; }
 .visit-badge {
     /* Lệnh !important để ép chết vị trí ở góc phải */
     position: fixed !important;
-    bottom: 115px !important; 
+    top: 90px !important; 
     right: 25px !important;
     z-index: 9990 !important;
     
@@ -589,7 +589,7 @@ body { padding-bottom: 110px !important; }
     /* Cố định chiều cao vùng Affiliate */
     .ad-right-aff { height: 95px; width: 100%; padding: 5px 0; }
     .ad-side { padding: 5px; } 
-    body { padding-bottom: 150px !important; }
+    body { padding-bottom: 900px !important; }
     
     .logo-title { font-size: 2.2rem; letter-spacing: 5px; }
     .logo-title:hover { letter-spacing: 8px; }
