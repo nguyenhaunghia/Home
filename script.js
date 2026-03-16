@@ -581,3 +581,134 @@ async function saveProfileModal() {
         btn.disabled = false; btn.innerText = "CẬP NHẬT";
     }
 }
+
+// ==========================================
+// HỆ THỐNG FETCH QUẢNG CÁO TỪ GOOGLE SHEETS (FIX ẢNH GOOGLE DRIVE & FALLBACK)
+// ==========================================
+async function loadAffiliateAds() {
+    const sheetId = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
+    const sheetName = 'Advertisement';
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+
+    try {
+        const response = await fetch(url);
+        const text = await response.text();
+        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+        const data = JSON.parse(jsonString);
+
+        let headers = data.table.cols.map(c => c.label ? c.label.toLowerCase().trim() : '');
+        let dataRows = data.table.rows;
+
+        // Xử lý dòng tiêu đề
+        if (!headers.includes('title') && dataRows.length > 0) {
+            headers = dataRows[0].c.map(cell => cell && cell.v ? String(cell.v).toLowerCase().trim() : '');
+            dataRows.shift();
+        }
+
+        // Dò tìm vị trí cột
+        const idxField   = headers.findIndex(h => h.includes('field'));
+        const idxAvatar  = headers.findIndex(h => h.includes('avatar'));
+        const idxTitle   = headers.findIndex(h => h.includes('title'));
+        const idxLink    = headers.findIndex(h => h.includes('link'));
+        const idxComment = headers.findIndex(h => h.includes('comment') || h.includes('note')); 
+        const idxEmbed   = headers.findIndex(h => h.includes('embed') || h.includes('code'));
+
+        if (idxTitle === -1) throw new Error("Thiếu cột 'Title'");
+
+        // Rút trích dữ liệu
+        let adsList = dataRows.map(row => {
+            const getVal = (index) => (index !== -1 && row.c[index] && row.c[index].v !== null) ? String(row.c[index].v) : '';
+            return {
+                field:   getVal(idxField),
+                avatar:  getVal(idxAvatar),
+                title:   getVal(idxTitle),
+                link:    getVal(idxLink) || '#',
+                comment: getVal(idxComment),
+                embed:   getVal(idxEmbed)
+            };
+        });
+
+        // Lọc thẻ trống & Xáo trộn ngẫu nhiên
+        adsList = adsList.filter(ad => ad.title.trim() !== '');
+        adsList = adsList.sort(() => 0.5 - Math.random());
+
+        renderAffiliateAds(adsList);
+
+    } catch (error) {
+        console.error('Lỗi tải dữ liệu quảng cáo:', error);
+    }
+}
+
+function getAdIcon(field) {
+    const f = field.toLowerCase();
+    if (f.includes('lập trình') || f.includes('code')) return 'fa-laptop-code';
+    if (f.includes('toán') || f.includes('math')) return 'fa-square-root-variable';
+    if (f.includes('ngoại ngữ') || f.includes('tiếng')) return 'fa-language';
+    if (f.includes('kỹ năng') || f.includes('skill')) return 'fa-brain';
+    if (f.includes('sách') || f.includes('book')) return 'fa-book-open';
+    return 'fa-rocket'; 
+}
+
+// Hàm "Phép thuật": Vượt rào bảo mật của Google Drive để nhúng ảnh
+function getDirectImageUrl(url) {
+    if (!url) return '';
+    url = url.trim();
+    // Bắt ID của file Google Drive (chuỗi dài >= 25 ký tự)
+    let match = url.match(/[-\w]{25,}/); 
+    if (url.includes('drive.google.com') && match) {
+        // Sử dụng Server lh3.googleusercontent.com để render ảnh trực tiếp
+        return `https://lh3.googleusercontent.com/d/${match[0]}`;
+    }
+    return url; // Trả lại bình thường nếu không phải link Drive
+}
+
+function renderAffiliateAds(ads) {
+    const container = document.getElementById('dynamic-aff-container');
+    container.innerHTML = ''; 
+
+    ads.forEach(ad => {
+        const iconClass = getAdIcon(ad.field);
+        
+        // --- XỬ LÝ CỘT TRÁI (TỈ LỆ 1: Avatar hoặc Icon) ---
+        let leftColHtml = '';
+        if (ad.avatar && ad.avatar.length > 5) {
+            let directImgUrl = getDirectImageUrl(ad.avatar);
+            // Kỹ thuật Fallback: onerror sẽ tự động biến ảnh lỗi thành Icon
+            leftColHtml = `<img src="${directImgUrl}" class="aff-avatar" alt="Avatar" onerror="this.outerHTML='<i class=\\'fas ${iconClass} aff-icon\\'></i>'">`;
+        } else {
+            leftColHtml = `<i class="fas ${iconClass} aff-icon"></i>`;
+        }
+
+        // --- XỬ LÝ CỘT PHẢI (TỈ LỆ 3: Title + [Embed OR Comment]) ---
+        let rightContentHtml = '';
+        if (ad.embed && ad.embed.trim() !== '') {
+            rightContentHtml = `<div class="aff-embed">${ad.embed}</div>`;
+        } else if (ad.comment && ad.comment.trim() !== '') {
+            rightContentHtml = `<span class="aff-comment-sm">${ad.comment}</span>`;
+        }
+
+        const html = `
+            <div class="aff-item" title="${ad.title}" onclick="if('${ad.link}' !== '#') window.open('${ad.link}', '_blank');">
+                <div class="aff-left-col">${leftColHtml}</div>
+                <div class="aff-right-col">
+                    <span class="aff-title-sm">${ad.title}</span>
+                    ${rightContentHtml}
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+    });
+
+    // --- BẮT SỰ KIỆN LĂN CHUỘT GIỮA ---
+    container.addEventListener('wheel', function(e) {
+        if (e.deltaY !== 0) {
+            e.preventDefault(); 
+            this.scrollBy({
+                left: e.deltaY > 0 ? 320 : -320, 
+                behavior: 'smooth'
+            });
+        }
+    }, { passive: false });
+}
+
+window.addEventListener('DOMContentLoaded', loadAffiliateAds);
