@@ -64,14 +64,12 @@ body {
     text-transform: uppercase; 
     letter-spacing: 12px; 
     
-    /* Hiệu ứng màu chữ Gradient Tech */
     background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 50%, #0ea5e9 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
     
-    /* Drop-shadow để glow mượt với Gradient */
     filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.6));
     margin: 0; 
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -133,7 +131,7 @@ body {
 }
 .avatar-crystal-ring img {
     width: 100%; height: 100%; border-radius: 50%;
-    object-fit: fill; border: 2px solid var(--bg-deep); background: #fff;
+    object-fit: cover; border: 2px solid var(--bg-deep); background: #fff;
 }
 
 .user-info { display: flex; flex-direction: column; justify-content: center; margin-right: 15px; }
@@ -453,7 +451,8 @@ body {
 /* =========================================
    HỆ THỐNG QUẢNG CÁO ĐỘNG (FIXED BOTTOM TASKBAR)
    ========================================= */
-body { padding-bottom: 110px !important; }
+body { padding-bottom: 90px !important; }
+
 .dual-ad-wrapper {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: rgba(15, 23, 42, 0.98); 
@@ -489,12 +488,12 @@ body { padding-bottom: 110px !important; }
 .aff-item {
     display: flex; align-items: stretch; justify-content: flex-start;
     background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px; padding: 4px;
+    border-radius: 8px; padding: 6px;
     transition: all 0.2s ease-in-out;
     
-    /* Ép cứng chiều cao, không cho phép phình to khi có ảnh hoặc chữ dài */
-    height: 60px !important; 
-    max-height: 50px !important;
+    /* Đồng bộ chuẩn: Cao đúng 56px để vừa khít thanh cuộn */
+    height: 56px !important; 
+    max-height: 56px !important;
     
     box-sizing: border-box; flex: 0 0 auto; min-width: 290px; max-width: 320px;
     scroll-snap-align: start; cursor: pointer;
@@ -504,25 +503,27 @@ body { padding-bottom: 110px !important; }
     box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.15), 0 -3px 15px rgba(34, 211, 238, 0.2);
 }
 
-/* CỘT TRÁI (Avatar/Icon) - KHÓA CỨNG ĐỘ RỘNG */
+/* CỘT TRÁI (Avatar/Icon) - HÌNH VUÔNG HOÀN HẢO */
 .aff-left-col {
-    flex: 0 0 50px; /* Ép cứng bề ngang là 70px */
-    width: 70px;
-    height: 40px;
+    flex: 0 0 44px; /* Rộng 44px */
+    width: 44px;
+    height: 44px; /* Cao 44px */
+    align-self: center; /* Tự động nằm chính giữa thẻ */
+    
     display: flex; align-items: center; justify-content: center;
     background: rgba(14, 165, 233, 0.1); border-radius: 6px; overflow: hidden;
 }
 .aff-avatar {
     width: 100%; height: 100%;
-    object-fit: cover; /* Tràn viền, không méo ảnh */
+    object-fit: cover; 
     display: block;
 }
 .aff-icon { font-size: 1.5rem; color: var(--primary-neon); }
 
-/* CỘT PHẢI (Nội dung) - CHẶN CHỮ TRÀN VIỀN */
+/* CỘT PHẢI (Nội dung) */
 .aff-right-col {
     flex: 1; 
-    min-width: 0; /* Lệnh quan trọng để ép chữ có dấu ... khi quá dài */
+    min-width: 0; 
     display: flex; flex-direction: column; justify-content: center;
     padding-left: 12px; overflow: hidden;
 }
@@ -543,9 +544,8 @@ body { padding-bottom: 110px !important; }
    BỘ ĐẾM LƯỢT TRUY CẬP (VISIT COUNTER)
    ========================================= */
 .visit-badge {
-    /* Lệnh !important để ép chết vị trí ở góc phải */
     position: fixed !important;
-    bottom: 100px !important; 
+    bottom: 75px !important; /* Neo cứng ở gốc dưới, ngay trên thanh quảng cáo */
     right: 25px !important;
     z-index: 9990 !important;
     
@@ -584,26 +584,28 @@ body { padding-bottom: 110px !important; }
     .form-grid-2 { grid-template-columns: 1fr; }
     
     .split-ad { flex-direction: column; height: auto; }
-    .ad-left-adsense { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); height: 45px; min-height: 45px; }
     
-    /* Cố định chiều cao vùng Affiliate */
-    .ad-right-aff { height: 95px; width: 100%; padding: 5px 0; }
+    /* Đảm bảo AdSense đủ 60px để hiển thị banner Google */
+    .ad-left-adsense { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); height: 60px; min-height: 60px; }
+    
+    .ad-right-aff { height: 75px; width: 100%; padding: 5px 0; }
     .ad-side { padding: 5px; } 
-    body { padding-bottom: 900px !important; }
+    
+    /* Fix lỗi đánh máy 900px */
+    body { padding-bottom: 155px !important; }
     
     .logo-title { font-size: 2.2rem; letter-spacing: 5px; }
     .logo-title:hover { letter-spacing: 8px; }
     
-    /* ÉP CỨNG CHIỀU CAO CARD TRÊN MOBILE */
     .aff-item { 
         min-width: 85vw; 
         max-width: 90vw; 
-        height: 80px !important; 
+        height: 65px !important; 
+        max-height: 65px !important;
     } 
     
-    /* ĐẨY BỘ ĐẾM LÊN TRÁNH THANH QUẢNG CÁO KÉP */
     .visit-badge {
-        bottom: 165px !important; 
+        bottom: 155px !important; 
         right: 15px !important;
     }
 }
