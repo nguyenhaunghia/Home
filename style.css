@@ -545,7 +545,7 @@ body { padding-bottom: 110px !important; }
 .visit-badge {
     /* Lệnh !important để ép chết vị trí ở góc phải */
     position: fixed !important;
-    top: 90px !important; 
+    bottom: 100px !important; 
     right: 25px !important;
     z-index: 9990 !important;
     
