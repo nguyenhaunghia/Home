@@ -38,11 +38,12 @@ body {
 }
 
 /* =========================================
-   HEADER & TYPOGRAPHY
+   HEADER & TYPOGRAPHY (CYBERPUNK STYLE)
    ========================================= */
 .page-header {
     text-align: center; padding-top: 50px; margin-bottom: 40px;
     position: relative; z-index: 10;
+    display: flex; flex-direction: column; align-items: center;
 }
 
 .tech-badge {
@@ -54,19 +55,47 @@ body {
     backdrop-filter: blur(4px);
 }
 
-.page-header h1, .logo-title {
-    font-family: 'Rajdhani', sans-serif; font-weight: 700;
-    font-size: 3.5rem; text-transform: uppercase; letter-spacing: 3px;
-    color: white; text-shadow: 0 0 20px rgba(14, 165, 233, 0.8);
-    margin: 0; transition: 0.3s; cursor: pointer;
+.no-underline { text-decoration: none !important; }
+
+.logo-title {
+    font-family: 'Rajdhani', sans-serif; 
+    font-weight: 800;
+    font-size: 4rem; 
+    text-transform: uppercase; 
+    letter-spacing: 12px; 
+    
+    /* Hiệu ứng màu chữ Gradient Tech */
+    background: linear-gradient(90deg, #ffffff 0%, #7dd3fc 50%, #0ea5e9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    
+    /* Drop-shadow để glow mượt với Gradient */
+    filter: drop-shadow(0 0 15px rgba(14, 165, 233, 0.6));
+    margin: 0; 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    display: inline-block;
 }
 
 .logo-title:hover {
-    text-shadow: 0 0 30px var(--primary-neon);
+    letter-spacing: 18px; 
+    filter: drop-shadow(0 0 25px rgba(14, 165, 233, 1));
 }
 
 .version-text {
-    color: #cbd5e1; margin-top: 10px; font-weight: 300;
+    font-family: 'Roboto Mono', monospace;
+    color: #0ea5e9; 
+    margin-top: 15px; 
+    font-weight: 500;
+    letter-spacing: 4px; 
+    font-size: 0.85rem;
+    background: rgba(14, 165, 233, 0.1);
+    padding: 6px 20px;
+    border-radius: 20px;
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    box-shadow: inset 0 0 10px rgba(14, 165, 233, 0.2);
 }
 
 /* =========================================
@@ -144,10 +173,6 @@ body {
     gap: 25px; width: 100%;
 }
 @media (max-width: 1100px) { .edu-grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 768px) { 
-    .edu-grid { grid-template-columns: 1fr; }
-    .page-header h1 { font-size: 2.2rem; }
-}
 
 /* =========================================
    CARD STYLE
@@ -456,12 +481,6 @@ body {
 }
 .modal-pwd-toggle:hover { color: var(--primary-neon); }
 
-@media (max-width: 768px) {
-    .modal-layout { flex-direction: column; align-items: center; }
-    .modal-left-col { width: 100%; border-right: none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 25px; margin-bottom: 20px; }
-    .form-grid-2 { grid-template-columns: 1fr; }
-}
-
 /* =========================================
    HỆ THỐNG TOAST NOTIFICATION (TECH STYLE)
    ========================================= */
@@ -614,7 +633,7 @@ body {
 .aff-avatar {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Hình lấp đầy khung tỉ lệ 1 vuông vức */
+    object-fit: fill;
 }
 .aff-icon { 
     font-size: 1.5rem; 
@@ -654,11 +673,96 @@ body {
     max-height: 100%; max-width: 100%; object-fit: contain;
 }
 
-/* Mobile Responsive */
+/* =========================================
+   MOBILE RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
-    .split-ad { flex-direction: column; height: auto; }
-    .ad-left-adsense { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); min-height: 60px;}
-    .ad-side { padding: 10px; }
-    body { padding-bottom: 160px !important; } 
-    .aff-item { min-width: 85vw; max-width: 90vw; } 
+    .edu-grid { grid-template-columns: 1fr; }
+    .modal-layout { flex-direction: column; align-items: center; }
+    .modal-left-col { width: 100%; border-right: none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 25px; margin-bottom: 20px; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+    
+    /* Responsive cho thanh quảng cáo */
+    .split-ad { 
+        flex-direction: column; 
+        height: auto; /* Mở khóa tổng để chứa 2 khối */
+    }
+    
+    .ad-left-adsense { 
+        border-right: none; 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+        height: 45px; 
+        min-height: 45px; /* Cố định chiều cao AdSense trên Mobile */
+    }
+    
+    /* Ép cứng chiều cao khối Affiliate trên Mobile để Card không bị thụt lún */
+    .ad-right-aff {
+        height: 95px; 
+        width: 100%;
+        padding: 5px 0; 
+    }
+
+    .ad-side { padding: 5px; } 
+    
+    body { padding-bottom: 150px !important; } /* Đẩy nội dung nền lên tránh bị che */
+    
+    /* Responsive cho Tiêu đề Cyberpunk */
+    .logo-title { font-size: 2.2rem; letter-spacing: 5px; }
+    .logo-title:hover { letter-spacing: 8px; }
+    
+    /* Card ép theo height của ad-right-aff */
+    .aff-item { 
+        min-width: 85vw; 
+        max-width: 90vw; 
+        height: calc(100% - 6px); 
+    } 
+}
+
+
+
+
+/* =========================================
+   BỘ ĐẾM LƯỢT TRUY CẬP (VISIT COUNTER)
+   ========================================= */
+.visit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--primary-neon);
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px dashed rgba(34, 211, 238, 0.4);
+    padding: 6px 18px;
+    border-radius: 50px;
+    margin-top: 10px;
+    box-shadow: inset 0 0 10px rgba(34, 211, 238, 0.1);
+    letter-spacing: 1.5px;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.visit-badge:hover {
+    border-color: var(--primary-neon);
+    border-style: solid;
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.4), inset 0 0 15px rgba(34, 211, 238, 0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.visit-badge i {
+    font-size: 0.9rem;
+    /* Hiệu ứng nhấp nháy như radar đang quét */
+    animation: radarBlink 1.5s infinite alternate;
+}
+
+#visit-count {
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+@keyframes radarBlink {
+    0% { opacity: 0.3; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1.1); color: #fff; text-shadow: 0 0 10px #22d3ee; }
 }

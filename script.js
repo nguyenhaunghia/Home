@@ -712,3 +712,35 @@ function renderAffiliateAds(ads) {
 }
 
 window.addEventListener('DOMContentLoaded', loadAffiliateAds);
+
+
+
+
+// ==========================================
+// HỆ THỐNG ĐẾM LƯỢT TRUY CẬP (HIT COUNTER API)
+// ==========================================
+function initVisitCounter() {
+    const counterElement = document.getElementById('visit-count');
+    if (!counterElement) return;
+
+    // Namespace định danh duy nhất cho dự án của bạn (tránh trùng lặp với web khác)
+    const namespace = 'nshome_smartschool_2026'; 
+    const key = 'total_visits';
+
+    // Gọi API miễn phí từ counterapi.dev
+    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+        .then(response => response.json())
+        .then(data => {
+            // Hiển thị số, tự động thêm dấu phẩy (vd: 1,234) và đệm số 0 ở đầu
+            counterElement.innerText = data.count.toLocaleString('en-US').padStart(4, '0');
+        })
+        .catch(error => {
+            console.error('Lỗi hệ thống đếm truy cập:', error);
+            counterElement.innerText = 'ERROR';
+        });
+}
+
+// Bổ sung gọi hàm initVisitCounter vào sự kiện DOMContentLoaded hiện có
+window.addEventListener('DOMContentLoaded', () => {
+    initVisitCounter();
+});
