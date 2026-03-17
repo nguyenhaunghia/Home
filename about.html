@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới thiệu - SMART SCHOOL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .article-container { padding: 20px; position: relative; z-index: 10; }
+        .article-card {
+            max-width: 800px; margin: 0 auto 50px auto;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(25px); 
+            border: 1px solid var(--border-tech); border-radius: 20px; 
+            padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            position: relative; overflow: hidden;
+            color: var(--text-dim); line-height: 1.8; font-size: 1.05rem;
+        }
+        .article-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+        }
+        .article-title {
+            font-family: 'Rajdhani', sans-serif; color: white; font-size: 2.2rem; margin-bottom: 20px;
+            text-transform: uppercase; letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        .article-card strong { color: white; font-weight: 600; }
+        .back-link {
+            display: inline-block; margin-bottom: 20px; color: var(--primary-neon); 
+            text-decoration: none; font-family: 'Roboto Mono', monospace; transition: 0.3s;
+        }
+        .back-link:hover { color: white; text-shadow: 0 0 8px var(--primary-neon); transform: translateX(-5px); }
+        
+        /* =========================================
+           LỚP CSS ĐỂ CĂN LỀ ĐỀU VÀ THỤT ĐẦU DÒNG
+           ========================================= */
+        .cyber-article-text {
+            text-align: justify; /* Căn đều 2 bên */
+            text-indent: 30px;   /* Thụt đầu dòng 30px */
+            margin-bottom: 15px; 
+        }
+    </style>
+</head>
+<body>
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="page-header" style="padding-top: 30px; margin-bottom: 20px;">
+        <a href="index.html" class="no-underline">
+            <h1 class="logo-title" style="font-size: 2.5rem;">SMART SCHOOL</h1>
+        </a>
+    </div>
+
+    <div class="article-container">
+        <div class="article-card">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Trở về Trang chủ</a>
+            <h2 class="article-title">Về N's Home - Cổng Thông Tin Smart School</h2>
+            
+            <p class="cyber-article-text">Chào mừng bạn đến với <strong>N's Home - Smart School</strong>, nền tảng giáo dục trực tuyến được thiết kế chuyên biệt để đồng hành cùng học sinh trong kỷ nguyên số. Với triết lý "Học tập thông minh - Tư duy logic", chúng tôi không chỉ cung cấp kiến thức mà còn rèn luyện phương pháp giải quyết vấn đề toàn diện.</p>
+            
+            <p class="cyber-article-text">Tại Smart School, chúng tôi tự hào mang đến một hệ sinh thái tài liệu học tập phong phú, tập trung vào các bộ môn nền tảng như <strong>Toán học, Tin học và Lập trình cơ bản</strong>. Từ những chuyên đề luyện thi THPT Quốc gia bám sát thực tiễn, đến các bài giảng hướng dẫn thuật toán, thiết kế web và làm chủ cơ sở dữ liệu, mọi nội dung đều được biên soạn kỹ lưỡng, trực quan và dễ hiểu.</p>
+            
+            <p class="cyber-article-text">Giao diện của N's Home được xây dựng theo phong cách công nghệ (Cyberpunk) hiện đại, tạo cảm hứng học tập mạnh mẽ như một trung tâm điều khiển thực thụ. Hệ thống lưu trữ bài giảng thông minh giúp người học dễ dàng truy cập, ôn tập và theo dõi tiến độ của bản thân mọi lúc, mọi nơi.</p>
+            
+            <p class="cyber-article-text">Sứ mệnh của N's Home là xóa bỏ khoảng cách tiếp cận tri thức, biến những con số và dòng code khô khan thành công cụ sắc bén để thế hệ trẻ tự tin bước vào tương lai. Hãy tham gia cùng chúng tôi để kiến tạo một cộng đồng học tập sáng tạo, kỷ luật và không ngừng phát triển!</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

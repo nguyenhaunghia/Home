@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chính sách bảo mật - SMART SCHOOL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .article-container { padding: 20px; position: relative; z-index: 10; }
+        .article-card {
+            max-width: 800px; margin: 0 auto 50px auto;
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(25px); 
+            border: 1px solid var(--border-tech); border-radius: 20px; 
+            padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            position: relative; overflow: hidden;
+            color: var(--text-dim); line-height: 1.8; font-size: 1.05rem;
+        }
+        .article-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+        }
+        .article-title {
+            font-family: 'Rajdhani', sans-serif; color: white; font-size: 2.2rem; margin-bottom: 5px;
+            text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(14, 165, 233, 0.5);
+        }
+        .article-card h3 { color: var(--primary-neon); font-family: 'Roboto Mono', monospace; font-size: 1.2rem; margin-top: 30px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px;}
+        .article-card strong { color: white; font-weight: 600; }
+        .article-card ul { padding-left: 20px; margin-bottom: 15px; }
+        .article-card li { margin-bottom: 8px; text-align: justify; }
+        .back-link {
+            display: inline-block; margin-bottom: 20px; color: var(--primary-neon); 
+            text-decoration: none; font-family: 'Roboto Mono', monospace; transition: 0.3s;
+        }
+        .back-link:hover { color: white; text-shadow: 0 0 8px var(--primary-neon); transform: translateX(-5px); }
+        .update-date { font-family: 'Roboto Mono', monospace; font-size: 0.85rem; color: #64748b; margin-bottom: 30px; }
+        
+        /* =========================================
+           LỚP CSS ĐỂ CĂN LỀ ĐỀU VÀ THỤT ĐẦU DÒNG
+           ========================================= */
+        .cyber-article-text {
+            text-align: justify; /* Căn đều 2 bên */
+            text-indent: 30px;   /* Thụt đầu dòng 30px */
+            margin-bottom: 15px; 
+        }
+    </style>
+</head>
+<body>
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="page-header" style="padding-top: 30px; margin-bottom: 20px;">
+        <a href="index.html" class="no-underline">
+            <h1 class="logo-title" style="font-size: 2.5rem;">SMART SCHOOL</h1>
+        </a>
+    </div>
+
+    <div class="article-container">
+        <div class="article-card">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Trở về Trang chủ</a>
+            <h2 class="article-title">Chính Sách Bảo Mật</h2>
+            <div class="update-date"><i class="far fa-clock"></i> Cập nhật lần cuối: Tháng 3/2026</div>
+            
+            <p class="cyber-article-text">Tại <strong>N's Home - Smart School</strong> (truy cập qua địa chỉ smartschool.io.vn), quyền riêng tư của khách truy cập là một trong những ưu tiên hàng đầu của chúng tôi. Tài liệu Chính sách bảo mật này phác thảo các loại thông tin cá nhân mà hệ thống thu thập, ghi lại và cách chúng tôi sử dụng chúng.</p>
+            
+            <h3>1. Tệp nhật ký (Log Files)</h3>
+            <p class="cyber-article-text">Smart School tuân thủ quy trình tiêu chuẩn về việc sử dụng tệp nhật ký. Những tệp này ghi lại thông tin khách khi họ truy cập trang web. Thông tương được thu thập bao gồm địa chỉ IP, loại trình duyệt, Nhà cung cấp dịch vụ Internet (ISP), dấu thời gian và số trang đã xem. Thông tin này hoàn toàn không liên kết với bất kỳ dữ liệu nào có thể nhận dạng cá nhân, nhằm mục đích phân tích xu hướng và quản trị trang web.</p>
+            
+            <h3>2. Cookie và Web Beacons</h3>
+            <p class="cyber-article-text">Giống như bất kỳ trang web nào khác, N's Home sử dụng "cookie". Những cookie này được dùng để lưu trữ thông tin về sở thích của khách truy cập và các trang mà họ đã truy cập. Thông tin này giúp chúng tôi tối ưu hóa trải nghiệm người dùng bằng cách tùy chỉnh nội dung trang web dựa trên loại trình duyệt và thiết bị.</p>
+            
+            <h3>3. Đối tác quảng cáo (Google AdSense)</h3>
+            <p class="cyber-article-text">Google là một trong những nhà cung cấp bên thứ ba trên trang web của chúng tôi. Google sử dụng cookie (DART) để phân phát quảng cáo cho người dùng trang web dựa trên lượt truy cập của họ vào trang web của chúng tôi và các trang web khác trên internet.</p>
+            <ul>
+                <li>Người dùng có thể chọn không sử dụng cookie DART bằng cách truy cập Chính sách bảo mật của mạng quảng cáo Google tại URL sau: <a href="https://policies.google.com/technologies/ads" target="_blank" style="color: var(--primary-neon);">https://policies.google.com/technologies/ads</a></li>
+                <li>Các đối tác quảng cáo của bên thứ ba có thể sử dụng các công nghệ như tệp cookie, JavaScript hoặc Web Beacons. Họ tự động nhận địa chỉ IP của bạn khi điều này xảy ra để đo lường hiệu quả chiến dịch. N's Home không có quyền kiểm soát các cookie này của bên thứ ba.</li>
+            </ul>
+            
+            <h3>4. Quyền của người dùng</h3>
+            <p class="cyber-article-text">Nếu bạn có bất kỳ câu hỏi nào hoặc cần thêm thông tin về Chính sách bảo mật của chúng tôi, đừng ngần ngại liên hệ với ban quản trị N's Home. Bằng cách sử dụng trang web của chúng tôi, bạn đồng ý với Chính sách bảo mật này và các điều khoản kèm theo.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

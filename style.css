@@ -609,3 +609,18 @@ body { padding-bottom: 90px !important; }
         right: 15px !important;
     }
 }
+
+/* =========================================
+   VĂN BẢN TRÌNH BÀY (CĂN LỀ ĐỀU & THỤT ĐẦU DÒNG)
+   ========================================= */
+.cyber-article-text {
+    text-align: justify; /* [CĂN LỀ ĐỀU] Ép văn bản phẳng lỳ 2 bên lề */
+    text-indent: 30px;   /* [THỤT ĐẦU DÒNG] Đầu đoạn văn sẽ lùi vào 30px */
+    
+    /* [Tùy chọn thêm] Để các đoạn văn không dính vào nhau */
+    margin-bottom: 15px; 
+}
+
+
+
+
