@@ -578,17 +578,7 @@ body { padding-bottom: 90px !important; }
 /* =========================================
    FOOTER BẢN QUYỀN (N's SoftWave)
    ========================================= */
-.tech-footer {
-    text-align: center;
-    padding: 40px 20px 20px 20px;
-    margin-top: 50px;
-    background: linear-gradient(0deg, rgba(15, 23, 42, 0.8) 0%, transparent 100%);
-    border-top: 1px dashed rgba(34, 211, 238, 0.2);
-    color: var(--text-dim);
-    font-family: 'Roboto Mono', monospace;
-    position: relative;
-    z-index: 10; 
-}
+
 
 .tech-footer-logo {
     font-family: 'Rajdhani', sans-serif;
@@ -630,10 +620,24 @@ body { padding-bottom: 90px !important; }
     text-shadow: 0 0 8px var(--primary-neon);
 }
 
+.tech-footer {
+    text-align: center;
+    padding: 40px 20px 20px 20px;
+    margin-top: 50px;
+    background: transparent; /* [ĐÃ SỬA] Xóa màu nền đè, trả lại nền trong suốt liền mạch 100% */
+    border-top: none; /* [ĐÃ SỬA] Xóa đường viền nét đứt phía trên */
+    color: var(--text-dim);
+    font-family: 'Roboto Mono', monospace;
+    position: relative;
+    z-index: 10; 
+}
+
+/* Các class logo, desc, contact giữ nguyên... */
+
 .tech-footer-copyright {
     font-size: 0.75rem;
     color: #64748b;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: none; /* [ĐÃ SỬA] Xóa luôn vệt kẻ mờ ngay trên chữ Copyright cho sạch tuyệt đối */
     padding-top: 15px;
     width: 50%;
     margin: 0 auto;
