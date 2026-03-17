@@ -88,13 +88,16 @@ body {
     margin-top: 15px; 
     font-weight: 500;
     letter-spacing: 4px; 
-    font-size: 0.85rem;
-    background: rgba(14, 165, 233, 0.1);
+    font-size: 1.0rem;
     padding: 6px 20px;
-    border-radius: 20px;
-    border: 1px solid rgba(14, 165, 233, 0.3);
-    box-shadow: inset 0 0 10px rgba(14, 165, 233, 0.2);
+
 }
+
+
+
+
+
+
 
 /* =========================================
    USER PROFILE CARD (CRYSTAL TECH STYLE)
@@ -160,22 +163,48 @@ body {
 }
 
 /* =========================================
-   GRID LAYOUT & DASHBOARD
+   GRID LAYOUT & DASHBOARD (ĐÃ NÂNG CẤP CUỘN NGANG)
    ========================================= */
+
+
+/* 1. Ép đáy của Dashboard về 0 */
 .dashboard-container {
     width: 100%; max-width: 1400px;
-    margin: 0 auto; padding: 0 20px 60px 20px;
+    margin: 0 auto; 
+    padding: 0 20px 0px 20px !important; /* Ép padding đáy = 0px */
 }
+
+/* 2. Ép đáy của Lưới Card sát vào thanh cuộn */
 .edu-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 25px; width: 100%;
+    display: flex;          
+    flex-wrap: nowrap;      
+    overflow-x: auto;       
+    overflow-y: hidden;
+    gap: 25px; 
+    width: 100%;
+    padding-bottom: 20px !important; /* Chỉ chừa đúng 10px cho thanh cuộn nằm */
+    margin-bottom: 5px !important;   /* Ép lề dưới = 0px */
+    scroll-behavior: smooth;
 }
-@media (max-width: 1100px) { .edu-grid { grid-template-columns: repeat(4, 1fr); } }
+
+
+/* Trang trí thanh cuộn ngang phong cách Cyberpunk */
+.edu-grid::-webkit-scrollbar { height: 4px; }
+.edu-grid::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); border-radius: 10px; }
+.edu-grid::-webkit-scrollbar-thumb { 
+    background: var(--primary-neon); 
+    border-radius: 10px; 
+    box-shadow: 0 0 8px var(--primary-neon); 
+}
 
 /* =========================================
    CARD STYLE
    ========================================= */
-.edu-col { opacity: 0; animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.edu-col { 
+    flex: 0 0 320px; /* [SỬA QUAN TRỌNG] Ép cứng chiều rộng mỗi card là 320px để chạy băng chuyền */
+    opacity: 0; 
+    animation: slideIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+}
 @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
 .edu-card {
@@ -185,6 +214,7 @@ body {
     border-radius: 12px; display: flex; flex-direction: column;
     overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 393px;
 }
 .edu-card:hover {
     transform: translateY(-5px);
@@ -263,7 +293,7 @@ body {
 @keyframes radarSpin { 100% { transform: rotate(360deg); } }
 @keyframes radarPulse { 0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4); } 100% { box-shadow: 0 0 0 20px transparent; } }
 
-.loading-container { grid-column: 1 / -1; padding: 40px 0; text-align: center; }
+.loading-container { width: 100%; padding: 40px 0; text-align: center; flex: 1 1 100%; }
 .loading-text { margin-top: 15px; font-family: 'Roboto Mono', monospace; color: white; }
 
 /* =========================================
@@ -580,15 +610,19 @@ body { padding-bottom: 90px !important; }
    ========================================= */
 
 
-.tech-footer-logo {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-glow);
-    letter-spacing: 3px;
-    margin-bottom: 12px;
-    text-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
+.tech-footer {
+    text-align: center;
+    padding: 50px 20px 20px 20px !important; /* Ép padding đỉnh = 0px */
+    margin-top: 0px !important;             /* Ép lề trên = 0px */
+    background: transparent; 
+    border-top: none; 
+    color: var(--text-dim);
+    font-family: 'Roboto Mono', monospace;
+    position: relative;
+    z-index: 10; 
 }
+
+
 
 .tech-footer-desc {
     font-family: 'Inter', sans-serif;
@@ -624,21 +658,20 @@ body { padding-bottom: 90px !important; }
     text-align: center;
     padding: 40px 20px 20px 20px;
     margin-top: 50px;
-    background: transparent; /* [ĐÃ SỬA] Xóa màu nền đè, trả lại nền trong suốt liền mạch 100% */
-    border-top: none; /* [ĐÃ SỬA] Xóa đường viền nét đứt phía trên */
+    background: transparent; /* Nền trong suốt hoàn toàn */
+    border-top: none; /* Không viền */
     color: var(--text-dim);
     font-family: 'Roboto Mono', monospace;
     position: relative;
     z-index: 10; 
 }
 
-/* Các class logo, desc, contact giữ nguyên... */
-
 .tech-footer-copyright {
+
     font-size: 0.75rem;
-    color: #64748b;
-    border-top: none; /* [ĐÃ SỬA] Xóa luôn vệt kẻ mờ ngay trên chữ Copyright cho sạch tuyệt đối */
-    padding-top: 15px;
+    color: #ffffff;
+    border-top: none; /* Sạch tuyệt đối */
+    padding-top: 1px;
     width: 50%;
     margin: 0 auto;
 }
@@ -647,20 +680,25 @@ body { padding-bottom: 90px !important; }
    MOBILE RESPONSIVE
    ========================================= */
 @media (max-width: 768px) {
-    .edu-grid { grid-template-columns: 1fr; }
+    /* [ĐÃ SỬA] Đảm bảo trên Mobile không bị ảnh hưởng bởi Flex Cuộn Ngang */
+    .edu-grid { 
+        display: flex; 
+        flex-direction: column; /* Trên Mobile thì lại xếp chồng dọc */
+        overflow-x: hidden; 
+    }
+    .edu-col { flex: 0 0 auto; width: 100%; }
+
     .modal-layout { flex-direction: column; align-items: center; }
     .modal-left-col { width: 100%; border-right: none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 25px; margin-bottom: 20px; }
     .form-grid-2 { grid-template-columns: 1fr; }
     
     .split-ad { flex-direction: column; height: auto; }
     
-    /* Đảm bảo AdSense đủ 60px để hiển thị banner Google */
     .ad-left-adsense { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); height: 60px; min-height: 60px; }
     
     .ad-right-aff { height: 75px; width: 100%; padding: 5px 0; }
     .ad-side { padding: 5px; } 
     
-    /* Fix lỗi đánh máy 900px */
     body { padding-bottom: 155px !important; }
     
     .logo-title { font-size: 2.2rem; letter-spacing: 5px; }
@@ -683,9 +721,7 @@ body { padding-bottom: 90px !important; }
    VĂN BẢN TRÌNH BÀY (CĂN LỀ ĐỀU & THỤT ĐẦU DÒNG)
    ========================================= */
 .cyber-article-text {
-    text-align: justify; /* [CĂN LỀ ĐỀU] Ép văn bản phẳng lỳ 2 bên lề */
-    text-indent: 30px;   /* [THỤT ĐẦU DÒNG] Đầu đoạn văn sẽ lùi vào 30px */
-    
-    /* [Tùy chọn thêm] Để các đoạn văn không dính vào nhau */
+    text-align: justify; 
+    text-indent: 30px;   
     margin-bottom: 15px; 
 }

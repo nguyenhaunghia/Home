@@ -32,8 +32,8 @@
         <p class="version-text">Ver 3.02 || 2026</p>
 
         <div style="margin-top: 10px; font-family: 'Roboto Mono', monospace; font-size: 0.85rem;">
-            <a href="about.html"...>Về chúng tôi</a> | 
-            <a href="privacy.html"...>Chính sách bảo mật</a>
+            <a href="about.html" style="color: var(--text-dim); text-decoration: none; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#22d3ee'" onmouseout="this.style.color='var(--text-dim)'">Về chúng tôi</a> | 
+            <a href="privacy.html" style="color: var(--text-dim); text-decoration: none; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#22d3ee'" onmouseout="this.style.color='var(--text-dim)'">Chính sách bảo mật</a>
         </div>
     </div>
 
@@ -51,7 +51,6 @@
     </div>
 
     <footer class="tech-footer">
-        
         <div class="tech-footer-desc" style="max-width: 1030px; margin: 0 auto 10px auto; padding: 0 20px; color: var(--text-dim); font-size: 0.9rem; line-height: 1.6;">
             Kiến tạo giải pháp công nghệ giáo dục đột phá. N's SoftWave tự hào phát triển hệ sinh thái học tập thông minh, tối ưu hóa trải nghiệm trực tuyến và cung cấp công cụ sắc bén để nâng tầm tư duy cho thế hệ trẻ.
         </div>
@@ -62,6 +61,7 @@
             &copy; 2026 N's SoftWave. All rights reserved.
         </div>
     </footer>
+
     <div class="dual-ad-wrapper">
         <div class="split-ad">
             
@@ -89,6 +89,29 @@
     </div>
 
     <script src="script.js"></script>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gridEl = document.querySelector('.edu-grid');
+            if (gridEl) {
+                gridEl.addEventListener('wheel', function(e) {
+                    // 1. Kiểm tra xem chuột có đang nằm trong thẻ menu cuộn dọc không
+                    const isInsideMenu = e.target.closest('.edu-menu');
+                    
+                    // 2. Nếu đang ở trong menu, Lệnh 'return' sẽ thoát hàm, trả lại quyền cuộn dọc bình thường
+                    if (isInsideMenu) {
+                        return; 
+                    }
+
+                    // 3. Nếu chuột nằm ngoài menu (ở tiêu đề hoặc viền card), áp dụng cuộn ngang
+                    if (e.deltaY !== 0) {
+                        e.preventDefault(); 
+                        gridEl.scrollLeft += e.deltaY * 1.5; // Nhân 1.5 để cuộn mượt hơn
+                    }
+                }, { passive: false });
+            }
+        });
+    </script>
 
     <div class="visit-badge" title="Tổng số lượt truy cập hệ thống">
         <i class="fas fa-satellite-dish"></i> <span id="visit-count">...</span>
