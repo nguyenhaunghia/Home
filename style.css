@@ -725,3 +725,113 @@ body { padding-bottom: 90px !important; }
     text-indent: 30px;   
     margin-bottom: 15px; 
 }
+
+
+
+
+
+
+
+
+
+
+/* =========================================
+   HỆ THỐNG RSS SIDEBARS (HAI BÊN)
+   ========================================= */
+.rss-sidebar {
+    position: fixed;
+    top: 120px; /* Nằm dưới Profile một chút */
+    width: 220px;
+    max-height: 60vh;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 12px;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+/* Hiệu ứng khi rê chuột vào sẽ sáng lên */
+.rss-sidebar:hover {
+    border-color: var(--primary-neon);
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+}
+
+.rss-left { left: 20px; }
+.rss-right { right: 20px; }
+
+.rss-header {
+    background: rgba(14, 165, 233, 0.2);
+    padding: 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary-neon);
+    text-align: center;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+    letter-spacing: 1px;
+}
+
+.rss-content {
+    padding: 10px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Trang trí thanh cuộn nhỏ cho RSS */
+.rss-content::-webkit-scrollbar { width: 3px; }
+.rss-content::-webkit-scrollbar-thumb { background: var(--primary-neon); }
+
+.rss-placeholder {
+    color: #64748b;
+    font-size: 0.75rem;
+    font-family: 'Roboto Mono', monospace;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ẨN SIDEBAR TRÊN MOBILE ĐỂ KHÔNG BỊ RỐI */
+@media (max-width: 1400px) {
+    .rss-sidebar { display: none; }
+}
+
+
+
+
+/* Từng mục tin nhỏ trong cột RSS */
+.rss-item {
+    display: block;
+    text-decoration: none;
+    padding: 10px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 2px solid rgba(34, 211, 238, 0.3);
+    transition: 0.3s;
+}
+
+.rss-item:hover {
+    background: rgba(34, 211, 238, 0.1);
+    border-left-color: var(--primary-neon);
+    transform: translateX(5px);
+}
+
+.rss-item-title {
+    color: #fff;
+    font-size: 0.8rem;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Giới hạn 2 dòng để không bị quá dài */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.rss-item-date {
+    color: #64748b;
+    font-size: 0.65rem;
+    font-family: 'Roboto Mono', monospace;
+}

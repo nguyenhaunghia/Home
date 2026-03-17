@@ -744,3 +744,48 @@ function initVisitCounter() {
 window.addEventListener('DOMContentLoaded', () => {
     initVisitCounter();
 });
+
+
+
+
+// HÀM LẤY TIN TỪ RSS VÀ HIỂN THỊ
+function loadRSS(url, containerId) {
+    const container = document.getElementById(containerId);
+    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+
+    fetch(proxyUrl)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                let html = '';
+                data.items.slice(0, 10).forEach(item => {
+                    // Xử lý ngày tháng cho gọn
+                    const pubDate = new Date(item.pubDate);
+                    const dateString = pubDate.toLocaleDateString('vi-VN');
+
+                    html += `
+                        <a href="${item.link}" target="_blank" class="rss-item">
+                            <div class="rss-item-title">${item.title}</div>
+                            <div class="rss-item-date"><i class="far fa-calendar-alt"></i> ${dateString}</div>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi RSS:", err);
+            container.innerHTML = '<div class="rss-placeholder">Tín hiệu từ Bộ GD đang bận...</div>';
+        });
+}
+
+// KÍCH HOẠT KHI TRANG LOAD XONG
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Cột trái: Lấy tin "Văn bản chỉ đạo điều hành" từ Bộ Giáo dục
+    // Mình sử dụng rss2json làm trạm trung gian để đọc dữ liệu từ Bộ
+    const moetRss = "https://moet.gov.vn/van-ban/van-ban-chi-dao-dieu-hanh/_layouts/15/moet/getrss.aspx?itemid=101914859";
+    loadRSS(moetRss, "rss-content-left");
+
+    // 2. Cột phải: Bạn có thể lấy tin "Giáo dục" từ VnExpress hoặc báo khác để đa dạng
+    loadRSS("https://vnexpress.net/rss/giao-duc.rss", "rss-content-right");
+});
