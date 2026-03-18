@@ -747,9 +747,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-
 // HÀM LẤY TIN TỪ RSS VÀ HIỂN THỊ
-function loadRSS(url, containerId) {
+function loadRSScu(url, containerId) {
     const container = document.getElementById(containerId);
     const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
 
@@ -779,13 +778,103 @@ function loadRSS(url, containerId) {
         });
 }
 
+function loadRSScu2(url, containerId) {
+    const container = document.getElementById(containerId);
+    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+
+    fetch(proxyUrl)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                let html = '';
+                
+                // DANH SÁCH MÃ MÀU (10 màu khác nhau, bạn có thể tự do thay đổi)
+                const colors = [
+                    '#3b82f6', // Xanh dương
+                    '#10b981', // Xanh ngọc
+                    '#f59e0b', // Cam
+                    '#ef4444', // Đỏ
+                    '#8b5cf6', // Tím
+                    '#ec4899', // Hồng
+                    '#06b6d4', // Xanh lơ
+                    '#84cc16', // Xanh lá mạ
+                    '#f43f5e', // Đỏ hồng
+                    '#14b8a6'  // Xanh mòng két
+                ];
+
+                data.items.slice(0, 10).forEach((item, index) => {
+                    // Xử lý ngày tháng
+                    const pubDate = new Date(item.pubDate);
+                    const dateString = pubDate.toLocaleDateString('vi-VN');
+                    
+                    // Lấy màu tuần tự theo danh sách bên trên
+                    const itemColor = colors[index % colors.length]; 
+
+                    // Gắn màu vào viền trái, tiêu đề và icon
+                    html += `
+                        <a href="${item.link}" target="_blank" class="rss-item" style="border-left: 3px solid ${itemColor}; padding-left: 10px; margin-bottom: 10px; display: block;">
+                            <div class="rss-item-title" style="color: ${itemColor}; font-weight: bold; margin-bottom: 4px;">${item.title}</div>
+                            <div class="rss-item-date" style="font-size: 0.85rem; color: #94a3b8;"><i class="far fa-calendar-alt" style="color: ${itemColor};"></i> ${dateString}</div>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi RSS:", err);
+            container.innerHTML = '<div class="rss-placeholder">Tín hiệu từ nguồn cấp đang bận...</div>';
+        });
+}
+
+// HÀM LẤY TIN TỪ RSS VÀ HIỂN THỊ (CHỈ ĐỔI MÀU BORDER TRÁI)
+function loadRSS(url, containerId) {
+    const container = document.getElementById(containerId);
+    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
+
+    fetch(proxyUrl)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'ok') {
+                let html = '';
+                
+                // Bảng 10 màu cho thanh viền trái
+                const colors = [
+                    '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', 
+                    '#ec4899', '#06b6d4', '#84cc16', '#f43f5e', '#14b8a6'
+                ];
+
+                data.items.slice(0, 10).forEach((item, index) => {
+                    const pubDate = new Date(item.pubDate);
+                    const dateString = pubDate.toLocaleDateString('vi-VN');
+                    
+                    // Lấy màu tuần tự
+                    const itemColor = colors[index % colors.length];
+
+                    // Chỉ chèn thêm style="border-left: 4px solid Mã_Màu" vào thẻ a
+                    html += `
+                        <a href="${item.link}" target="_blank" class="rss-item" style="border-left: 4px solid ${itemColor} !important;">
+                            <div class="rss-item-title">${item.title}</div>
+                            <div class="rss-item-date"><i class="far fa-calendar-alt"></i> ${dateString}</div>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi RSS:", err);
+            container.innerHTML = '<div class="rss-placeholder">Tín hiệu từ nguồn cấp đang bận...</div>';
+        });
+}
+
 // KÍCH HOẠT KHI TRANG LOAD XONG
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Cột trái: Lấy tin "Văn bản chỉ đạo điều hành" từ Bộ Giáo dục
-    // Mình sử dụng rss2json làm trạm trung gian để đọc dữ liệu từ Bộ
-    const moetRss = "https://moet.gov.vn/van-ban/van-ban-chi-dao-dieu-hanh/_layouts/15/moet/getrss.aspx?itemid=101914859";
-    loadRSS(moetRss, "rss-content-left");
+    // 1. Cột trái: Lấy tin Giáo dục từ Báo Thanh Niên (thay thế cho nguồn Bộ GD bị chặn)
+    const leftRss = "https://thanhnien.vn/rss/giao-duc.rss";
+    loadRSS(leftRss, "rss-content-left");
 
-    // 2. Cột phải: Bạn có thể lấy tin "Giáo dục" từ VnExpress hoặc báo khác để đa dạng
-    loadRSS("https://vnexpress.net/rss/giao-duc.rss", "rss-content-right");
+    // 2. Cột phải: Tin Công nghệ từ VnExpress (Số hóa / Công nghệ)
+    const rightRss = "https://vnexpress.net/rss/so-hoa.rss"; 
+    loadRSS(rightRss, "rss-content-right");
 });
