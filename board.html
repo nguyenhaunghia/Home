@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            
+    <title>Mô Phỏng Hình Học | SMART SCHOOL</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-deep: #f0fdfa; 
+            --bg-card: #ffffff; 
+            --border-tech: rgba(8, 145, 178, 0.2); 
+            --primary-neon: #0891b2; 
+            --text-glow: #083344; 
+            --shadow-neo: 0 20px 50px rgba(8, 145, 178, 0.12), 0 0 0 1px rgba(8, 145, 178, 0.05);
+        }
+        
+        html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+        body { background-color: var(--bg-deep); color: var(--text-glow); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
+
+        .main-layout { display: flex; width: 100%; height: 100vh; justify-content: center; align-items: stretch; }
+        .ad-full-sidebar { flex: 1; background: #fff; border: 1px dashed var(--primary-neon); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.8rem; text-align: center; z-index: 100; }
+        .content-main { display: flex; flex-direction: column; width: auto; height: 100%; z-index: 101; padding: 0 10px; }
+
+        .header-container { height: 9vh; display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .home-btn { width: 35px; height: 35px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--primary-neon); background: #fff; border: 1px solid var(--border-tech); text-decoration: none; }
+        .header-title { font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 3px; margin: 0 15px; background: linear-gradient(90deg, #0f766e, #0891b2, #0369a1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
+        .visit-badge { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid var(--border-tech); padding: 4px 10px; border-radius: 10px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--primary-neon); }
+
+        .game-card { background: var(--bg-card); padding: 3px; border-radius: 12px; box-shadow: var(--shadow-neo); border: 1px solid var(--border-tech); border-bottom: 4px solid var(--primary-neon); }
+        .tool-box { background: #ffffff; border-radius: 10px; overflow: hidden; height: 82vh !important; aspect-ratio: 4 / 3; position: relative; cursor: crosshair; }
+
+        .tool-box canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #layer-draw { z-index: 1; }
+        #layer-tools { z-index: 2; pointer-events: none; }
+        
+        #ui-layer { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; z-index: 3; pointer-events: none; }
+        .tool-title { font-size: 24px; font-weight: bold; color: #333; text-transform: uppercase; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        .instruction { font-size: 18px; color: #d93025; margin-top: 5px; font-weight: 600; background: rgba(255, 255, 255, 0.8); display: inline-block; padding: 2px 15px; border-radius: 20px; }
+
+        .ad-footer { height: 60px; width: 100%; border: 1px dashed #cbd5e1; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.6rem; background: #fff; margin-top: auto; margin-bottom: 1vh; }
+
+        @media (max-height: 700px) {
+            .header-title { font-size: 1.4rem; }
+            .tool-box { height: 78vh !important; }
+            .tool-title { font-size: 18px; }
+            .instruction { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-layout">
+        <div class="ad-full-sidebar">THANH TRÁI</div>
+
+        <div class="content-main">
+            <div class="header-container">
+                <a href="../index.html" class="home-btn"><i class="fas fa-home"></i></a>
+                <h1 class="header-title">MATH</h1>
+                <div class="visit-badge"><i class="fas fa-satellite-dish"></i> <span id="visit-count">...</span></div>
+            </div>
+
+            <div class="game-card">
+                <div class="tool-box" id="app-container">
+                    <div id="ui-layer">
+                        <div class="tool-title">Đang tải dữ liệu...</div>
+                        <div class="instruction" id="text-instruction">Vui lòng chờ trong giây lát</div>
+                    </div>
+
+                    <canvas id="layer-draw" width="800" height="600"></canvas>
+                    <canvas id="layer-tools" width="800" height="600"></canvas>
+                </div>
+            </div>
+
+            <div class="ad-footer">ADSENSE HORIZONTAL</div>
+        </div>
+
+        <div class="ad-full-sidebar">THANH PHẢI</div>
+    </div>
+
+    <script src="geometry_tools.js"></script>
+    <script src="vedoanthang.js"></script>
+    <script src="vetrungdiem.js"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('https://api.counterapi.dev/v1/smartschool_io_vn/geometry_sim/up')
+                .then(r => r.json()).then(d => {
+                    document.getElementById('visit-count').innerText = d.count.toLocaleString('vi-VN');
+                });
+        });
+
+        const container = document.getElementById('app-container');
+        const ctxDraw = document.getElementById('layer-draw').getContext('2d');
+        const ctxTools = document.getElementById('layer-tools').getContext('2d');
+        const textInst = document.getElementById('text-instruction');
+
+        // CẬP NHẬT: Tải hình ảnh từ thư mục assets
+        const imgRuler = new Image(); imgRuler.src = 'assets/Ruler.png'; 
+        const imgPencil = new Image(); imgPencil.src = 'assets/Pencil.png';
+
+        const geoEngine = new GeometryEngine(ctxDraw, ctxTools, imgRuler, imgPencil, 800, 600);
+
+        const environment = {
+            container: container,
+            ctxDraw: ctxDraw,
+            ctxTools: ctxTools,
+            textInst: textInst,
+            geoEngine: geoEngine
+        };
+
+        // ==========================================
+        // ROUTER ĐỊNH TUYẾN BÀI HỌC
+        // ==========================================
+        const urlParams = new URLSearchParams(window.location.search);
+        const lessonName = urlParams.get('bai') || 'bai1_doanthang'; 
+
+        const script = document.createElement('script');
+        // Tải kịch bản từ thư mục lessons
+        script.src = `lessons/${lessonName}.js`;
+        
+        script.onload = () => {
+            if (typeof window.startLesson === 'function') {
+                window.startLesson(environment);
+            }
+        };
+        
+        script.onerror = () => {
+            textInst.innerText = "Hệ thống: Không tìm thấy dữ liệu bài học này!";
+            document.querySelector('.tool-title').innerText = "LỖI TẢI DỮ LIỆU";
+        };
+        
+        document.body.appendChild(script);
+
+    </script>
+</body>
+</html>
