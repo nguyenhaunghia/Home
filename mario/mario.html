@@ -3,62 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luyện Gõ 10 Ngón - SMART SCHOOL</title>
+    
+    <title>Luyện Gõ 10 Ngón Online - Mario Teaches Typing | SMART SCHOOL</title>
+    <meta name="description" content="Phần mềm luyện gõ 10 ngón Mario Teaches Typing trực tuyến. Đồng bộ phong cách công nghệ cao từ SMART SCHOOL.">
+    <meta name="keywords" content="luyện gõ 10 ngón, mario teaches typing, học đánh máy online, smart school, giáo dục số, tin học 6, mario, luyện gõ">
+    <meta name="robots" content="index, follow">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="https://js-dos.com/6.22/current/js-dos.js"></script>
     <style>
+        /* ================= BIẾN MÀU CHUẨN XANH DUBAI ================= */
+        :root {
+            --bg-deep: #f0fdfa; 
+            --bg-card: rgba(255, 255, 255, 0.95); 
+            --border-tech: rgba(8, 145, 178, 0.3); 
+            --primary-neon: #0891b2; 
+            --text-glow: #083344; 
+            --text-dim: #334155; 
+        }
+        
         body {
-            background-color: #0f172a; /* Màu nền tối đồng bộ hệ thống */
-            color: #e2e8f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            background-color: var(--bg-deep);
+            color: var(--text-glow);
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0; min-height: 100vh;
+            display: flex; flex-direction: column;
+            position: relative;
+            z-index: 1;
+            
+            /* Background Lưới đồ thị khoa học */
+            background-image:
+                linear-gradient(rgba(8, 145, 178, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(8, 145, 178, 0.02) 1px, transparent 1px),
+                linear-gradient(rgba(8, 145, 178, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(8, 145, 178, 0.02) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 200px 200px, 200px 200px;
+            background-attachment: fixed;
         }
+
+        /* TẠO HIỆU ỨNG ĐỔ ÁNH SÁNG (GLOW MÀU XANH DUBAI Ở TRUNG TÂM) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -10%; left: 50%;
+            transform: translateX(-50%);
+            width: 70vw; height: 70vh;
+            background: radial-gradient(circle, rgba(8, 145, 178, 0.12) 0%, transparent 65%);
+            z-index: -1; pointer-events: none;
+        }
+
+        /* 1. HEADER KHÔNG VIỀN (ĐỒNG NHẤT VỚI NỀN) */
+        .top-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 30px 15px 30px;
+            background: transparent; 
+            border: none;
+            box-shadow: none;
+        }
+        
+        .header-left, .header-right { flex: 1; display: flex; align-items: center; }
+        .header-left { justify-content: flex-start; }
+        .header-right { justify-content: flex-end; }
+
+        /* ================= NÚT TRANG CHỦ (CHỈ ICON, BO TRÒN, NỔI BÓNG) ================= */
+        .home-btn-icon {
+            display: inline-flex; justify-content: center; align-items: center;
+            width: 48px; height: 48px; /* Khung vuông bo tròn thành hình tròn */
+            border-radius: 50%;
+            color: var(--primary-neon); text-decoration: none;
+            font-size: 1.3rem; /* Icon to rõ ràng */
+            background: var(--bg-card); border: 1px solid var(--border-tech);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Bóng tĩnh nhẹ nhàng */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .home-btn-icon:hover { 
+            background: var(--primary-neon); color: #fff; 
+            transform: translateY(-4px); /* Hiệu ứng nảy lên */
+            box-shadow: 0 10px 25px rgba(8, 145, 178, 0.4); /* Bóng Neon rực rỡ */
+        }
+
+        /* ================= TIÊU ĐỀ ================= */
         .header-title {
-            margin-bottom: 20px;
-            color: #38bdf8;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+            font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 2.2rem; 
+            text-transform: uppercase; letter-spacing: 1px; text-align: center;
+            -webkit-text-stroke: 1px #0891b2;
+            background: linear-gradient(90deg, #0f766e 0%, #0891b2 50%, #0369a1 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(8, 145, 178, 0.2));
+            margin: 0; flex: 2;
         }
+
+        /* ================= BỘ ĐẾM SỐ (CHỈ ICON, NHỎ LẠI, NỔI BÓNG) ================= */
+        .visit-badge-icon {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: 'Roboto Mono', monospace; font-size: 0.95rem; /* Thu nhỏ font chữ */
+            color: var(--primary-neon); font-weight: 800;
+            background: var(--bg-card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-tech); 
+            padding: 8px 18px; border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Bóng tĩnh */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: default;
+        }
+        .visit-badge-icon:hover {
+            border-color: var(--primary-neon); 
+            background: #fff;
+            transform: translateY(-4px); /* Hiệu ứng nảy lên */
+            box-shadow: 0 10px 25px rgba(8, 145, 178, 0.3); /* Bóng Neon rực rỡ */
+        }
+        .visit-badge-icon i { font-size: 1.1rem; animation: radarBlink 1.5s infinite alternate; }
+        #visit-count { color: var(--text-glow); text-shadow: none; margin-left: 2px;}
+
+        @keyframes radarBlink {
+            0% { opacity: 0.5; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); color: var(--primary-neon); }
+        }
+
+        /* 2. BỐ CỤC LƯỚI 3 CỘT (TỶ LỆ 22.5% - 55% - 22.5%) */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 22.5% 55% 22.5%; /* MARIO 55% MÀN HÌNH */
+            gap: 20px;
+            padding: 0px 0px 0px 0px;
+            width: 100%; max-width: 1600px; margin: 0 auto;
+            box-sizing: border-box; flex: 1; align-items: start;
+        }
+
+        /* 3. KHU VỰC GAME (55%) */
+        .game-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; }
         .game-container {
-            width: 100%;
-            max-width: 640px; /* Kích thước chuẩn của game DOS */
-            background: #000;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 2px solid #334155;
+            width: 100%; background: #000; padding: 5px; border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(8, 145, 178, 0.2);
+            border: 1px solid var(--border-tech);
+            border-bottom: 4px solid var(--primary-neon);
+            margin-bottom: 4px;
         }
-        canvas {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            display: block;
+        canvas { width: 100%; height: auto; border-radius: 6px; display: block; }
+
+        /* 4. KHUNG QUẢNG CÁO */
+        .ad-box {
+            background: var(--bg-card); backdrop-filter: blur(12px);
+            border: 1px dashed var(--primary-neon); border-radius: 12px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--primary-neon); text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
-        .back-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #334155;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: 0.3s;
+        .ad-box:hover { background: rgba(8, 145, 178, 0.05); border-style: solid; box-shadow: 0 10px 30px rgba(8, 145, 178, 0.15);}
+        .ad-sidebar { min-height: 670px; padding: 15px; position: sticky; top: 20px; }
+        .ad-footer { width: 100%; height: 120px; padding: 5px; }
+        .ad-label { font-size: 0.75rem; text-transform: uppercase; font-family: 'Roboto Mono', monospace; font-weight: 700; margin-top: 8px; letter-spacing: 1px; color: var(--text-dim); }
+
+        /* 5. RESPONSIVE ĐIỆN THOẠI */
+        @media (max-width: 1024px) {
+            .top-header { flex-direction: column; gap: 15px; padding: 15px; }
+            .header-left, .header-right { justify-content: center; width: 100%; }
+            .main-layout { grid-template-columns: 1fr; justify-items: center; }
+            .ad-sidebar { width: 100%; max-width: 336px; min-height: 250px; position: static; }
+            .game-wrapper { order: 1; }
+            .left-ad { order: 2; } 
+            .right-ad { order: 3; }
         }
-        .back-btn:hover { background: #475569; }
     </style>
 </head>
 <body>
 
-    <h2 class="header-title"><i class="fas fa-keyboard"></i> LUYỆN GÕ 10 NGÓN MARIO</h2>
-    
-    <div class="game-container">
-        <canvas id="mario-canvas"></canvas>
+    <div class="top-header">
+        <div class="header-left">
+            <a href="../index.html" class="home-btn-icon" title="Về trang chủ">
+                <i class="fas fa-home"></i>
+            </a>
+        </div>
+
+        <h1 class="header-title">TEACHES TYPING MARIO</h1>
+
+        <div class="header-right">
+            <div class="visit-badge-icon" title="Tổng số lượt trải nghiệm">
+                <i class="fas fa-satellite-dish"></i>
+                <span id="visit-count">...</span>
+            </div>
+        </div>
     </div>
 
-    <a href="index.html" class="back-btn">Trở về Bảng Điều Khiển</a>
+    <div class="main-layout">
+        
+        <div class="ad-box ad-sidebar left-ad">
+            <i class="fas fa-microchip fa-2x"></i>
+            <span class="ad-label">Quảng cáo Trái</span>
+        </div>
+
+        <div class="game-wrapper">
+            <div class="game-container">
+                <canvas id="mario-canvas"></canvas>
+            </div>
+            
+            <div class="ad-box ad-footer">
+                <i class="fas fa-ad fa-lg"></i>
+                <span class="ad-label">Quảng Cáo Dưới (AdSense Ngang)</span>
+            </div>
+        </div>
+
+        <div class="ad-box ad-sidebar right-ad">
+            <i class="fas fa-microchip fa-2x"></i>
+            <span class="ad-label">Quảng cáo Phải</span>
+        </div>
+
+    </div>
 
     <script src="mario.js"></script>
+
+<script>
+        // 1. Đặt tên tiêu đề bạn muốn
+        const smartSchoolTitle = "Mario | SMART SCHOOL";
+        
+        // 2. Khôi phục lại tên
+        document.title = smartSchoolTitle;
+
+        // 3. Khóa vĩnh viễn quyền ghi đè tiêu đề của thư viện JS-DOS
+        Object.defineProperty(document, "title", {
+            get: function() { return smartSchoolTitle; },
+            set: function() { /* Bỏ qua mọi lệnh đổi tên từ bên ngoài */ } 
+        });
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            // Thêm lệnh /up vào cuối link để ép server cộng thêm 1 mỗi khi F5
+            fetch('https://api.counterapi.dev/v1/smartschool_io_vn/mario_game/up')
+                .then(response => {
+                    if (!response.ok) throw new Error("Chưa kết nối được Server");
+                    return response.json();
+                })
+                .then(data => {
+                    // Cập nhật con số thật từ máy chủ và định dạng dấu chấm (VD: 1.000)
+                    document.getElementById('visit-count').innerText = data.count.toLocaleString('vi-VN');
+                })
+                .catch(error => {
+                    // Dự phòng nếu học sinh bị rớt mạng
+                    console.error("Lỗi đếm số:", error);
+                    document.getElementById('visit-count').innerText = "...";
+                });
+        });
+    </script>
+
 </body>
 </html>
