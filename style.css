@@ -628,7 +628,7 @@ body { padding-bottom: 90px !important; }
    HỆ THỐNG RSS SIDEBARS (HAI BÊN)
    ========================================= */
 .rss-sidebar {
-    position: fixed; top: 120px; width: 240px; max-height: 70vh;
+    position: fixed; top: 120px; width: 240px; 
     background: rgba(255, 255, 255, 0.9) !important; 
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-tech); border-radius: 12px;
@@ -637,8 +637,8 @@ body { padding-bottom: 90px !important; }
 }
 
 .rss-sidebar:hover { border-color: var(--primary-neon); box-shadow: 0 0 20px rgba(8, 145, 178, 0.15); }
-.rss-left { left: 20px; }
-.rss-right { right: 20px; }
+.rss-left { left: 5px; top: 10px; max-height: 88vh;}
+.rss-right { right: 5px; top: 100px; max-height: 76vh;}
 
 .rss-header {
     background: rgba(8, 145, 178, 0.1) !important; padding: 10px;
