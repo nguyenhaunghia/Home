@@ -23,30 +23,93 @@
         body { background-color: var(--bg-deep); color: var(--text-glow); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
 
         .main-layout { display: flex; width: 100%; height: 100vh; justify-content: center; align-items: stretch; }
+        
+        /* THANH QUẢNG CÁO: Tự động phình to nuốt trọn không gian dư thừa */
         .ad-full-sidebar { flex: 1; background: #fff; border: 1px dashed var(--primary-neon); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.8rem; text-align: center; z-index: 100; }
-        .content-main { display: flex; flex-direction: column; width: auto; height: 100%; z-index: 101; padding: 0 10px; }
+        
+        /* CẬP NHẬT CHÍNH: Khóa chết độ rộng cột giữa bằng đúng tỷ lệ 4/3 của chiều cao 82vh */
+        .content-main { 
+            display: flex; 
+            flex-direction: column; 
+            width: calc(82vh * 4 / 3); /* Chìa khóa vàng chống méo hình và dư viền */
+            max-width: 96vw; /* Chống tràn trên màn hình điện thoại/nhỏ */
+            height: 100%; 
+            z-index: 101; 
+            margin: 0 12px; /* Tạo khe hở mỏng 12px để phân tách với quảng cáo */
+        }
 
         .header-container { height: 9vh; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .home-btn { width: 35px; height: 35px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--primary-neon); background: #fff; border: 1px solid var(--border-tech); text-decoration: none; }
         .header-title { font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 3px; margin: 0 15px; background: linear-gradient(90deg, #0f766e, #0891b2, #0369a1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
         .visit-badge { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid var(--border-tech); padding: 4px 10px; border-radius: 10px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--primary-neon); }
 
-        .game-card { background: var(--bg-card); padding: 3px; border-radius: 12px; box-shadow: var(--shadow-neo); border: 1px solid var(--border-tech); border-bottom: 4px solid var(--primary-neon); }
-        .tool-box { background: #ffffff; border-radius: 10px; overflow: hidden; height: 82vh !important; aspect-ratio: 4 / 3; position: relative; cursor: crosshair; }
+        .action-btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: flex; align-items: center; gap: 8px; }
+        .action-btn.primary { background: var(--primary-neon); color: white; }
+        .action-btn.primary:hover { background: #06b6d4; transform: translateY(-2px); }
+
+        /* KHUNG TÀI LIỆU (DOC): Rộng bằng 100% cột giữa */
+        #doc-view { display: none; height: 82vh; width: 100%; background: #fff; border-radius: 12px; box-shadow: var(--shadow-neo); border: 1px solid var(--border-tech); overflow: hidden; }
+        #doc-view iframe { width: 100%; height: 100%; border: none; }
+
+        /* TẤM BÌA BẢNG VẼ: Ôm sát sạt, không còn padding viền trắng dư thừa */
+        .game-card { 
+            background: var(--bg-card); 
+            padding: 0; 
+            border-radius: 12px; 
+            box-shadow: var(--shadow-neo); 
+            border: 1px solid var(--border-tech); 
+            border-bottom: 4px solid var(--primary-neon); 
+            position: relative; 
+            width: 100%; 
+            height: 82vh;
+        }
+
+        /* KHUNG CANVAS: Bung lụa 100% bề mặt tấm bìa */
+        .tool-box { 
+            background: transparent; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            width: 100%; 
+            height: 100%; 
+            position: relative; 
+            cursor: crosshair; 
+        }
 
         .tool-box canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         #layer-draw { z-index: 1; }
         #layer-tools { z-index: 2; pointer-events: none; }
-        
         #ui-layer { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; z-index: 3; pointer-events: none; }
         .tool-title { font-size: 24px; font-weight: bold; color: #333; text-transform: uppercase; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
         .instruction { font-size: 18px; color: #d93025; margin-top: 5px; font-weight: 600; background: rgba(255, 255, 255, 0.8); display: inline-block; padding: 2px 15px; border-radius: 20px; }
+
+        #board-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
+
+        /* MODAL POPUP: Phóng to ra một chút để vẽ cho sướng khi đang xem tài liệu */
+        #board-wrapper.is-modal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(8, 51, 68, 0.85);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        #board-wrapper.is-modal .game-card {
+            width: calc(85vh * 4 / 3); /* Vẫn giữ tỷ lệ 4:3 nhưng to hơn bản ngoài 1 xíu */
+            height: 85vh;
+            max-width: 95vw;
+        }
+
+        #close-modal-btn {
+            position: absolute; top: -15px; right: -15px; width: 35px; height: 35px;
+            border-radius: 50%; background: #ef4444; color: white; border: 2px solid white;
+            font-weight: bold; cursor: pointer; display: none; z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 16px;
+        }
+        #board-wrapper.is-modal #close-modal-btn { display: block; }
 
         .ad-footer { height: 60px; width: 100%; border: 1px dashed #cbd5e1; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.6rem; background: #fff; margin-top: auto; margin-bottom: 1vh; }
 
         @media (max-height: 700px) {
             .header-title { font-size: 1.4rem; }
-            .tool-box { height: 78vh !important; }
             .tool-title { font-size: 18px; }
             .instruction { font-size: 14px; }
         }
@@ -61,18 +124,28 @@
             <div class="header-container">
                 <a href="../index.html" class="home-btn"><i class="fas fa-home"></i></a>
                 <h1 class="header-title">MATH</h1>
-                <div class="visit-badge"><i class="fas fa-satellite-dish"></i> <span id="visit-count">...</span></div>
+                
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div id="dynamic-buttons"></div>
+                    <div class="visit-badge"><i class="fas fa-satellite-dish"></i> <span id="visit-count">...</span></div>
+                </div>
             </div>
 
-            <div class="game-card">
-                <div class="tool-box" id="app-container">
-                    <div id="ui-layer">
-                        <div class="tool-title">Đang tải dữ liệu...</div>
-                        <div class="instruction" id="text-instruction">Vui lòng chờ trong giây lát</div>
-                    </div>
+            <div id="doc-view">
+                <iframe id="docIframe" src=""></iframe>
+            </div>
 
-                    <canvas id="layer-draw" width="800" height="600"></canvas>
-                    <canvas id="layer-tools" width="800" height="600"></canvas>
+            <div id="board-wrapper">
+                <div class="game-card">
+                    <button id="close-modal-btn" onclick="closeBoardModal()"><i class="fas fa-times"></i></button>
+                    <div class="tool-box" id="app-container">
+                        <div id="ui-layer">
+                            <div class="tool-title">Đang tải dữ liệu...</div>
+                            <div class="instruction" id="text-instruction">Vui lòng chờ trong giây lát</div>
+                        </div>
+                        <canvas id="layer-draw" width="800" height="600"></canvas>
+                        <canvas id="layer-tools" width="800" height="600"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -83,9 +156,6 @@
     </div>
 
     <script src="geometry_tools.js"></script>
-    <script src="vedoanthang.js"></script>
-    <script src="vetrungdiem.js"></script>
-
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -95,17 +165,76 @@
                 });
         });
 
+        const boardWrapper = document.getElementById('board-wrapper');
+        
+        function openBoardModal() {
+            boardWrapper.classList.add('is-modal');
+            boardWrapper.style.display = 'flex';
+        }
+
+        function closeBoardModal() {
+            boardWrapper.classList.remove('is-modal');
+            boardWrapper.style.display = 'none';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const bai = urlParams.get('bai'); 
+        const docUrl = urlParams.get('docUrl'); 
+
+        const docView = document.getElementById('doc-view');
+        const iframe = document.getElementById('docIframe');
+        const btnContainer = document.getElementById('dynamic-buttons');
+        const headerTitle = document.querySelector('.header-title');
+
+        function loadLessonScript(lessonName) {
+            const script = document.createElement('script');
+            script.src = `lessons/${lessonName}.js`;
+            script.onload = () => { if (typeof window.startLesson === 'function') window.startLesson(environment); };
+            script.onerror = () => {
+                document.getElementById('text-instruction').innerText = "Không tìm thấy dữ liệu bài học!";
+                document.querySelector('.tool-title').innerText = "LỖI TẢI DỮ LIỆU";
+            };
+            document.body.appendChild(script);
+        }
+
+        if (bai && !docUrl) {
+            docView.style.display = 'none';
+            boardWrapper.style.display = 'flex'; 
+            boardWrapper.classList.remove('is-modal'); 
+            loadLessonScript(bai);
+        } 
+        else if (!bai && docUrl) {
+            docView.style.display = 'block';
+            boardWrapper.style.display = 'none';
+            iframe.src = docUrl;
+            headerTitle.innerText = "LÝ THUYẾT BÀI HỌC";
+            document.querySelector('.tool-title').style.display = 'none'; 
+        } 
+        else if (bai && docUrl) {
+            docView.style.display = 'block';
+            boardWrapper.style.display = 'none'; 
+            iframe.src = docUrl;
+            headerTitle.innerText = "LÝ THUYẾT & THỰC HÀNH";
+            btnContainer.innerHTML = '<button onclick="openBoardModal()" class="action-btn primary"><i class="fas fa-pencil-ruler"></i> Thực Hành Vẽ</button>';
+            loadLessonScript(bai);
+        } 
+        else {
+            docView.style.display = 'none';
+            boardWrapper.style.display = 'flex'; 
+            loadLessonScript('bai1_doanthang');
+        }
+
         const container = document.getElementById('app-container');
         const ctxDraw = document.getElementById('layer-draw').getContext('2d');
         const ctxTools = document.getElementById('layer-tools').getContext('2d');
         const textInst = document.getElementById('text-instruction');
 
-        // CẬP NHẬT: Tải hình ảnh từ thư mục assets
         const imgRuler = new Image(); imgRuler.src = 'assets/Ruler.png'; 
         const imgPencil = new Image(); imgPencil.src = 'assets/Pencil.png';
+        const imgEke = new Image(); imgEke.src = 'assets/Eke.png';
 
-        const geoEngine = new GeometryEngine(ctxDraw, ctxTools, imgRuler, imgPencil, 800, 600);
-
+        const geoEngine = new GeometryEngine(ctxDraw, ctxTools, imgRuler, imgPencil, imgEke, 800, 600);
+        
         const environment = {
             container: container,
             ctxDraw: ctxDraw,
@@ -113,30 +242,6 @@
             textInst: textInst,
             geoEngine: geoEngine
         };
-
-        // ==========================================
-        // ROUTER ĐỊNH TUYẾN BÀI HỌC
-        // ==========================================
-        const urlParams = new URLSearchParams(window.location.search);
-        const lessonName = urlParams.get('bai') || 'bai1_doanthang'; 
-
-        const script = document.createElement('script');
-        // Tải kịch bản từ thư mục lessons
-        script.src = `lessons/${lessonName}.js`;
-        
-        script.onload = () => {
-            if (typeof window.startLesson === 'function') {
-                window.startLesson(environment);
-            }
-        };
-        
-        script.onerror = () => {
-            textInst.innerText = "Hệ thống: Không tìm thấy dữ liệu bài học này!";
-            document.querySelector('.tool-title').innerText = "LỖI TẢI DỮ LIỆU";
-        };
-        
-        document.body.appendChild(script);
-
     </script>
 </body>
 </html>
