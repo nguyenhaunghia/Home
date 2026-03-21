@@ -1,1 +1,8 @@
+# Google AdSense
 google.com, pub-9531418462807701, DIRECT, f08c47fec0942fa0
+
+# MGID
+mgid.com, 849547, DIRECT, [MÃ_TOKEN_CỦA_BẠN]
+
+# Ezoic (Nếu bạn đã tích hợp Ezoic, hãy thêm dòng định danh của họ vào đây)
+# ezoic.com, [EzoicID], DIRECT, [Token]

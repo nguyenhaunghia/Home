@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
             
     <title>Mô Phỏng Hình Học | SMART SCHOOL</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@600;700;800&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -19,39 +18,64 @@
             --shadow-neo: 0 20px 50px rgba(8, 145, 178, 0.12), 0 0 0 1px rgba(8, 145, 178, 0.05);
         }
         
+        /* FIX: Reset padding, margin cho html và body để không bị hở viền */
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; }
         body { background-color: var(--bg-deep); color: var(--text-glow); font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
 
         .main-layout { display: flex; width: 100%; height: 100vh; justify-content: center; align-items: stretch; }
         
-        /* THANH QUẢNG CÁO: Tự động phình to nuốt trọn không gian dư thừa */
-        .ad-full-sidebar { flex: 1; background: #fff; border: 1px dashed var(--primary-neon); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.8rem; text-align: center; z-index: 100; }
+        /* FIX QUẢNG CÁO: Đưa position: relative để nó ôm sát khung flex */
+        .ad-full-sidebar { 
+            flex: 1; 
+            background: #fff; 
+            border: 1px dashed var(--primary-neon); 
+            display: flex; align-items: center; justify-content: center; 
+            color: #94a3b8; font-size: 0.8rem; text-align: center; 
+            z-index: 100; 
+            position: relative; /* Giúp quảng cáo ôm sát container cha */
+            height: 100%; /* Bung lụa 100% chiều cao */
+        }
         
-        /* CẬP NHẬT CHÍNH: Khóa chết độ rộng cột giữa bằng đúng tỷ lệ 4/3 của chiều cao 82vh */
+        /* CỘT GIỮA */
         .content-main { 
             display: flex; 
             flex-direction: column; 
-            width: calc(82vh * 4 / 3); /* Chìa khóa vàng chống méo hình và dư viền */
-            max-width: 96vw; /* Chống tràn trên màn hình điện thoại/nhỏ */
+            width: calc(82vh * 4 / 3); 
+            max-width: 96vw; 
             height: 100%; 
             z-index: 101; 
-            margin: 0 12px; /* Tạo khe hở mỏng 12px để phân tách với quảng cáo */
+            margin: 0 12px; 
         }
 
         .header-container { height: 9vh; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .home-btn { width: 35px; height: 35px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--primary-neon); background: #fff; border: 1px solid var(--border-tech); text-decoration: none; }
-        .header-title { font-family: 'Rajdhani', sans-serif; font-weight: 800; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 3px; margin: 0 15px; background: linear-gradient(90deg, #0f766e, #0891b2, #0369a1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; white-space: nowrap; }
+        .header-title { 
+            font-family: 'Montserrat', sans-serif; /* ĐỔI Ở ĐÂY */
+            font-weight: 800; 
+            font-size: 1.6rem; 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+            margin: 0 15px; 
+            background: linear-gradient(90deg, #0f766e, #0891b2, #0369a1); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text; 
+            color: transparent; 
+            white-space: nowrap; 
+        }
+
+
         .visit-badge { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid var(--border-tech); padding: 4px 10px; border-radius: 10px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--primary-neon); }
 
         .action-btn { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.9rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; display: flex; align-items: center; gap: 8px; }
         .action-btn.primary { background: var(--primary-neon); color: white; }
         .action-btn.primary:hover { background: #06b6d4; transform: translateY(-2px); }
 
-        /* KHUNG TÀI LIỆU (DOC): Rộng bằng 100% cột giữa */
+        /* KHUNG TÀI LIỆU */
         #doc-view { display: none; height: 82vh; width: 100%; background: #fff; border-radius: 12px; box-shadow: var(--shadow-neo); border: 1px solid var(--border-tech); overflow: hidden; }
         #doc-view iframe { width: 100%; height: 100%; border: none; }
 
-        /* TẤM BÌA BẢNG VẼ: Ôm sát sạt, không còn padding viền trắng dư thừa */
+        /* TẤM BÌA BẢNG VẼ */
         .game-card { 
             background: var(--bg-card); 
             padding: 0; 
@@ -64,7 +88,7 @@
             height: 82vh;
         }
 
-        /* KHUNG CANVAS: Bung lụa 100% bề mặt tấm bìa */
+        /* KHUNG CANVAS */
         .tool-box { 
             background: transparent; 
             border-radius: 10px; 
@@ -79,12 +103,37 @@
         #layer-draw { z-index: 1; }
         #layer-tools { z-index: 2; pointer-events: none; }
         #ui-layer { position: absolute; top: 20px; left: 0; width: 100%; text-align: center; z-index: 3; pointer-events: none; }
-        .tool-title { font-size: 24px; font-weight: bold; color: #333; text-transform: uppercase; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+                
+        /* =========================================
+           FIX CSS: ĐỘ TIÊU ĐỀ BÀI HỌC (NẰM TRÊN KHUNG VẼ)
+           ========================================= */
+        .tool-title { 
+            font-family: 'Montserrat', sans-serif; /* ĐỔI Ở ĐÂY */
+            font-weight: 800; 
+            font-size: 2rem; /* Giảm size một chút vì font Montserrat khá to */
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            
+            background: linear-gradient(90deg, #0f766e, #0891b2, #0369a1); 
+            background-clip: text; 
+            -webkit-background-clip: text; 
+            color: transparent; 
+            -webkit-text-fill-color: transparent;
+            
+            filter: drop-shadow(0 2px 5px rgba(255, 255, 255, 0.8)) 
+                    drop-shadow(0 4px 10px rgba(8, 145, 178, 0.15));
+        }
+
+        @media (max-height: 700px) {
+            .tool-title { font-size: 1.6rem; letter-spacing: 1px; }
+        }
+        
         .instruction { font-size: 18px; color: #d93025; margin-top: 5px; font-weight: 600; background: rgba(255, 255, 255, 0.8); display: inline-block; padding: 2px 15px; border-radius: 20px; }
 
         #board-wrapper { display: flex; justify-content: center; align-items: center; width: 100%; }
 
-        /* MODAL POPUP: Phóng to ra một chút để vẽ cho sướng khi đang xem tài liệu */
+        /* MODAL POPUP */
         #board-wrapper.is-modal {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(8, 51, 68, 0.85);
@@ -93,7 +142,7 @@
         }
         
         #board-wrapper.is-modal .game-card {
-            width: calc(85vh * 4 / 3); /* Vẫn giữ tỷ lệ 4:3 nhưng to hơn bản ngoài 1 xíu */
+            width: calc(85vh * 4 / 3); 
             height: 85vh;
             max-width: 95vw;
         }
@@ -118,7 +167,7 @@
 <body>
 
     <div class="main-layout">
-        <div class="ad-full-sidebar">THANH TRÁI</div>
+        <div class="ad-full-sidebar" style="border-right: 1px solid var(--border-tech);">THANH TRÁI</div>
 
         <div class="content-main">
             <div class="header-container">
@@ -152,7 +201,7 @@
             <div class="ad-footer">ADSENSE HORIZONTAL</div>
         </div>
 
-        <div class="ad-full-sidebar">THANH PHẢI</div>
+        <div class="ad-full-sidebar" style="border-left: 1px solid var(--border-tech);">THANH PHẢI</div>
     </div>
 
     <script src="geometry_tools.js"></script>
