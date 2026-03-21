@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Hướng dẫn Toàn diện về Thiết lập Chuột Máy tính | SMART SCHOOL</title>
+    
+    <script>
+        // 1. ID DUY NHẤT ĐỂ ĐẾM LƯỢT XEM
+        const ARTICLE_ID = "huong_dan_setup_chuot";
+
+        // 2. LINK HÌNH ẢNH TRONG BÀI (Thay link của bạn vào trong ngoặc kép)
+
+        const IMG_2 = "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"; // Ảnh 2: Cài đặt Windows (Minh họa PC)
+        const IMG_3 = "https://images.unsplash.com/photo-1517059224940-d4af9eec41b7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"; // Ảnh 3: Cài đặt macOS
+        const IMG_4 = "https://images.unsplash.com/photo-1598550476439-6847785fcea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"; // Ảnh 4: Gán nút / Macro
+        const IMG_5 = "https://images.unsplash.com/photo-1625842268584-8f3296236761?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"; // Ảnh 5: Chỉnh DPI chuột Gaming
+        const IMG_1 = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"; // Ảnh 1: Chuột máy tính không dây
+        const IMG_6 = "https://images.unsplash.com/photo-1629131726692-1accd0c53ce0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"; // Ảnh 6: Chuột công thái học (Vertical)
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="tricks_style.css">
+    
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+        <main class="main-column">
+            
+            <div class="hero-panel">
+                <a href="../index.html" class="home-btn-absolute" title="Về trang chủ"><i class="fas fa-home"></i></a>
+                
+                <div class="hero-content">
+                    <h1 class="hero-title">Thiết lập Chuột máy tính từ Cơ bản đến Nâng cao</h1>
+                    <div class="hero-meta">
+                        <span class="hero-category"><i class="fas fa-microchip"></i> Thủ thuật máy tính</span>
+                        <span><i class="far fa-calendar-alt"></i> 27/10/2026</span>
+                        <span><i class="far fa-eye"></i> <span id="visit-count" class="view-count">...</span></span>
+                        <span><i class="far fa-user"></i> Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="article-content">
+                
+                <p>Chuột máy tính là một trong những thiết bị ngoại vi quan trọng nhất, đóng vai trò như "cánh tay nối dài" của người dùng trong mọi tương tác với máy tính. Dù bạn là một nhân viên văn phòng, một game thủ hay một nhà thiết kế đồ họa, việc thiết lập chuột đúng cách không chỉ giúp tăng hiệu suất làm việc mà còn đảm bảo sự thoải mái, ngăn ngừa các vấn đề về sức khỏe liên quan đến cổ tay và cánh tay.</p>
+                <p>Bài viết này sẽ cung cấp cho bạn một hướng dẫn toàn diện, từ các bước cài đặt cơ bản trên hệ điều hành đến những tùy chỉnh nâng cao bằng phần mềm chuyên dụng, giúp bạn tối ưu hóa trải nghiệm sử dụng chuột của mình.</p>
+
+                <div class="toc-inline-box">
+                    <h3 class="toc-title"><i class="fas fa-list-ul"></i> NỘI DUNG BÀI VIẾT</h3>
+                    <ul class="toc-list">
+                        <li><a href="#phan-1">Phần 1: Chọn và Chuẩn bị Chuột</a></li>
+                        <li><a href="#phan-2">Phần 2: Cài đặt Chuột Cơ bản trên Hệ điều hành</a></li>
+                        <li><a href="#phan-3">Phần 3: Thiết lập Chuột Nâng cao với Phần mềm của Hãng</a></li>
+                        <li><a href="#phan-4">Phần 4: Thiết lập Chuột cho Các Mục đích Cụ thể</a></li>
+                        <li><a href="#phan-5">Phần 5: Mẹo nhỏ và Bảo quản Chuột</a></li>
+                    </ul>
+                </div>
+
+                <h2 id="phan-1">Phần 1: Chọn và Chuẩn bị Chuột</h2>
+                <p>Trước khi đi vào các bước thiết lập, điều quan trọng là bạn phải sở hữu một chú chuột phù hợp với nhu cầu và cấu trúc bàn tay của mình.</p>
+
+                <h3>Xác định Nhu cầu Sử dụng</h3>
+                <ul>
+                    <li><strong>Văn phòng & Cơ bản:</strong> Một chú chuột đơn giản, nhỏ gọn, ưu tiên kết nối không dây để gọn gàng là lựa chọn phù hợp.</li>
+                    <li><strong>Chơi Game:</strong> Cần chuột có cảm biến chính xác cao (DPI cao), Polling Rate nhanh, các nút phụ có thể lập trình và thiết kế công thái học để sử dụng trong thời gian dài.</li>
+                    <li><strong>Thiết kế Đồ họa:</strong> Ưu tiên chuột có độ chính xác cao, DPI điều chỉnh linh hoạt và các nút phụ để gán phím tắt.</li>
+                </ul>
+
+                <h3>Các Loại Chuột Phổ biến</h3>
+                <ul>
+                    <li><strong>Chuột Có dây:</strong> Kết nối ổn định, không lo hết pin, phù hợp cho chơi game chuyên nghiệp.</li>
+                    <li><strong>Chuột Không dây:</strong> Linh hoạt, gọn gàng, phù hợp cho văn phòng và di chuyển. Các mẫu chuột chơi game không dây hiện đại đã có độ trễ rất thấp.</li>
+                    <li><strong>Chuột Công thái học:</strong> Thiết kế đặc biệt giúp giảm áp lực lên cổ tay, phù hợp cho người sử dụng máy tính thường xuyên.</li>
+                    <li><strong>Chuột Dọc (Vertical Mouse):</strong> Một dạng chuột công thái học đặc biệt, giữ cổ tay ở vị trí tự nhiên hơn khi sử dụng.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-1" src="" alt="Chuột công thái học">
+                    <div class="img-caption">Một mẫu chuột không dây hiện đại giúp thao tác thoải mái.</div>
+                </div>
+
+                <p>Sau khi đã chọn được chú chuột ưng ý, hãy kết nối nó với máy tính qua cổng USB (nếu có dây) hoặc qua đầu thu USB/Bluetooth (nếu không dây).</p>
+
+                <h2 id="phan-2">Phần 2: Cài đặt Chuột Cơ bản trên Hệ điều hành</h2>
+                <p>Cả Windows và macOS đều cung cấp các cài đặt chuột cơ bản để bạn điều chỉnh các thông số thiết yếu nhất.</p>
+
+                <h3>2.1 Thiết lập Chuột trên Windows</h3>
+                <p>Để truy cập cài đặt chuột trên Windows, bạn có thể vào <strong>Settings</strong> -> <strong>Devices</strong> -> <strong>Mouse</strong>. Tại đây, bạn sẽ thấy các tùy chọn sau:</p>
+                <ul>
+                    <li><strong>Select your primary button:</strong> Chọn nút chuột trái hoặc phải làm nút chính.</li>
+                    <li><strong>Cursor speed:</strong> Điều chỉnh tốc độ di chuyển của con trỏ chuột. Tăng tốc độ nếu bạn muốn con trỏ di chuyển nhanh hơn với ít chuyển động tay hơn, và ngược lại.</li>
+                    <li><strong>Rolling the mouse wheel to scroll:</strong> Chọn cuộn chuột theo từng dòng hoặc theo trang.</li>
+                    <li><strong>Choose how many lines to scroll each time:</strong> Điều chỉnh số dòng được cuộn mỗi khi bạn lăn bánh xe chuột.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-2" src="" alt="Cài đặt chuột trên Windows">
+                    <div class="img-caption">Thiết lập cơ bản trên hệ điều hành Windows.</div>
+                </div>
+
+                <div class="cyber-tip">
+                    <div class="cyber-tip-title"><i class="fas fa-lightbulb"></i> Mẹo dành cho Game thủ</div>
+                    <p>Trong phần <strong>Additional mouse options</strong> > <strong>Pointer Options</strong>, bạn <strong>nên tắt</strong> mục <em>Enhance pointer precision</em>. Tính năng này tạo ra gia tốc chuột, làm giảm độ chính xác và tính nhất quán khi vẩy chuột nhanh trong các tựa game bắn súng.</p>
+                </div>
+
+                <h3>2.2 Thiết lập Chuột trên macOS</h3>
+                <p>Trên macOS, bạn có thể truy cập cài đặt chuột bằng cách vào <strong>System Preferences</strong> -> <strong>Mouse</strong>. Giao diện cài đặt chuột trên macOS khá đơn giản với các tùy chọn:</p>
+                <ul>
+                    <li><strong>Tracking speed:</strong> Điều chỉnh tốc độ con trỏ.</li>
+                    <li><strong>Scrolling speed:</strong> Điều chỉnh tốc độ cuộn chuột.</li>
+                    <li><strong>Double-click speed:</strong> Điều chỉnh tốc độ nhấn đúp chuột.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-3" src="" alt="Cài đặt chuột trên macOS">
+                    <div class="img-caption">Môi trường macOS với giao diện tinh chỉnh đơn giản, trực quan.</div>
+                </div>
+
+                <h2 id="phan-3">Phần 3: Thiết lập Nâng cao với Phần mềm của Hãng</h2>
+                <p>Nhiều hãng sản xuất chuột chơi game và chuột công thái học (như Logitech, Razer, SteelSeries, v.v.) cung cấp phần mềm chuyên dụng để bạn tùy chỉnh chuột ở mức độ sâu hơn rất nhiều. Việc sử dụng phần mềm của hãng là cực kỳ quan trọng đối với game thủ và người dùng chuyên nghiệp.</p>
+
+                <h3>3.1 Gán nút (Button Remapping) và Macro</h3>
+                <p>Đây là tính năng mạnh mẽ nhất của phần mềm hãng. Bạn có thể thay đổi chức năng của bất kỳ nút nào trên chuột, kể cả các nút phụ.</p>
+                <ul>
+                    <li><strong>Gán nút (Remapping):</strong> Chuyển chức năng của một nút chuột sang một nút khác, một phím trên bàn phím hoặc một phím tắt.</li>
+                    <li><strong>Macro:</strong> Ghi lại một chuỗi các thao tác phím và chuột phức tạp, sau đó gán nó cho một nút chuột duy nhất. Rất hữu ích cho các trò chơi MOBA/MMO hoặc trong công việc để tự động hóa các tác vụ lặp đi lặp lại.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-4" src="" alt="Gán nút trên chuột">
+                    <div class="img-caption">Giao diện gán chức năng cho các nút phụ.</div>
+                </div>
+
+                <h3>3.2 Điều chỉnh DPI và Polling Rate</h3>
+                <ul>
+                    <li><strong>DPI (Dots Per Inch):</strong> Đo lường độ nhạy của cảm biến chuột. DPI càng cao, con trỏ sẽ di chuyển càng xa trên màn hình. Hầu hết chuột chơi game cho phép thiết lập các mức DPI khác nhau và chuyển đổi nhanh chóng bằng nút bấm cứng.</li>
+                    <li><strong>Polling Rate:</strong> Tần suất chuột gửi báo cáo vị trí về máy tính mỗi giây (đơn vị Hz). Polling Rate càng cao (1000Hz), chuyển động càng mượt mà và phản hồi càng nhanh.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-5" src="" alt="Cài đặt DPI">
+                    <div class="img-caption">Khu vực điều chỉnh DPI và dải đèn LED RGB trong phần mềm.</div>
+                </div>
+
+                <h2 id="phan-4">Phần 4: Thiết lập Chuột cho Các Mục đích Cụ thể</h2>
+                
+                <h3>4.1 Cho Chơi Game FPS (Bắn súng góc nhìn thứ nhất)</h3>
+                <ul>
+                    <li><strong>DPI:</strong> Ưu tiên thấp đến trung bình (400 - 1600 DPI) để ngắm bắn chuẩn xác.</li>
+                    <li><strong>Polling Rate:</strong> Mức cao nhất (1000Hz) để giảm độ trễ tối đa.</li>
+                    <li><strong>Gia tốc chuột:</strong> Bắt buộc phải tắt để xây dựng bộ nhớ cơ bắp.</li>
+                </ul>
+
+                <h3>4.2 Cho Thiết kế Đồ họa và Chỉnh sửa Video</h3>
+                <ul>
+                    <li><strong>DPI:</strong> Sử dụng DPI thấp khi vẽ chi tiết nhỏ, và DPI cao khi cần di chuyển nhanh trên màn hình rộng.</li>
+                    <li><strong>Gán nút:</strong> Gán các phím tắt thường dùng (Ctrl+Z, Space để di chuyển canvas, Undo, Redo...) giúp làm việc nhanh gấp đôi.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-6" src="" alt="Chuột dọc Vertical">
+                    <div class="img-caption">Chuột dọc Vertical giúp giữ cổ tay ở vị trí tự nhiên, chống hội chứng ống cổ tay.</div>
+                </div>
+
+                <h2 id="phan-5">Phần 5: Mẹo nhỏ và Bảo quản Chuột</h2>
+                <ul>
+                    <li><strong>Sử dụng Lót chuột (Mouse Pad):</strong> Giúp cảm biến hoạt động chính xác hơn và bảo vệ feet chuột (phần nhựa dưới đáy) không bị mòn.</li>
+                    <li><strong>Vệ sinh Định kỳ:</strong> Sử dụng khăn mềm hơi ẩm để lau sạch bề mặt. Dùng tăm bông hoặc bình xịt khí nén làm sạch khe hở và cảm biến.</li>
+                    <li><strong>Cập nhật Firmware:</strong> Thường xuyên cập nhật phần mềm hãng để nhận các bản vá lỗi và tối ưu hóa độ trễ.</li>
+                </ul>
+
+                <p>Hãy nhớ rằng, không có một thiết lập "hoàn hảo" duy nhất cho tất cả mọi người. Hãy trải nghiệm, tinh chỉnh và tìm ra các thông số phù hợp nhất với phong cách sử dụng và cảm giác tay của riêng bạn. Chúc bạn có những trải nghiệm sử dụng máy tính tuyệt vời và hiệu quả!</p>
+
+            </article>
+
+        </main>
+
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 1. GÁN LINK ẢNH TỪ PHẦN CÀI ĐẶT VÀO CÁC THẺ IMG
+            if(document.getElementById('pic-1')) document.getElementById('pic-1').src = IMG_1;
+            if(document.getElementById('pic-2')) document.getElementById('pic-2').src = IMG_2;
+            if(document.getElementById('pic-3')) document.getElementById('pic-3').src = IMG_3;
+            if(document.getElementById('pic-4')) document.getElementById('pic-4').src = IMG_4;
+            if(document.getElementById('pic-5')) document.getElementById('pic-5').src = IMG_5;
+            if(document.getElementById('pic-6')) document.getElementById('pic-6').src = IMG_6;
+
+            // 2. ĐẾM LƯỢT XEM
+            if(typeof ARTICLE_ID !== 'undefined') {
+                fetch(`https://api.counterapi.dev/v1/smartschool_io_vn/${ARTICLE_ID}/up`)
+                    .then(r => r.json())
+                    .then(d => {
+                        document.getElementById('visit-count').innerText = d.count.toLocaleString('vi-VN');
+                    })
+                    .catch(e => {
+                        document.getElementById('visit-count').innerText = "...";
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
