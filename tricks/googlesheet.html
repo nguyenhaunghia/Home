@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Hướng dẫn Toàn tập Google Sheets từ Cơ bản đến Nâng cao | SMART SCHOOL</title>
+
+    <meta name="description" content="Cẩm nang toàn tập về Google Sheets: So sánh với Excel, hướng dẫn thao tác cơ bản, sử dụng hàm, biểu đồ, lọc dữ liệu và làm việc nhóm hiệu quả.">
+    <meta name="keywords" content="hướng dẫn google sheets, học google sheet, hàm google sheet, vlookup, pivot table, cố định dòng, định dạng có điều kiện, smart school">
+    <meta name="author" content="Admin - SMART SCHOOL">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Hướng dẫn Toàn tập Google Sheets từ Cơ bản đến Nâng cao | SMART SCHOOL">
+    <meta property="og:description" content="Làm chủ công cụ bảng tính đám mây mạnh mẽ nhất hiện nay. Hướng dẫn chi tiết dành cho học sinh, sinh viên và dân văn phòng.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80"> 
+    
+    <script>
+        // A. ID DUY NHẤT ĐỂ ĐẾM LƯỢT XEM
+        const ARTICLE_ID = "huong_dan_google_sheets_toan_tap";
+
+        // B. LINK HOẶC ID HÌNH ẢNH TỪ GOOGLE DRIVE (Nhận diện tự động LH3)
+        const IMG_1 = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80"; // Ảnh 1: Intro Google Sheets
+        const IMG_2 = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1000&q=80"; // Ảnh 2: So sánh Sheets vs Excel
+        const IMG_3 = "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=1000&q=80"; // Ảnh 3: Tạo mới và Giao diện cơ bản
+        const IMG_4 = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1000&q=80"; // Ảnh 4: Font, Màu sắc, Định dạng
+        const IMG_5 = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1000&q=80"; // Ảnh 5: Cố định dòng/cột & Tìm kiếm
+        const IMG_6 = "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=1000&q=80"; // Ảnh 6: Các hàm cơ bản & VLOOKUP
+        const IMG_7 = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80"; // Ảnh 7: Vẽ Biểu đồ (Charts)
+        const IMG_8 = "https://images.unsplash.com/photo-1593642532842-98d0fd5ebc1a?auto=format&fit=crop&w=1000&q=80"; // Ảnh 8: Sắp xếp & Lọc dữ liệu (Filter)
+        const IMG_9 = "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1000&q=80"; // Ảnh 9: Định dạng có điều kiện
+        const IMG_10 = "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=1000&q=80"; // Ảnh 10: Bảo vệ trang tính & Chia sẻ
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="tricks_style.css">
+
+    <style>
+        .compare-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .compare-table th, .compare-table td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; line-height: 1.6; }
+        .compare-table th { background-color: var(--primary-neon); color: #fff; font-weight: 700; font-size: 1.1rem; }
+        .compare-table tr:last-child td { border-bottom: none; }
+        .compare-table tr:hover { background-color: #f8fafc; }
+        .highlight-text { color: var(--primary-neon); font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+        <main class="main-column">
+            
+            <div class="hero-panel">
+                <a href="../index.html" class="home-btn-absolute" title="Về trang chủ"><i class="fas fa-home"></i></a>
+                
+                <div class="hero-content">
+                    <h1 class="hero-title">Google Sheets Toàn Tập: Khai phá sức mạnh Bảng tính Đám mây</h1>
+                    <div class="hero-meta">
+                        <span class="hero-category"><i class="fas fa-table"></i> Tin học Văn phòng</span>
+                        <span><i class="far fa-calendar-alt"></i> 10/05/2026</span>
+                        <span><i class="far fa-eye"></i> <span id="visit-count" class="view-count">...</span></span>
+                        <span><i class="far fa-user"></i> Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="article-content">
+                
+                <p>Trong thời đại học tập và làm việc trực tuyến lên ngôi, việc quản lý dữ liệu không còn bị giới hạn trên một chiếc máy tính cá nhân. <strong>Google Sheets (Google Trang tính)</strong> đã vươn lên trở thành một công cụ mạnh mẽ, miễn phí và vô cùng linh hoạt, cho phép hàng chục người cùng lúc thao tác trên một bảng dữ liệu mà không hề xảy ra xung đột.</p>
+                <p>Từ những bạn học sinh trung học cần thống kê điểm số, quỹ lớp, đến những doanh nghiệp quản lý hàng ngàn đơn hàng mỗi ngày, Google Sheets đều đáp ứng xuất sắc. Bài viết này của <strong>SMART SCHOOL</strong> sẽ là một "bách khoa toàn thư" hướng dẫn bạn làm chủ Google Sheets từ những cú click chuột đầu tiên cho đến các thủ thuật phân tích dữ liệu chuyên sâu nhất.</p>
+
+                <div class="article-img-box">
+                    <img id="pic-1" src="" alt="Google Sheets Introduction">
+                    <div class="img-caption">Google Sheets mang sức mạnh xử lý dữ liệu lên trình duyệt web của bạn.</div>
+                </div>
+
+                <div class="toc-inline-box">
+                    <h3 class="toc-title"><i class="fas fa-list-ul"></i> NỘI DUNG BÀI VIẾT</h3>
+                    <ul class="toc-list">
+                        <li><a href="#phan-1">1. Giới thiệu & So sánh Google Sheets với Excel</a></li>
+                        <li><a href="#phan-2">2. Hướng dẫn các thao tác Cơ bản (New, Font, Tìm kiếm, Cố định)</a></li>
+                        <li><a href="#phan-3">3. Hướng dẫn các tính năng Nâng cao (Hàm, Filter, Sort, Biểu đồ)</a></li>
+                        <li><a href="#phan-4">4. Định dạng có điều kiện & Bảo vệ trang tính</a></li>
+                        <li><a href="#phan-5">5. Tổng kết & Ghi nhớ</a></li>
+                    </ul>
+                </div>
+
+                <h2 id="phan-1">1. Giới thiệu & So sánh Google Sheets với các phần mềm khác</h2>
+                <p>Google Sheets là một phần mềm bảng tính dựa trên nền tảng web (Web-based) được phát triển bởi Google. Bạn không cần phải cài đặt bất kỳ phần mềm nặng nề nào vào máy tính, mọi thao tác đều diễn ra trên trình duyệt (Chrome, Cốc Cốc, Edge...) và dữ liệu được lưu tự động lên Google Drive.</p>
+
+                <h3>So sánh Google Sheets và Microsoft Excel</h3>
+                <p>Nhiều người thường tự hỏi: <em>"Đã có Excel rồi, tại sao phải học thêm Google Sheets?"</em> Dưới đây là bảng so sánh chi tiết giúp bạn hiểu rõ ưu thế của từng nền tảng:</p>
+
+                <table class="compare-table">
+                    <tr>
+                        <th>Tiêu chí</th>
+                        <th>Google Sheets (Google)</th>
+                        <th>Microsoft Excel (Microsoft)</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Chi phí & Truy cập</strong></td>
+                        <td>Hoàn toàn <span class="highlight-text">Miễn phí</span>. Chỉ cần có tài khoản Gmail. Truy cập từ mọi thiết bị có Internet.</td>
+                        <td>Trả phí bản quyền khá cao (Gói Microsoft 365). Phải cài đặt phần mềm vào máy tính.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Làm việc nhóm (Collaboration)</strong></td>
+                        <td><span class="highlight-text">Vô địch</span>. Hàng chục người có thể cùng chỉnh sửa một file trong thời gian thực. Thấy rõ con trỏ chuột của người khác.</td>
+                        <td>Hạn chế. Dù có tính năng Co-authoring nhưng thường xuyên bị trễ (lag) và dễ sinh ra lỗi đồng bộ.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lưu trữ dữ liệu</strong></td>
+                        <td>Tự động lưu (Auto-save) sau mỗi cú gõ phím. Không bao giờ sợ mất file do cúp điện. Lưu Lịch sử phiên bản chi tiết.</td>
+                        <td>Phải bấm Ctrl+S thủ công (nếu không dùng OneDrive). Dễ rủi ro mất file nếu máy tính hỏng.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sức mạnh xử lý & Dữ liệu lớn</strong></td>
+                        <td>Yếu hơn. Khi file vượt qua 10.000 dòng hoặc có quá nhiều hàm phức tạp, trình duyệt sẽ bị giật, lag.</td>
+                        <td><span class="highlight-text">Vô địch</span>. Xử lý cực kỳ mượt mà với hàng triệu dòng dữ liệu. Tích hợp Power Query và VBA.</td>
+                    </tr>
+                </table>
+
+                <div class="article-img-box">
+                    <img id="pic-2" src="" alt="So sánh Sheets và Excel">
+                    <div class="img-caption">Google Sheets chiến thắng ở mảng làm việc nhóm, còn Excel thống trị ở mảng xử lý dữ liệu khổng lồ.</div>
+                </div>
+
+                <div class="cyber-tip">
+                    <div class="cyber-tip-title"><i class="fas fa-lightbulb"></i> Lời khuyên từ SMART SCHOOL</div>
+                    <p>Hãy sử dụng <strong>Google Sheets</strong> cho các bài tập nhóm, quản lý danh sách lớp, lên kế hoạch thu chi hàng tháng nơi cần nhiều người vào xem và sửa. Hãy dùng <strong>Excel</strong> khi bạn phải làm đồ án phân tích dữ liệu chuyên sâu với hàng trăm ngàn dòng số liệu.</p>
+                </div>
+
+                <h2 id="phan-2">2. Hướng dẫn các thao tác Cơ bản</h2>
+
+                <h3>2.1 Tạo mới và Mở file</h3>
+                <ul>
+                    <li><strong>Cách 1 (Truyền thống):</strong> Truy cập vào <code>drive.google.com</code>, click vào nút <strong>Mới (New)</strong> ở góc trái > Chọn <strong>Google Trang tính (Google Sheets)</strong> > Bảng tính trống.</li>
+                    <li><strong>Cách 2 (Siêu tốc):</strong> Mở một tab mới trên trình duyệt Chrome, gõ <code>sheet.new</code> rồi nhấn Enter. Ngay lập tức một bảng tính trống sẽ hiện ra.</li>
+                </ul>
+                <p>Để mở một file Excel có sẵn trên máy tính bằng Google Sheets: Vào menu <strong>Tệp (File)</strong> > <strong>Nhập (Import)</strong> > Chuyển sang tab <strong>Tải lên (Upload)</strong> và kéo thả file Excel từ máy tính của bạn vào.</p>
+
+                <div class="article-img-box">
+                    <img id="pic-3" src="" alt="Tạo mới Google Sheets">
+                    <div class="img-caption">Giao diện làm việc thân thiện và tối giản của Google Sheets.</div>
+                </div>
+
+                <h3>2.2 Định dạng Font chữ, Màu sắc và Viền bảng</h3>
+                <p>Giao diện của Sheets rất giống Word và Excel. Trên thanh công cụ (Toolbar) phía trên cùng, bạn sẽ thấy các biểu tượng quen thuộc:</p>
+                <ul>
+                    <li><strong>Font chữ:</strong> Nhấp vào mũi tên cạnh chữ "Arial" để đổi font. <em>Mẹo: Các font dễ đọc nhất cho bảng tính là Roboto, Open Sans hoặc Montserrat.</em></li>
+                    <li><strong>Bôi đậm/In nghiêng:</strong> Dùng tổ hợp phím <code>Ctrl + B</code> (Đậm) và <code>Ctrl + I</code> (Nghiêng).</li>
+                    <li><strong>Tô màu:</strong> Biểu tượng chữ <code>A</code> có thanh màu bên dưới là để đổi màu chữ. Biểu tượng "Thùng sơn" dùng để tô màu nền cho ô (Fill color).</li>
+                    <li><strong>Kẻ viền (Borders):</strong> Bôi đen vùng dữ liệu cần kẻ ô > Nhấp vào biểu tượng lưới vuông (Borders) > Chọn Tất cả đường viền.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-4" src="" alt="Định dạng Google Sheets">
+                    <div class="img-caption">Sử dụng thanh công cụ để trang trí bảng dữ liệu trở nên chuyên nghiệp và dễ nhìn hơn.</div>
+                </div>
+
+                <h3>2.3 Tìm kiếm và Thay thế (Search & Replace)</h3>
+                <p>Khi bảng dữ liệu dài hàng ngàn dòng, việc tìm bằng mắt là bất khả thi.</p>
+                <ul>
+                    <li><strong>Tìm kiếm nhanh:</strong> Nhấn <code>Ctrl + F</code>. Một hộp thoại nhỏ góc trên bên phải hiện ra. Gõ từ khóa, Sheets sẽ bôi màu xanh lá cây tất cả các ô chứa từ đó.</li>
+                    <li><strong>Tìm kiếm và Thay thế:</strong> Nhấn <code>Ctrl + H</code>. Ví dụ: Bạn lỡ gõ sai từ "Tp.HCM" thành "HCM" trong toàn bộ 500 dòng. Cửa sổ này cho phép bạn "Tìm: HCM" và "Thay thế bằng: Tp.HCM", nhấn <strong>Thay thế tất cả</strong> là xong trong 1 giây!</li>
+                </ul>
+
+                <h3>2.4 Cố định Dòng và Cột (Freeze Panes)</h3>
+                <p>Rất nhiều bạn gặp tình trạng: Cuộn chuột xuống dưới cùng để xem dữ liệu thì quên mất tiêu đề của cột đó là gì (Họ tên? Lớp? hay Điểm số?). Tính năng <strong>Cố định (Freeze)</strong> sinh ra để giải quyết việc này.</p>
+                <ul>
+                    <li><strong>Cách làm:</strong> Bôi đen dòng tiêu đề (Ví dụ Dòng 1) > Vào menu <strong>Xem (View)</strong> > <strong>Cố định (Freeze)</strong> > Chọn <strong>1 hàng (1 row)</strong>.</li>
+                    <li>Bây giờ, khi bạn cuộn chuột xuống hàng ngàn, dòng tiêu đề vẫn luôn ghim cố định ở trên cùng màn hình. Bạn làm tương tự với Cột (Column) nếu bảng quá rộng sang ngang.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-5" src="" alt="Cố định dòng Google Sheets">
+                    <div class="img-caption">Cố định hàng tiêu đề giúp việc đọc dữ liệu dài dễ dàng hơn bao giờ hết.</div>
+                </div>
+
+                <h2 id="phan-3">3. Hướng dẫn các tính năng Nâng cao</h2>
+
+                <h3>3.1 Làm chủ các Hàm (Functions) cốt lõi</h3>
+                <p>Hàm là linh hồn của bảng tính. Google Sheets luôn bắt đầu một hàm bằng dấu Bằng (<code>=</code>). Dưới đây là 4 hàm sinh tồn bạn bắt buộc phải biết:</p>
+                <ul>
+                    <li><strong>Hàm SUM (Cộng tổng):</strong> <code>=SUM(C2:C100)</code> - Cộng tất cả các số từ ô C2 đến C100.</li>
+                    <li><strong>Hàm AVERAGE (Trung bình):</strong> <code>=AVERAGE(D2:D50)</code> - Tính điểm trung bình của cả lớp.</li>
+                    <li><strong>Hàm IF (Câu lệnh điều kiện Nếu... thì):</strong> <code>=IF(E2>=8, "Học sinh Giỏi", "Bình thường")</code>. Dùng để xếp loại, đánh giá dựa trên một tiêu chí cụ thể.</li>
+                    <li><strong>Hàm VLOOKUP (Dò tìm):</strong> Hàm huyền thoại trong giới văn phòng. Dùng để dò tìm Tên học sinh dựa vào Mã học sinh từ một danh sách khác. <br>
+                    <em>Cú pháp: <code>=VLOOKUP(Giá_trị_dò_tìm, Vùng_chứa_dữ_liệu, Số_thứ_tự_cột_lấy_kết_quả, 0)</code></em>.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-6" src="" alt="Sử dụng Hàm trong Sheets">
+                    <div class="img-caption">Kết hợp các hàm IF và VLOOKUP để tự động hóa việc tính toán và phân loại.</div>
+                </div>
+
+                <h3>3.2 Sắp xếp (Sort) và Lọc dữ liệu (Filter)</h3>
+                <p>Khi có một danh sách lộn xộn, bạn muốn tìm ra 5 bạn điểm cao nhất, hoặc chỉ hiển thị những bạn thuộc "Tổ 1".</p>
+                <ul>
+                    <li><strong>Lọc dữ liệu (Filter):</strong> Bôi đen dòng Tiêu đề > Vào menu <strong>Dữ liệu (Data)</strong> > <strong>Tạo bộ lọc (Create a filter)</strong>. Một biểu tượng hình phễu 3 kẻ ngang sẽ xuất hiện ở đầu mỗi cột. Bấm vào phễu đó, bỏ tích các mục bạn không muốn xem rồi nhấn OK. Dữ liệu sẽ tự động thu gọn lại theo đúng ý bạn.</li>
+                    <li><strong>Sắp xếp (Sort):</strong> Cũng bấm vào hình phễu đó > Chọn <strong>Sắp xếp A-Z</strong> (từ nhỏ đến lớn) hoặc <strong>Sắp xếp Z-A</strong> (từ lớn xuống nhỏ). Rất hữu ích để xếp hạng điểm số.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-8" src="" alt="Lọc dữ liệu Sheets">
+                    <div class="img-caption">Công cụ Lọc (Filter) giúp bạn trích xuất thông tin nhanh chóng từ một mớ dữ liệu hỗn độn.</div>
+                </div>
+
+                <h3>3.3 Trực quan hóa dữ liệu bằng Biểu đồ (Charts)</h3>
+                <p>Con số thì khô khan, nhưng biểu đồ thì biết nói. Google Sheets giúp bạn vẽ biểu đồ cực đẹp chỉ trong 3 click chuột.</p>
+                <ul>
+                    <li><strong>Bước 1:</strong> Bôi đen toàn bộ bảng dữ liệu bạn muốn vẽ biểu đồ (Bao gồm cả dòng Tiêu đề).</li>
+                    <li><strong>Bước 2:</strong> Vào menu <strong>Chèn (Insert)</strong> > Chọn <strong>Biểu đồ (Chart)</strong>.</li>
+                    <li><strong>Bước 3:</strong> Google Sheets thông minh sẽ tự đoán loại biểu đồ phù hợp nhất. Tuy nhiên, bảng điều khiển bên phải (Chart Editor) cho phép bạn tự do đổi sang Biểu đồ hình tròn (Pie chart), Biểu đồ cột (Column chart) hoặc Biểu đồ đường (Line chart) tùy ý.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-7" src="" alt="Vẽ biểu đồ Sheets">
+                    <div class="img-caption">Google Sheets cung cấp hàng chục mẫu biểu đồ trực quan, sinh động để làm báo cáo.</div>
+                </div>
+
+                <h2 id="phan-4">4. Định dạng có điều kiện & Bảo mật trang tính</h2>
+
+                <h3>4.1 Định dạng có điều kiện (Conditional Formatting)</h3>
+                <p>Tính năng siêu phàm này giúp bảng tính tự động đổi màu ô tùy theo giá trị bên trong nó. Ví dụ: Bạn muốn tất cả các ô có điểm dưới 5 tự động bôi màu ĐỎ để dễ nhận diện.</p>
+                <ul>
+                    <li>Bôi đen cột Điểm số > Menu <strong>Định dạng (Format)</strong> > <strong>Định dạng có điều kiện (Conditional formatting)</strong>.</li>
+                    <li>Bảng điều khiển bên phải hiện ra. Ở mục <em>Quy tắc định dạng (Format rules)</em>, chọn <strong>Nhỏ hơn (Less than)</strong> và điền số <strong>5</strong>.</li>
+                    <li>Ở mục <em>Kiểu định dạng (Formatting style)</em>, chọn màu nền đỏ, chữ trắng. Nhấn <strong>Đã xong (Done)</strong>. Bảng tính của bạn giờ đây đã thông minh hơn rất nhiều!</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-9" src="" alt="Định dạng có điều kiện">
+                    <div class="img-caption">Định dạng có điều kiện giúp làm nổi bật các dữ liệu quan trọng hoàn toàn tự động.</div>
+                </div>
+
+                <h3>4.2 Bảo vệ Trang tính và Dải ô (Protect Sheets/Ranges)</h3>
+                <p>Khi làm việc nhóm, bạn gửi link cho cả lớp điền thông tin, nhưng lại sợ các bạn lỡ tay xóa mất cột Công thức tính toán của mình? Hãy khóa nó lại!</p>
+                <ul>
+                    <li><strong>Bảo vệ cả 1 Sheet:</strong> Click chuột phải vào Tên Sheet ở dưới cùng màn hình > Chọn <strong>Bảo vệ trang tính (Protect sheet)</strong> > Thiết lập quyền. Chỉ có bạn (hoặc những email bạn chỉ định) mới được phép chỉnh sửa Sheet đó, những người khác chỉ được xem.</li>
+                    <li><strong>Khóa một vùng cụ thể:</strong> Bôi đen cột công thức > Chuột phải > Chọn <strong>Xem các hành động khác đối với ô</strong> > <strong>Bảo vệ dải ô</strong>. Sau đó bạn có thể yên tâm gửi link cho bất kỳ ai mà không sợ bị phá dữ liệu.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-10" src="" alt="Bảo vệ trang tính Google Sheets">
+                    <div class="img-caption">Khóa trang tính là bước bắt buộc để bảo vệ công sức của bạn khi share link cho nhiều người.</div>
+                </div>
+
+                <h2 id="phan-5">5. Tổng kết & Lời khuyên</h2>
+                <p>Google Sheets không chỉ đơn thuần là một bảng tính, nó là một nền tảng làm việc cộng tác tuyệt vời của thế kỷ 21. Bằng việc thành thạo Google Sheets, bạn đã nắm trong tay chìa khóa để tổ chức cuộc sống, học tập và công việc một cách khoa học nhất.</p>
+                
+                <div style="background-color: #f8fafc; padding: 20px; border-left: 5px solid var(--primary-neon); border-radius: 0 10px 10px 0; margin-top: 15px;">
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>Thao tác:</strong> Hãy nhớ phím tắt <code>Ctrl+F</code> để tìm kiếm, và luôn <strong>Cố định dòng tiêu đề</strong> trước khi làm việc với dữ liệu dài.</li>
+                        <li><strong>Xử lý dữ liệu:</strong> Luyện tập thành thạo bộ 3 công cụ: <strong>Hàm (SUM, IF, VLOOKUP)</strong>, <strong>Lọc (Filter)</strong> và <strong>Sắp xếp (Sort)</strong>.</li>
+                        <li><strong>An toàn dữ liệu:</strong> Luôn cài đặt <strong>Bảo vệ dải ô</strong> chứa công thức quan trọng trước khi nhấn nút <em>Share (Chia sẻ)</em> file cho tập thể.</li>
+                    </ul>
+                </div>
+
+            </article>
+
+        </main>
+
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <div class="chat-widget-container">
+        <div class="chat-menu" id="chatMenu">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=nhn.softwave@gmail.com" target="_blank" class="chat-option">
+                <i class="fas fa-envelope" style="color: #ea4335;"></i> Gửi Email
+            </a>
+            <div class="chat-option" onclick="toggleZaloQR()">
+                <i class="fas fa-comment-dots" style="color: #0068FF;"></i> Nhắn tin Zalo
+            </div>
+            <div class="zalo-qr-box" id="zaloQRBox">
+                <img src="../MyQr.jpg" alt="Mã QR Zalo">
+                <p>Quét mã QR bằng Zalo</p>
+            </div>
+        </div>
+        <button class="chat-bubble" id="chatButton" onclick="toggleChatMenu()" title="Liên hệ Admin">
+            <i class="fas fa-comment-dots" id="chatIcon"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 1. HÀM XỬ LÝ ẢNH THÔNG MINH (LH3 siêu tốc)
+            function getImageUrl(source) {
+                if (!source || source.trim() === "") return "";
+                let fileId = "";
+                
+                if (source.includes("drive.google.com")) {
+                    let match = source.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                        fileId = match[1];
+                    }
+                } else if (source.startsWith("http")) {
+                    return source;
+                } else {
+                    fileId = source;
+                }
+
+                if (fileId) {
+                    return "https://lh3.googleusercontent.com/d/" + fileId;
+                }
+                return "";
+            }
+
+            // 2. TỰ ĐỘNG CHÈN LINK VÀO MƯỜI (10) THẺ IMG TRONG BÀI
+            if(document.getElementById('pic-1') && typeof IMG_1 !== 'undefined') document.getElementById('pic-1').src = getImageUrl(IMG_1);
+            if(document.getElementById('pic-2') && typeof IMG_2 !== 'undefined') document.getElementById('pic-2').src = getImageUrl(IMG_2);
+            if(document.getElementById('pic-3') && typeof IMG_3 !== 'undefined') document.getElementById('pic-3').src = getImageUrl(IMG_3);
+            if(document.getElementById('pic-4') && typeof IMG_4 !== 'undefined') document.getElementById('pic-4').src = getImageUrl(IMG_4);
+            if(document.getElementById('pic-5') && typeof IMG_5 !== 'undefined') document.getElementById('pic-5').src = getImageUrl(IMG_5);
+            if(document.getElementById('pic-6') && typeof IMG_6 !== 'undefined') document.getElementById('pic-6').src = getImageUrl(IMG_6);
+            if(document.getElementById('pic-7') && typeof IMG_7 !== 'undefined') document.getElementById('pic-7').src = getImageUrl(IMG_7);
+            if(document.getElementById('pic-8') && typeof IMG_8 !== 'undefined') document.getElementById('pic-8').src = getImageUrl(IMG_8);
+            if(document.getElementById('pic-9') && typeof IMG_9 !== 'undefined') document.getElementById('pic-9').src = getImageUrl(IMG_9);
+            if(document.getElementById('pic-10') && typeof IMG_10 !== 'undefined') document.getElementById('pic-10').src = getImageUrl(IMG_10);
+
+            // 3. TỰ ĐỘNG ĐẾM LƯỢT XEM
+            if(typeof ARTICLE_ID !== 'undefined') {
+                fetch(`https://api.counterapi.dev/v1/smartschool_io_vn/${ARTICLE_ID}/up`)
+                    .then(r => r.json())
+                    .then(d => {
+                        document.getElementById('visit-count').innerText = d.count.toLocaleString('vi-VN');
+                    })
+                    .catch(e => {
+                        document.getElementById('visit-count').innerText = "...";
+                    });
+            }
+        });
+
+        function toggleChatMenu() {
+            const menu = document.getElementById('chatMenu');
+            const icon = document.getElementById('chatIcon');
+            
+            menu.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                icon.classList.remove('fa-comment-dots');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-comment-dots');
+                document.getElementById('zaloQRBox').classList.remove('active'); 
+            }
+        }
+
+        function toggleZaloQR() {
+            document.getElementById('zaloQRBox').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

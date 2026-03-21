@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Cá nhân hóa Màn hình Desktop Windows 10, 11 & 12 | SMART SCHOOL</title>
+
+    <meta name="description" content="Hướng dẫn toàn diện cách thiết lập hình nền, thay đổi icon và tinh chỉnh Taskbar trên Windows 10, Windows 11 và hệ điều hành Windows 12 mới nhất.">
+    <meta name="keywords" content="đổi hình nền, setup desktop, đổi icon windows, windows 11, windows 12, taskbar, hình nền động, thủ thuật máy tính, smart school">
+    <meta name="author" content="Admin - SMART SCHOOL">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Cá nhân hóa Màn hình Desktop Windows 10, 11 & 12 | SMART SCHOOL">
+    <meta property="og:description" content="Biến màn hình máy tính nhàm chán của bạn thành một không gian làm việc đầy cảm hứng với hướng dẫn setup Desktop chuẩn Cyberpunk.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1593640495253-23d96b423667?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"> 
+    
+    <script>
+        // 1. ID DUY NHẤT ĐỂ ĐẾM LƯỢT XEM
+        const ARTICLE_ID = "setup_desktop_win10_11_12";
+
+        // 2. LINK HOẶC ID HÌNH ẢNH TỪ GOOGLE DRIVE
+        // NHỚ: Phải set quyền ảnh trên Drive là "Bất kỳ ai có liên kết"
+        const IMG_1 = "https://drive.google.com/file/d/1ybx5ahpRrhH19zQyWUmm4flNYkOO6uyD/view?usp=drive_link"; 
+        const IMG_2 = "https://drive.google.com/file/d/1ybx5ahpRrhH19zQyWUmm4flNYkOO6uyD/view?usp=drive_link"; 
+        const IMG_3 = "https://drive.google.com/file/d/1ybx5ahpRrhH19zQyWUmm4flNYkOO6uyD/view?usp=drive_link"; 
+        const IMG_4 = "1ybx5ahpRrhH19zQyWUmm4flNYkOO6uyD"; 
+        const IMG_5 = "1ybx5ahpRrhH19zQyWUmm4flNYkOO6uyD"; 
+        const IMG_6 = "1ybx5ahpRrhH19zQyWUmm4flNYkOO6uyD"; 
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="tricks_style.css">
+    
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+        <main class="main-column">
+            
+            <div class="hero-panel">
+                <a href="../index.html" class="home-btn-absolute" title="Về trang chủ"><i class="fas fa-home"></i></a>
+                
+                <div class="hero-content">
+                    <h1 class="hero-title">Hướng dẫn cá nhân hóa Desktop Windows 10, 11 và 12</h1>
+                    <div class="hero-meta">
+                        <span class="hero-category"><i class="fas fa-microchip"></i> Thủ thuật máy tính</span>
+                        <span><i class="far fa-calendar-alt"></i> 28/10/2026</span>
+                        <span><i class="far fa-eye"></i> <span id="visit-count" class="view-count">...</span></span>
+                        <span><i class="far fa-user"></i> Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="article-content">
+                
+                <p>Màn hình chính (Desktop) giống như bàn học hay bàn làm việc ảo của bạn vậy. Một chiếc bàn lộn xộn với hàng tá icon vứt lung tung sẽ khiến bạn nhanh chóng cảm thấy ngột ngạt và giảm hiệu suất. Ngược lại, một chiếc màn hình được thiết lập gọn gàng, hình nền đẹp mắt và các icon được sắp xếp khoa học sẽ mang lại nguồn cảm hứng bất tận mỗi khi bạn bật máy tính lên.</p>
+                <p>Từ thiết kế góc cạnh quen thuộc của Windows 10, sự bo tròn mềm mại trên Windows 11, cho đến giao diện nổi (floating UI) tích hợp AI sâu rộng của Windows 12, Microsoft luôn cung cấp cho chúng ta những công cụ tuyệt vời để làm chủ không gian hiển thị. Hãy cùng <strong>SMART SCHOOL</strong> khám phá cách "lột xác" cho chiếc máy tính của bạn nhé!</p>
+
+                <div class="toc-inline-box">
+                    <h3 class="toc-title"><i class="fas fa-list-ul"></i> NỘI DUNG BÀI VIẾT</h3>
+                    <ul class="toc-list">
+                        <li><a href="#phan-1">1. Đổi Hình Nền (Wallpaper): Mang nghệ thuật vào góc máy</a></li>
+                        <li><a href="#phan-2">2. Quản lý Icon Desktop: Gọn gàng và Chuyên nghiệp</a></li>
+                        <li><a href="#phan-3">3. Tinh chỉnh Taskbar (Thanh Tác Vụ) qua các thời kỳ</a></li>
+                        <li><a href="#phan-4">4. Nâng tầm Setup với phần mềm thứ ba (Wallpaper Engine & Rainmeter)</a></li>
+                    </ul>
+                </div>
+
+                <div class="article-img-box">
+                    <img id="pic-1" src="" alt="Góc máy tính làm việc gọn gàng">
+                    <div class="img-caption">Một góc làm việc gọn gàng bắt đầu từ một màn hình Desktop ngăn nắp.</div>
+                </div>
+
+                <h2 id="phan-1">1. Đổi Hình Nền (Wallpaper): Mang nghệ thuật vào góc máy</h2>
+                <p>Bức ảnh nền chính là linh hồn của màn hình Desktop. Cách thay đổi hình nền về cơ bản là giống nhau trên các hệ điều hành, nhưng mỗi phiên bản lại có thêm những tính năng đặc quyền riêng.</p>
+
+                <ul>
+                    <li><strong>Trên Windows 10:</strong> Click chuột phải vào màn hình Desktop -> Chọn <em>Personalize</em> -> Ở mục <em>Background</em>, chọn <strong>Picture</strong> (Ảnh tĩnh), <strong>Solid color</strong> (Màu đơn sắc) hoặc <strong>Slideshow</strong> (Tự động chuyển ảnh).</li>
+                    <li><strong>Trên Windows 11:</strong> Giao diện Cài đặt (Settings) được làm lại trực quan hơn. Windows 11 bổ sung thêm tính năng <strong>Windows Spotlight</strong>, tự động tải về những bức ảnh phong cảnh tuyệt đẹp từ Bing mỗi ngày để làm mới màn hình của bạn.</li>
+                    <li><strong>Trên Windows 12:</strong> Sự xuất hiện của <em>AI Wallpaper</em>. Bạn không cần đi tìm ảnh nữa, chỉ cần gõ yêu cầu vào thanh Copilot (ví dụ: "Tạo hình nền phi hành gia đứng trên sao hỏa tone màu xanh neon"), Windows 12 sẽ lập tức tạo ra một bức ảnh độc bản, có hỗ trợ hiệu ứng chiều sâu (Parallax) khi bạn rê chuột.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-2" src="" alt="Thay đổi hình nền Windows">
+                    <div class="img-caption">Giao diện Personalize quen thuộc giúp bạn nhanh chóng đổi áo mới cho hệ thống.</div>
+                </div>
+
+                <div class="cyber-tip">
+                    <div class="cyber-tip-title"><i class="fas fa-lightbulb"></i> Mẹo chọn độ phân giải ảnh</div>
+                    <p>Luôn tải ảnh có độ phân giải bằng hoặc lớn hơn màn hình của bạn (Full HD, 2K hoặc 4K). Trong phần <strong>Choose a fit</strong>, hãy chọn <em>Fill</em> để ảnh phủ kín màn hình mà không bị méo tỷ lệ nhé!</p>
+                </div>
+
+                <h2 id="phan-2">2. Quản lý Icon Desktop: Gọn gàng và Chuyên nghiệp</h2>
+                <p>Bạn có thói quen lưu mọi thứ ra Desktop? Đã đến lúc quy hoạch lại chúng. Một màn hình chỉ nên chứa từ 5-10 icon quan trọng nhất.</p>
+
+                <h3>Ẩn/Hiện Icon hệ thống (This PC, Recycle Bin)</h3>
+                <p>Theo mặc định, Windows mới cài xong có thể không hiển thị biểu tượng "This PC" (My Computer). Để lấy lại nó:</p>
+                <ul>
+                    <li>Mở <strong>Settings</strong> -> <strong>Personalization</strong> -> <strong>Themes</strong>.</li>
+                    <li>Tìm và click vào <strong>Desktop icon settings</strong>.</li>
+                    <li>Tích chọn <em>Computer</em>, <em>Recycle Bin</em>, hoặc <em>Control Panel</em> rồi nhấn OK.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-4" src="" alt="Icon Desktop Windows">
+                    <div class="img-caption">Bạn có thể thay đổi hình dáng của icon thư mục mặc định thành bất kỳ hình nào bạn thích.</div>
+                </div>
+
+                <h3>Thay đổi Icon cho Folder</h3>
+                <p>Bạn muốn thư mục "Tài liệu học tập" của mình mang hình một cuốn sách thay vì kẹp hồ sơ vàng khè nhàm chán? Hãy Click chuột phải vào thư mục đó -> <strong>Properties</strong> -> Tab <strong>Customize</strong> -> Nhấn <strong>Change Icon</strong> và chọn hình bạn thích.</p>
+
+                <h2 id="phan-3">3. Tinh chỉnh Taskbar (Thanh Tác Vụ) qua các thời kỳ</h2>
+                <p>Taskbar là nơi bạn tương tác nhiều nhất. Sự tiến hóa của Taskbar qua Win 10, 11 và 12 cho thấy xu hướng thiết kế tối giản ngày càng lên ngôi.</p>
+
+                <ul>
+                    <li><strong>Windows 10:</strong> Các icon nằm lệch sang trái. Bạn có thể kéo Taskbar sang cạnh viền trái, phải hoặc trên cùng của màn hình. Để Taskbar trong suốt, bạn có thể tải phần mềm <em>TranslucentTB</em> miễn phí trên Microsoft Store.</li>
+                    <li><strong>Windows 11:</strong> Apple-hóa với bộ icon và nút Start được căn giữa màn hình (Centered). Bạn không thể kéo Taskbar sang hai bên viền màn hình nữa. Đổi lại, các biểu tượng ứng dụng có hiệu ứng animation rất mượt.</li>
+                    <li><strong>Windows 12:</strong> <em>Floating Taskbar (Thanh tác vụ nổi)</em>. Thanh Taskbar không còn bám dính vào cạnh dưới màn hình nữa mà tách rời ra, bo tròn 4 góc tạo cảm giác như thanh Dock của macOS hoặc iPadOS. Các Widget AI sẽ tự động xuất hiện ở góc phải tùy theo thói quen sử dụng của bạn.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-5" src="" alt="Taskbar Windows">
+                    <div class="img-caption">Thanh Taskbar nổi trên các phiên bản Windows hiện đại mang lại cảm giác thanh thoát.</div>
+                </div>
+
+                <h2 id="phan-4">4. Nâng tầm Setup với phần mềm thứ ba</h2>
+                <p>Nếu những thiết lập mặc định của Windows chưa đủ làm bạn thỏa mãn, giới "dân chơi" máy tính thường sử dụng thêm 2 phần mềm sau để phá vỡ mọi giới hạn giao diện:</p>
+
+                <ul>
+                    <li><strong>Wallpaper Engine (Có phí trên Steam):</strong> Đưa hình nền tĩnh vào dĩ vãng. Phần mềm này cho phép bạn đặt video, mô hình 3D, hoặc ảnh có hiệu ứng thời tiết (mưa rơi, tuyết rơi) làm hình nền. Nó thậm chí còn phản ứng với nhịp điệu bài hát bạn đang nghe.</li>
+                    <li><strong>Rainmeter (Miễn phí):</strong> Công cụ tạo Widget thần thánh. Bạn có thể thêm đồng hồ đo nhiệt độ CPU, thanh RAM, dự báo thời tiết, hoặc bộ phân tích phổ âm thanh trực tiếp lên màn hình Desktop với hàng ngàn giao diện (skin) tải về từ cộng đồng.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-6" src="" alt="Màn hình động Wallpaper Engine">
+                    <div class="img-caption">Sự kết hợp giữa hình nền động và các Widget từ Rainmeter.</div>
+                </div>
+
+                <p>Hy vọng qua bài viết này, bạn đã nắm được các kỹ thuật từ cơ bản đến nâng cao để "makeover" (trang điểm) cho chiếc máy tính của mình. Một màn hình đẹp không chỉ thể hiện cá tính mà còn là nguồn năng lượng tích cực khởi đầu cho một ngày học tập và làm việc. Chúc bạn tạo được một góc Desktop mang đậm phong cách SMART SCHOOL!</p>
+
+            </article>
+
+        </main>
+
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <div class="chat-widget-container">
+        
+        <div class="chat-menu" id="chatMenu">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=nhn.softwave@gmail.com" target="_blank" class="chat-option">
+                <i class="fas fa-envelope" style="color: #ea4335;"></i> Gửi Email
+            </a>
+            
+            <div class="chat-option" onclick="toggleZaloQR()">
+                <i class="fas fa-comment-dots" style="color: #0068FF;"></i> Nhắn tin Zalo
+            </div>
+            
+            <div class="zalo-qr-box" id="zaloQRBox">
+                <img src="../MyQr.jpg" alt="Mã QR Zalo">
+                <p>Quét mã QR bằng Zalo</p>
+            </div>
+        </div>
+
+        <button class="chat-bubble" id="chatButton" onclick="toggleChatMenu()" title="Liên hệ Admin">
+            <i class="fas fa-comment-dots" id="chatIcon"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 1. HÀM XỬ LÝ ẢNH TỪ GOOGLE DRIVE (Sử dụng máy chủ LH3 siêu tốc)
+            function getImageUrl(source) {
+                if (!source || source.trim() === "") return "";
+                
+                let fileId = "";
+                
+                // Bóc tách ID nếu dán full link Drive
+                if (source.includes("drive.google.com")) {
+                    let match = source.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                        fileId = match[1];
+                    }
+                } 
+                // Trả về nguyên gốc nếu là link web bình thường
+                else if (source.startsWith("http")) {
+                    return source;
+                } 
+                // Nhận diện nếu dán chuỗi ID ngắn
+                else {
+                    fileId = source;
+                }
+
+                // Dùng máy chủ phân phối ảnh lh3 của Google để xuyên qua lớp chặn
+                if (fileId) {
+                    return "https://lh3.googleusercontent.com/d/" + fileId;
+                }
+                return "";
+            }
+
+            // 2. TỰ ĐỘNG CHÈN LINK VÀO IMG
+            if(document.getElementById('pic-1') && typeof IMG_1 !== 'undefined') document.getElementById('pic-1').src = getImageUrl(IMG_1);
+            if(document.getElementById('pic-2') && typeof IMG_2 !== 'undefined') document.getElementById('pic-2').src = getImageUrl(IMG_2);
+            if(document.getElementById('pic-3') && typeof IMG_3 !== 'undefined') document.getElementById('pic-3').src = getImageUrl(IMG_3);
+            if(document.getElementById('pic-4') && typeof IMG_4 !== 'undefined') document.getElementById('pic-4').src = getImageUrl(IMG_4);
+            if(document.getElementById('pic-5') && typeof IMG_5 !== 'undefined') document.getElementById('pic-5').src = getImageUrl(IMG_5);
+            if(document.getElementById('pic-6') && typeof IMG_6 !== 'undefined') document.getElementById('pic-6').src = getImageUrl(IMG_6);
+
+            // 3. ĐẾM LƯỢT XEM
+            if(typeof ARTICLE_ID !== 'undefined') {
+                fetch(`https://api.counterapi.dev/v1/smartschool_io_vn/${ARTICLE_ID}/up`)
+                    .then(r => r.json())
+                    .then(d => {
+                        document.getElementById('visit-count').innerText = d.count.toLocaleString('vi-VN');
+                    })
+                    .catch(e => {
+                        document.getElementById('visit-count').innerText = "...";
+                    });
+            }
+        });
+
+        // 4. XỬ LÝ SỰ KIỆN CHO WIDGET CHAT LIÊN HỆ
+        function toggleChatMenu() {
+            const menu = document.getElementById('chatMenu');
+            const icon = document.getElementById('chatIcon');
+            
+            menu.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                icon.classList.remove('fa-comment-dots');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-comment-dots');
+                document.getElementById('zaloQRBox').classList.remove('active'); 
+            }
+        }
+
+        function toggleZaloQR() {
+            document.getElementById('zaloQRBox').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

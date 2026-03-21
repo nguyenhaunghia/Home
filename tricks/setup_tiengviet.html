@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    
+    <title>Hướng dẫn Thiết lập và Sửa lỗi Gõ Tiếng Việt trên Windows | SMART SCHOOL</title>
+
+    <meta name="description" content="Hướng dẫn chi tiết cách cài đặt gõ tiếng Việt bằng UniKey và bộ gõ mặc định của Windows. Tổng hợp các lỗi thường gặp và cách khắc phục nhanh chóng cho học sinh.">
+    <meta name="keywords" content="gõ tiếng việt, cài unikey, lỗi gõ tiếng việt, telex, vni, bộ gõ windows, unikey.org, thủ thuật máy tính, smart school">
+    <meta name="author" content="Admin - SMART SCHOOL">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Hướng dẫn Thiết lập và Sửa lỗi Gõ Tiếng Việt trên Windows | SMART SCHOOL">
+    <meta property="og:description" content="Khắc phục triệt để tình trạng lỗi dấu, không gõ được tiếng Việt với cẩm nang thiết lập UniKey và Windows Keyboard chuẩn nhất.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1555532538-dcdbd01d3738?auto=format&fit=crop&w=1000&q=80"> 
+    
+    <script>
+        // A. ID DUY NHẤT để đếm lượt xem 
+        const ARTICLE_ID = "huong_dan_go_tieng_viet_win";
+
+        // B. LINK HOẶC ID HÌNH ẢNH TỪ GOOGLE DRIVE
+        const IMG_1 = "1dzTzWCtKSgk3uDZKlKUfu2kQEi2ct4rB"; // Ảnh 1: Bàn phím máy tính
+        const IMG_2 = "https://drive.google.com/file/d/1dzTzWCtKSgk3uDZKlKUfu2kQEi2ct4rB/view?usp=drive_link"; // Ảnh 2: Giao diện phần mềm/Màn hình
+        const IMG_3 = "https://drive.google.com/file/d/1dzTzWCtKSgk3uDZKlKUfu2kQEi2ct4rB/view?usp=drive_link"; // Ảnh 3: Code/Settings
+        const IMG_4 = "1dzTzWCtKSgk3uDZKlKUfu2kQEi2ct4rB"; // Ảnh 4: Fix lỗi/Sửa chữa
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="tricks_style.css">
+    
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+        <main class="main-column">
+            
+            <div class="hero-panel">
+                <a href="../index.html" class="home-btn-absolute" title="Về trang chủ"><i class="fas fa-home"></i></a>
+                
+                <div class="hero-content">
+                    <h1 class="hero-title">Cẩm nang Gõ Tiếng Việt: Thiết lập chuẩn và "Bắt bệnh" các lỗi thường gặp</h1>
+                    <div class="hero-meta">
+                        <span class="hero-category"><i class="fas fa-microchip"></i> Thủ thuật máy tính</span>
+                        <span><i class="far fa-calendar-alt"></i> 21/03/2026</span>
+                        <span><i class="far fa-eye"></i> <span id="visit-count" class="view-count">...</span></span>
+                        <span><i class="far fa-user"></i> Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="article-content">
+                
+                <p>Gõ tiếng Việt có dấu là thao tác cơ bản và quan trọng nhất khi sử dụng máy tính, đặc biệt là đối với các bạn học sinh thường xuyên phải soạn thảo văn bản, làm bài thuyết trình hay tra cứu tài liệu học tập. Tuy nhiên, việc đang gõ tự nhiên chữ bị "nhảy" lung tung, mất dấu, hoặc lúc gõ được lúc không lại là nỗi ám ảnh của rất nhiều người.</p>
+                
+                <p>Bài viết này của <strong>SMART SCHOOL</strong> sẽ hướng dẫn bạn từ A-Z cách thiết lập gõ tiếng Việt trên máy tính Windows một cách chuẩn mực nhất, đồng thời cung cấp các "bí kíp" để bạn tự khắc phục những lỗi gõ tiếng Việt cứng đầu nhất.</p>
+
+                <div class="toc-inline-box">
+                    <h3 class="toc-title"><i class="fas fa-list-ul"></i> NỘI DUNG BÀI VIẾT</h3>
+                    <ul class="toc-list">
+                        <li><a href="#muc-1">1. Hướng dẫn thiết lập với phần mềm UniKey</a></li>
+                        <li><a href="#muc-2">2. Hướng dẫn thiết lập Bộ gõ tích hợp sẵn của Windows</a></li>
+                        <li><a href="#muc-3">3. "Bắt bệnh" và khắc phục các lỗi gõ Tiếng Việt thường gặp</a></li>
+                        <li><a href="#muc-4">4. Tóm tắt & Ghi nhớ nhanh</a></li>
+                    </ul>
+                </div>
+
+                <div class="article-img-box">
+                    <img id="pic-1" src="" alt="Gõ bàn phím máy tính">
+                    <div class="img-caption">Làm chủ bộ gõ Tiếng Việt giúp tăng tốc độ hoàn thành bài tập lên rất nhiều.</div>
+                </div>
+
+                <h2 id="muc-1">1. Hướng dẫn thiết lập với phần mềm UniKey</h2>
+                <p>UniKey là phần mềm gõ tiếng Việt "quốc dân" được sử dụng phổ biến nhất tại Việt Nam nhờ sự gọn nhẹ, miễn phí và vô cùng ổn định. Để UniKey hoạt động trơn tru, bạn cần thực hiện đúng các bước sau:</p>
+
+                <h3>Bước 1: Tải đúng bản chuẩn của UniKey</h3>
+                <div class="cyber-tip">
+                    <div class="cyber-tip-title"><i class="fas fa-exclamation-triangle"></i> Cảnh báo cực kỳ quan trọng</div>
+                    <p>Tuyệt đối KHÔNG tải UniKey từ các trang web lạ. Hiện nay có rất nhiều trang web giả mạo chứa virus. Trang web chính thức và duy nhất của tác giả Phạm Kim Long là: <strong>unikey.org</strong>.</p>
+                </div>
+                <p>Truy cập vào <em>unikey.org</em>, chọn mục Download và tải phiên bản phù hợp với máy tính của bạn (thường là bản 64-bit cho các máy tính đời mới hiện nay).</p>
+
+                <h3>Bước 2: Thiết lập Bảng mã và Kiểu gõ</h3>
+                <p>Mở ứng dụng UniKey lên, bạn sẽ thấy giao diện chính. Hãy cài đặt 2 thông số quan trọng nhất:</p>
+                <ul>
+                    <li><strong>Bảng mã:</strong> Luôn chọn <strong>Unicode</strong>. Đây là bảng mã tiêu chuẩn quốc tế, hiển thị đúng tiếng Việt trên 99% các phần mềm hiện nay (Word, Chrome, Zalo, Facebook...).</li>
+                    <li><strong>Kiểu gõ:</strong> Chọn <strong>Telex</strong> (kiểu gõ bằng chữ cái như: <em>aa = â, as = á</em>) hoặc <strong>VNI</strong> (kiểu gõ bằng số như: <em>a6 = â, a1 = á</em>) tùy theo thói quen mà bạn đã được học. Telex thường phổ biến hơn trong giới trẻ vì tốc độ gõ nhanh hơn.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-2" src="" alt="Giao diện Unikey">
+                    <div class="img-caption">Giao diện điều khiển chính của phần mềm UniKey.</div>
+                </div>
+
+                <h3>Bước 3: Tinh chỉnh mở rộng</h3>
+                <p>Nhấn vào nút <strong>Mở rộng</strong> trên giao diện UniKey và tích chọn các mục sau để tối ưu hóa:</p>
+                <ul>
+                    <li><strong>Khởi động cùng Windows:</strong> Giúp UniKey tự động bật mỗi khi bạn mở máy tính, bạn không cần phải bật lại thủ công.</li>
+                    <li><strong>Cho phép gõ tự do (telex tự do):</strong> Rất hữu ích khi bạn hay gõ xen kẽ tiếng Anh và tiếng Việt.</li>
+                    <li>Bỏ tích ở ô <em>"Bật hội thoại này khi khởi động"</em> để UniKey chạy ngầm gọn gàng dưới thanh Taskbar.</li>
+                </ul>
+
+                <h2 id="muc-2">2. Hướng dẫn thiết lập Bộ gõ tích hợp sẵn của Windows</h2>
+                <p>Kể từ phiên bản Windows 10 (bản cập nhật 1903 trở lên) và đặc biệt là trên Windows 11, Microsoft đã tích hợp sẵn một bộ gõ Tiếng Việt kiểu Telex và VNI ngay trong hệ điều hành. Nếu bạn không muốn cài thêm UniKey, đây là một sự lựa chọn tuyệt vời.</p>
+
+                <h3>Cách bật bộ gõ Tiếng Việt của Windows</h3>
+                <ul>
+                    <li><strong>Bước 1:</strong> Bấm phím <code>Windows</code>, gõ chữ <em>Language settings</em> và nhấn Enter để mở mục cài đặt ngôn ngữ.</li>
+                    <li><strong>Bước 2:</strong> Trong phần <em>Preferred languages</em>, nhấn nút <strong>Add a language</strong>.</li>
+                    <li><strong>Bước 3:</strong> Gõ tìm chữ <em>Vietnamese</em>, chọn nó và nhấn <strong>Next</strong> -> <strong>Install</strong>. Đợi một chút để Windows tải gói ngôn ngữ về máy.</li>
+                    <li><strong>Bước 4:</strong> Sau khi cài xong, click vào chữ <em>Vietnamese</em> -> Chọn <strong>Options</strong> (hoặc dấu 3 chấm -> Language options).</li>
+                    <li><strong>Bước 5:</strong> Kéo xuống phần <em>Keyboards</em>, nhấn <strong>Add a keyboard</strong> và chọn <strong>Vietnamese Telex</strong> (hoặc VNI). Bạn có thể xóa bộ gõ "Vietnamese" mặc định (bộ gõ này rất khó dùng) để tránh nhầm lẫn.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-3" src="" alt="Cài đặt bàn phím Windows">
+                    <div class="img-caption">Thêm bàn phím Vietnamese Telex ngay trong phần Cài đặt của Windows 11.</div>
+                </div>
+
+                <p><strong>Cách sử dụng:</strong> Để chuyển đổi nhanh giữa gõ Tiếng Anh (ENG) và Tiếng Việt (VIE), bạn chỉ cần nhấn tổ hợp phím <code>Windows + Space</code> (phím cách). Biểu tượng ngôn ngữ ở góc phải dưới cùng màn hình (gần đồng hồ) sẽ thay đổi tương ứng.</p>
+
+                <h2 id="muc-3">3. "Bắt bệnh" và khắc phục các lỗi gõ Tiếng Việt thường gặp</h2>
+                <p>Dù bạn dùng UniKey hay bộ gõ của Windows, đôi khi lỗi vẫn xảy ra. Dưới đây là các "triệu chứng" và cách trị bệnh dứt điểm:</p>
+
+                <h3>Lỗi 1: Gõ chữ ra tiếng Anh dù đã bật UniKey</h3>
+                <ul>
+                    <li><strong>Nguyên nhân:</strong> Do bạn vô tình bấm nhầm tổ hợp phím tắt chuyển đổi chế độ của UniKey, hoặc biểu tượng UniKey đang ở chữ <strong>E</strong> (English) thay vì chữ <strong>V</strong> (Việt).</li>
+                    <li><strong>Cách sửa:</strong> Nhìn xuống góc phải màn hình (Taskbar), nếu biểu tượng UniKey là chữ E màu xanh, hãy click chuột trái một lần vào nó để chuyển thành chữ <strong>V màu đỏ</strong>. Hoặc bấm tổ hợp phím <code>Ctrl + Shift</code> (phím tắt mặc định đổi ngôn ngữ của UniKey).</li>
+                </ul>
+
+                <h3>Lỗi 2: Chữ bị nhảy lung tung, gõ chữ này ra chữ khác (VD: gõ "tiếng" thành "tíeng")</h3>
+                <ul>
+                    <li><strong>Nguyên nhân:</strong> Đây là lỗi "xung đột bộ gõ". Bạn đang bật CÙNG LÚC cả phần mềm UniKey và bộ gõ tiếng Việt tích hợp sẵn của Windows. Hai bộ gõ này "đánh nhau" tranh giành quyền xử lý phím bấm của bạn.</li>
+                    <li><strong>Cách sửa:</strong> Bạn chỉ được phép chọn 1 trong 2 để sử dụng.
+                        <ul>
+                            <li>Nếu muốn dùng UniKey: Hãy bấm <code>Windows + Space</code> để chuyển ngôn ngữ của Windows về lại <strong>ENG (English)</strong>.</li>
+                            <li>Nếu muốn dùng bộ gõ của Windows: Hãy click chuột phải vào biểu tượng UniKey chữ V/E dưới thanh Taskbar và chọn <strong>Kết thúc</strong> (Tắt hoàn toàn UniKey).</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-4" src="" alt="Sửa lỗi máy tính">
+                    <div class="img-caption">Đừng hoảng hốt khi gõ sai chữ, hầu hết nguyên nhân là do xung đột bộ gõ.</div>
+                </div>
+
+                <h3>Lỗi 3: Không gõ được tiếng Việt trên một số ứng dụng đặc thù (Zalo, Game, Photoshop...)</h3>
+                <ul>
+                    <li><strong>Nguyên nhân:</strong> Một số ứng dụng yêu cầu quyền quản trị viên cao hơn quyền hiện tại của UniKey, khiến UniKey không thể can thiệp vào để bỏ dấu.</li>
+                    <li><strong>Cách sửa:</strong> Tắt hoàn toàn UniKey (nhấn chuột phải vào biểu tượng chọn Kết thúc). Sau đó, ra màn hình Desktop, click chuột phải vào icon UniKey và chọn <strong>Run as administrator</strong> (Chạy với quyền Quản trị viên). Bạn sẽ gõ được tiếng Việt bình thường trên mọi ứng dụng.</li>
+                </ul>
+
+                <h3>Lỗi 4: Gõ ra các ký tự kỳ lạ (Font chữ bị lỗi)</h3>
+                <ul>
+                    <li><strong>Nguyên nhân:</strong> Bạn đang chọn sai Bảng mã trong UniKey so với Font chữ đang dùng trong Word/PowerPoint.</li>
+                    <li><strong>Cách sửa:</strong> 
+                        <ul>
+                            <li>Nếu dùng các font chữ hiện đại (Arial, Times New Roman, Calibri...): Chọn bảng mã <strong>Unicode</strong>.</li>
+                            <li>Nếu dùng các font chữ kiểu cũ bắt đầu bằng VNI- (như VNI-Times): Chọn bảng mã <strong>VNI Windows</strong>.</li>
+                            <li>Nếu dùng các font chữ bắt đầu bằng .Vn (như .VnTime): Chọn bảng mã <strong>TCVN3 (ABC)</strong>.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h2 id="muc-4">4. Tóm tắt & Ghi nhớ nhanh</h2>
+                <p>Để không bao giờ phải bực mình vì vấn đề gõ tiếng Việt nữa, các bạn học sinh chỉ cần ghi nhớ "thần chú" 3 ý sau đây:</p>
+                
+                <div style="background-color: #f8fafc; padding: 20px; border-left: 5px solid var(--primary-neon); border-radius: 0 10px 10px 0; margin-top: 15px;">
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>Nguyên tắc 1 CÔNG CỤ:</strong> Chọn 1 trong 2. Hoặc chỉ dùng UniKey (nhớ chuyển Windows về ENG), hoặc chỉ dùng bộ gõ của Windows (tắt hẳn UniKey). Bật cả 2 cùng lúc chắc chắn sẽ bị nhảy chữ.</li>
+                        <li><strong>Bộ 3 thông số vàng của UniKey:</strong> Tải từ <code>unikey.org</code> + Bảng mã <code>Unicode</code> + Khởi động <code>Run as administrator</code>.</li>
+                        <li><strong>Kiểm tra nhanh khi không gõ được:</strong> Nhìn xuống góc phải màn hình xem UniKey đang là chữ V hay chữ E. Bấm vào nó hoặc dùng <code>Ctrl+Shift</code> để đổi.</li>
+                    </ul>
+                </div>
+
+            </article>
+
+        </main>
+
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <div class="chat-widget-container">
+        <div class="chat-menu" id="chatMenu">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=nhn.softwave@gmail.com" target="_blank" class="chat-option">
+                <i class="fas fa-envelope" style="color: #ea4335;"></i> Gửi Email
+            </a>
+            <div class="chat-option" onclick="toggleZaloQR()">
+                <i class="fas fa-comment-dots" style="color: #0068FF;"></i> Nhắn tin Zalo
+            </div>
+            <div class="zalo-qr-box" id="zaloQRBox">
+                <img src="../MyQr.jpg" alt="Mã QR Zalo">
+                <p>Quét mã QR bằng Zalo</p>
+            </div>
+        </div>
+        <button class="chat-bubble" id="chatButton" onclick="toggleChatMenu()" title="Liên hệ Admin">
+            <i class="fas fa-comment-dots" id="chatIcon"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 1. HÀM XỬ LÝ ẢNH THÔNG MINH (Bản LH3 siêu tốc)
+            function getImageUrl(source) {
+                if (!source || source.trim() === "") return "";
+                
+                let fileId = "";
+                
+                if (source.includes("drive.google.com")) {
+                    let match = source.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                        fileId = match[1];
+                    }
+                } 
+                else if (source.startsWith("http")) {
+                    return source;
+                } 
+                else {
+                    fileId = source;
+                }
+
+                if (fileId) {
+                    return "https://lh3.googleusercontent.com/d/" + fileId;
+                }
+                return "";
+            }
+
+            // 2. TỰ ĐỘNG CHÈN LINK VÀO IMG
+            if(document.getElementById('pic-1') && typeof IMG_1 !== 'undefined') document.getElementById('pic-1').src = getImageUrl(IMG_1);
+            if(document.getElementById('pic-2') && typeof IMG_2 !== 'undefined') document.getElementById('pic-2').src = getImageUrl(IMG_2);
+            if(document.getElementById('pic-3') && typeof IMG_3 !== 'undefined') document.getElementById('pic-3').src = getImageUrl(IMG_3);
+            if(document.getElementById('pic-4') && typeof IMG_4 !== 'undefined') document.getElementById('pic-4').src = getImageUrl(IMG_4);
+
+            // 3. TỰ ĐỘNG ĐẾM LƯỢT XEM
+            if(typeof ARTICLE_ID !== 'undefined') {
+                fetch(`https://api.counterapi.dev/v1/smartschool_io_vn/${ARTICLE_ID}/up`)
+                    .then(r => r.json())
+                    .then(d => {
+                        document.getElementById('visit-count').innerText = d.count.toLocaleString('vi-VN');
+                    })
+                    .catch(e => {
+                        document.getElementById('visit-count').innerText = "...";
+                    });
+            }
+        });
+
+        function toggleChatMenu() {
+            const menu = document.getElementById('chatMenu');
+            const icon = document.getElementById('chatIcon');
+            
+            menu.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                icon.classList.remove('fa-comment-dots');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-comment-dots');
+                document.getElementById('zaloQRBox').classList.remove('active'); 
+            }
+        }
+
+        function toggleZaloQR() {
+            document.getElementById('zaloQRBox').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

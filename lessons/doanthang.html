@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Đoạn Thẳng Là Gì? Khái Niệm, Cách Vẽ Và Thực Hành Trực Quan | SMART SCHOOL</title>
+
+    <meta name="description" content="Bài giảng chi tiết về đoạn thẳng trong môn Toán học. Hướng dẫn nhận biết, cách gọi tên, cách vẽ và khu vực thực hành tương tác trực tiếp dành cho học sinh.">
+    <meta name="keywords" content="đoạn thẳng, hình học cơ bản, toán học, cách vẽ đoạn thẳng, trung điểm đoạn thẳng, thực hành toán, smart school">
+    <meta name="author" content="Giáo viên Toán - SMART SCHOOL">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Đoạn Thẳng Là Gì? Khái Niệm, Cách Vẽ Và Thực Hành Trực Quan | SMART SCHOOL">
+    <meta property="og:description" content="Cùng khám phá thế giới hình học kỳ thú với bài học về đoạn thẳng, kèm công cụ vẽ tương tác sinh động.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1632516643720-e7f5d7d6ecc9?auto=format&fit=crop&w=1000&q=80"> 
+    
+    <script>
+        // A. ID DUY NHẤT ĐỂ ĐẾM LƯỢT XEM
+        const ARTICLE_ID = "bai_giang_toan_doan_thang";
+
+        // B. LINK HOẶC ID HÌNH ẢNH TỪ GOOGLE DRIVE (Tự động nhận diện LH3)
+        // Bạn dán ID hình ảnh minh họa bài giảng của bạn vào đây nhé
+        const IMG_1 = "https://images.unsplash.com/photo-1632516643720-e7f5d7d6ecc9?auto=format&fit=crop&w=1000&q=80"; // Ảnh 1: Dụng cụ học tập (Thước kẻ, compa, bút chì)
+        const IMG_2 = "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1000&q=80"; // Ảnh 2: Hình ảnh đoạn thẳng trong thực tế (Cây cầu, mép bàn...)
+        const IMG_3 = "https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=format&fit=crop&w=1000&q=80"; // Ảnh 3: Minh họa bản vẽ hình học trên giấy
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../tricks/tricks_style.css">
+
+    <style>
+        /* CSS bổ sung cho bài giảng Toán học và Khu vực thực hành */
+        .math-box {
+            background-color: #f0fdf4;
+            border-left: 5px solid #22c55e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .math-box h4 { margin-top: 0; color: #166534; }
+        .practice-container {
+            width: 100%;
+            min-height: 450px;
+            border: 3px dashed var(--primary-neon);
+            border-radius: 12px;
+            background-color: #ffffff;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            margin: 30px 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .practice-label {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            background: var(--primary-neon);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            z-index: 10;
+        }
+        .compare-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .compare-table th, .compare-table td { padding: 15px; border: 1px solid #e2e8f0; text-align: left; }
+        .compare-table th { background-color: #f8fafc; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+        <main class="main-column">
+            
+            <div class="hero-panel">
+                <a href="../index.html" class="home-btn-absolute" title="Về trang chủ"><i class="fas fa-home"></i></a>
+                
+                <div class="hero-content">
+                    <h1 class="hero-title">Đoạn Thẳng Là Gì? Khám Phá Thế Giới Hình Học Qua Góc Nhìn Trực Quan</h1>
+                    <div class="hero-meta">
+                        <span class="hero-category"><i class="fas fa-shapes"></i> Toán Học Cơ Bản</span>
+                        <span><i class="far fa-calendar-alt"></i> Ngày học: Hôm nay</span>
+                        <span><i class="far fa-eye"></i> <span id="visit-count" class="view-count">...</span></span>
+                        <span><i class="fas fa-chalkboard-teacher"></i> Tổ Toán - SMART SCHOOL</span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="article-content">
+                
+                <p>Chào mừng các em học sinh đến với lớp học Hình học của <strong>SMART SCHOOL</strong>! Trong thế giới Toán học rộng lớn, vạn vật dù phức tạp đến đâu cũng đều được cấu tạo từ những yếu tố cơ bản nhất. Nếu như Điểm là "hạt nhân" vô hình nhỏ bé nhất, thì <strong>Đoạn thẳng</strong> chính là những "viên gạch" đầu tiên nối liền các hạt nhân đó lại với nhau, tạo nên muôn vàn hình khối diệu kỳ.</p>
+                
+                <p>Bài học hôm nay không chỉ cung cấp cho các em những định nghĩa khô khan trong sách giáo khoa, mà còn đưa các em vào một hành trình khám phá xem đoạn thẳng hiện hữu quanh ta như thế nào, cách các nhà toán học định nghĩa nó, và đặc biệt là phần <strong>Thực hành tương tác trực tiếp</strong> ngay trên trang web này.</p>
+
+                <div class="toc-inline-box">
+                    <h3 class="toc-title"><i class="fas fa-list-ul"></i> NỘI DUNG BÀI GIẢNG</h3>
+                    <ul class="toc-list">
+                        <li><a href="#muc-1">1. Hình ảnh đoạn thẳng trong thực tế cuộc sống</a></li>
+                        <li><a href="#muc-2">2. Khái niệm Đoạn thẳng trong Toán học</a></li>
+                        <li><a href="#muc-3">3. Phân biệt Đoạn thẳng, Đường thẳng và Tia</a></li>
+                        <li><a href="#muc-4">4. Cách đặt tên, gọi tên và ký hiệu Đoạn thẳng</a></li>
+                        <li><a href="#muc-5">5. Hướng dẫn cách vẽ Đoạn thẳng chuẩn xác</a></li>
+                        <li><a href="#muc-6">6. 🎮 THỰC HÀNH TƯƠNG TÁC: Vẽ đoạn thẳng</a></li>
+                        <li><a href="#muc-7">7. Tóm tắt & Ghi nhớ</a></li>
+                    </ul>
+                </div>
+
+                <div class="article-img-box">
+                    <img id="pic-1" src="" alt="Dụng cụ học tập hình học">
+                    <div class="img-caption">Thước thẳng và bút chì là những người bạn đồng hành không thể thiếu khi học về đoạn thẳng.</div>
+                </div>
+
+                <h2 id="muc-1">1. Hình ảnh đoạn thẳng trong thực tế cuộc sống</h2>
+                <p>Toán học bắt nguồn từ thực tiễn. Trước khi tìm hiểu định nghĩa toán học, các em hãy đảo mắt nhìn quanh căn phòng của mình. Các em có thấy những đường nét thẳng tắp và có giới hạn không? Đó chính là hình ảnh mô phỏng của đoạn thẳng trong thế giới thực!</p>
+                <ul>
+                    <li><strong>Mép của chiếc thước kẻ:</strong> Chiếc thước kẻ các em đang cầm trên tay có một đầu bắt đầu từ vạch 0cm và kết thúc ở vạch 20cm (hoặc 30cm). Mép thẳng của chiếc thước chính là một hình ảnh rất rõ nét của đoạn thẳng.</li>
+                    <li><strong>Sợi dây chun được kéo căng:</strong> Khi các em lấy một sợi dây chun và dùng hai tay kéo căng nó ra, phần dây nằm giữa hai ngón tay của các em tạo thành một đường thẳng tắp, không bị võng xuống. Hai ngón tay chính là hai điểm giới hạn của đoạn dây đó.</li>
+                    <li><strong>Bản lề cánh cửa, mép quyển sách, hay một chiếc đũa:</strong> Tất cả những vật thể này đều có đặc điểm chung: Thẳng và có hai đầu mút rõ ràng không thể kéo dài thêm nữa.</li>
+                </ul>
+
+                <div class="article-img-box">
+                    <img id="pic-2" src="" alt="Đoạn thẳng trong kiến trúc">
+                    <div class="img-caption">Những nhịp cầu treo, khung cửa sổ hay những thanh thép trong xây dựng đều mang hình bóng của đoạn thẳng.</div>
+                </div>
+
+                <p>Như vậy, trong cuộc sống, đoạn thẳng đại diện cho khoảng cách ngắn nhất, nhanh nhất để đi từ một vị trí này đến một vị trí khác. Người ta thường nói "Đi theo đường chim bay" chính là ngầm hiểu việc di chuyển theo một đoạn thẳng nối liền hai điểm.</p>
+
+                <h2 id="muc-2">2. Khái niệm Đoạn thẳng trong Toán học</h2>
+                <p>Bây giờ, chúng xuất phát từ thế giới thực vào trang giấy Toán học. Để xây dựng nên đoạn thẳng, chúng ta cần bắt đầu từ <strong>Điểm</strong>.</p>
+                
+                <div class="math-box">
+                    <h4><i class="fas fa-book-open"></i> Định nghĩa chính thức:</h4>
+                    <p>Cho hai điểm phân biệt A và B. <strong>Đoạn thẳng AB</strong> là hình gồm điểm A, điểm B và tất cả các điểm nằm giữa A và B.</p>
+                </div>
+
+                <p>Hãy phân tích kỹ định nghĩa này để hiểu sâu hơn nhé:</p>
+                <ul>
+                    <li><strong>Điểm A và Điểm B:</strong> Được gọi là hai <strong>mút</strong> (hoặc hai <strong>đầu mút</strong>, hai <strong>điểm mút</strong>) của đoạn thẳng. Đây là ranh giới, là bức tường ngăn không cho đoạn thẳng chạy dài vô tận.</li>
+                    <li><strong>Tất cả các điểm nằm giữa:</strong> Nếu các em dùng một chiếc kính lúp phóng to gấp hàng triệu lần một đoạn kẻ chì trên giấy, các em sẽ thấy đường kẻ ấy thực chất là vô số những chấm nhỏ (điểm) xếp sát rạt vào nhau tạo thành. Bất kỳ một điểm nào nằm trên đường kẻ đó (ngoại trừ hai điểm ở hai rìa ngoài cùng) đều được gọi là "điểm nằm giữa".</li>
+                </ul>
+                <p>Vì vậy, đoạn thẳng thực chất là một tập hợp chứa <em>vô số điểm</em>, nhưng nó lại bị "khóa chặt" trong một khoảng không gian nhất định bởi hai điểm mút ở hai đầu.</p>
+
+                <h2 id="muc-3">3. Phân biệt Đoạn thẳng, Đường thẳng và Tia</h2>
+                <p>Một trong những lỗi sai phổ biến nhất của học sinh khi mới học Hình học là nhầm lẫn giữa ba anh em nhà "Thẳng": Đường thẳng, Tia và Đoạn thẳng. Các em hãy xem bảng so sánh sau đây để không bao giờ bị trừ điểm oan nhé:</p>
+
+                <table class="compare-table">
+                    <tr>
+                        <th>Tiêu chí</th>
+                        <th>Đoạn thẳng</th>
+                        <th>Tia (Nửa đường thẳng)</th>
+                        <th>Đường thẳng</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Đặc điểm giới hạn</strong></td>
+                        <td>Bị giới hạn ở <strong>cả hai đầu</strong> (có 2 đầu mút).</td>
+                        <td>Bị giới hạn ở <strong>một đầu</strong> (gốc) và kéo dài vô tận về đầu còn lại.</td>
+                        <td><strong>Không bị giới hạn</strong> ở bất kỳ đầu nào (kéo dài vô tận về 2 phía).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Có đo được độ dài không?</strong></td>
+                        <td><strong>CÓ.</strong> Dùng thước có thể đo được chính xác nó dài bao nhiêu cm.</td>
+                        <td><strong>KHÔNG.</strong> Do kéo dài vô tận nên không thể đo độ dài.</td>
+                        <td><strong>KHÔNG.</strong> Vô tận về 2 hướng nên không thể đo lường.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hình ảnh liên tưởng</strong></td>
+                        <td>Chiếc đũa, cây bút chì, cây cầu bắc qua sông.</td>
+                        <td>Tia sáng phát ra từ đèn pin, tia nắng mặt trời.</td>
+                        <td>Một sợi dây vô hình kéo dài qua toàn bộ vũ trụ.</td>
+                    </tr>
+                </table>
+
+                <div class="article-img-box">
+                    <img id="pic-3" src="" alt="Vẽ hình học">
+                    <div class="img-caption">Khi làm bài tập, việc phân biệt rõ đoạn thẳng, tia và đường thẳng sẽ giúp em vẽ hình không bị sai lệch.</div>
+                </div>
+
+                <h2 id="muc-4">4. Cách đặt tên, gọi tên và ký hiệu Đoạn thẳng</h2>
+                <p>Trong toán học, mọi đối tượng đều cần có một cái tên để chúng ta có thể làm việc và giao tiếp. Đối với đoạn thẳng, cách đặt tên cực kỳ đơn giản và logic.</p>
+                
+                <h3>Sử dụng chữ cái in hoa</h3>
+                <p>Vì một đoạn thẳng được xác định bởi hai điểm mút, và theo quy ước Quốc tế, các Điểm được đặt tên bằng các chữ cái in hoa (A, B, C, M, N...). Do đó, tên của đoạn thẳng sẽ là sự ghép lại của hai chữ cái in hoa đại diện cho hai đầu mút đó.</p>
+
+                <ul>
+                    <li>Nếu một đoạn thẳng có hai đầu mút là điểm M và điểm N, ta gọi nó là <strong>Đoạn thẳng MN</strong>.</li>
+                    <li>Sự công bằng trong Toán học: Đọc từ trái sang phải hay từ phải sang trái đều đúng! Các em có thể gọi là <strong>Đoạn thẳng MN</strong> hoặc <strong>Đoạn thẳng NM</strong>. Hai cách gọi này chỉ cùng một đối tượng duy nhất.</li>
+                </ul>
+
+                <h3>Sử dụng chữ cái in thường (ít phổ biến hơn ở cấp độ cơ bản)</h3>
+                <p>Đôi khi trong các bài toán phức tạp (như hình tam giác, đa giác), để tránh việc phải viết quá nhiều chữ cái in hoa, người ta có thể gọi tên đoạn thẳng bằng một chữ cái in thường, ví dụ: đoạn thẳng <strong>a</strong>, đoạn thẳng <strong>b</strong>, đoạn thẳng <strong>c</strong>. Tuy nhiên, cách gọi theo 2 điểm mút in hoa vẫn là quy chuẩn quan trọng nhất mà các em cần ghi nhớ.</p>
+
+                <h2 id="muc-5">5. Hướng dẫn cách vẽ Đoạn thẳng chuẩn xác</h2>
+                <p>Vẽ hình là kỹ năng thực hành then chốt. Một hình vẽ đẹp, chính xác, sạch sẽ sẽ mang lại cảm hứng giải toán và giúp các em dễ dàng nhìn ra lời giải. Để vẽ đoạn thẳng, các em cần chuẩn bị: một chiếc bút chì sắc nét và một chiếc thước kẻ thẳng (tốt nhất là loại thước có chia vạch mm).</p>
+
+                <h3>Các bước tiến hành:</h3>
+                <ul>
+                    <li><strong>Bước 1: Chấm điểm bắt đầu.</strong> Dùng mũi bút chì ấn nhẹ lên giấy để đánh dấu một điểm. Đặt tên cho nó là A. Đừng vẽ điểm quá to như hạt đỗ, chỉ cần một chấm rõ ràng là đủ.</li>
+                    <li><strong>Bước 2: Chấm điểm kết thúc.</strong> Chọn một vị trí khác trên trang giấy, chấm thêm một điểm nữa và đặt tên là B. (Nếu đề bài yêu cầu vẽ đoạn thẳng dài đúng 5cm, em sẽ đặt thước sao cho vạch số 0 trùng với điểm A, rồi chấm điểm B ngay tại vạch số 5 của thước).</li>
+                    <li><strong>Bước 3: Nối hai điểm.</strong> Đặt mép thước thẳng đi qua sát mép của cả điểm A và điểm B. Dùng một tay giữ chặt thước ép xuống mặt bàn để thước không bị xê dịch.</li>
+                    <li><strong>Bước 4: Vẽ đường kẻ.</strong> Cầm bút chì bằng tay còn lại, đặt ngòi bút sát vào mép thước tại điểm A. Kéo một đường dứt khoát, liền mạch dọc theo mép thước cho đến khi chạm đúng vào điểm B thì dừng lại.</li>
+                </ul>
+                
+                <div class="cyber-tip">
+                    <div class="cyber-tip-title"><i class="fas fa-exclamation-circle"></i> Lỗi sai thường gặp cần tránh</div>
+                    <p>- Vẽ nét kéo dài vượt qua khỏi điểm A hoặc điểm B. Nếu em kéo dài lố ra ngoài, em đã vô tình vẽ thành "Tia" hoặc "Đường thẳng" rồi đấy! <br>- Nét vẽ bị run, mờ hoặc đồ lại nhiều lần khiến hình vẽ bị nhem nhuốc.</p>
+                </div>
+
+                <h2 id="muc-6">6. 🎮 THỰC HÀNH TƯƠNG TÁC: Tự tay vẽ Đoạn thẳng</h2>
+                <p>Học đi đôi với hành! Ngay bây giờ, các em không cần lấy giấy bút ra, hãy sử dụng chính con chuột máy tính hoặc ngón tay (nếu dùng điện thoại/máy tính bảng) để thực hành vẽ đoạn thẳng ngay trên màn hình.</p>
+                <p><em>Hướng dẫn: Hãy click chuột (hoặc chạm) vào màn hình bên dưới để tạo điểm A, sau đó kéo rê chuột và thả ra để tạo điểm B. Hệ thống sẽ tự động vẽ một đoạn thẳng nối liền hai điểm và đo độ dài cho các em!</em></p>
+
+                <div class="practice-container" id="app-vedoanthang">
+                    <div class="practice-label">Khu vực Thực hành SMART SCHOOL</div>
+                    <p style="color: #64748b; font-style: italic;"><i class="fas fa-spinner fa-spin"></i> Đang tải công cụ tương tác đồ họa...</p>
+                </div>
+                <script src="vedoanthang.js"></script>
+                <h2 id="muc-7">7. Tóm tắt & Ghi nhớ nhanh</h2>
+                <p>Bài học hôm nay tuy đơn giản nhưng lại là nền móng cực kỳ quan trọng cho toàn bộ chương trình Hình học của các em sau này. Hãy nhắm mắt lại và nhẩm lại 3 câu "thần chú" sau đây để khắc sâu kiến thức vào bộ não nhé:</p>
+
+                <div style="background-color: #f8fafc; padding: 20px; border-left: 5px solid var(--primary-neon); border-radius: 0 10px 10px 0; margin-top: 15px;">
+                    <ul style="margin-bottom: 0;">
+                        <li><strong>Bản chất:</strong> Đoạn thẳng AB gồm hai điểm mút A, B và toàn bộ dải các điểm nằm xen giữa chúng.</li>
+                        <li><strong>Giới hạn:</strong> Đoạn thẳng bị "chặn" ở cả hai đầu, không thể kéo dài. Chính vì thế, chúng ta luôn luôn <strong>đo được độ dài</strong> của nó bằng thước.</li>
+                        <li><strong>Cách gọi tên:</strong> Đặt tên bằng 2 chữ cái in hoa ở hai đầu mút (Đoạn thẳng AB = Đoạn thẳng BA). Công bằng, dễ nhớ!</li>
+                    </ul>
+                </div>
+
+                <p>Cảm ơn các em đã theo dõi bài giảng của SMART SCHOOL. Đừng quên thực hành trên bảng vẽ tương tác phía trên nhiều lần để rèn luyện sự khéo léo nhé. Chúc các em học Toán thật vui và hiệu quả!</p>
+
+            </article>
+
+        </main>
+
+        <aside class="ad-sidebar">
+            <div class="sticky-ad-box">
+                <i class="fas fa-ad fa-2x"></i>
+                <div>Ads 300x600</div>
+            </div>
+        </aside>
+
+    </div>
+
+    <div class="chat-widget-container">
+        <div class="chat-menu" id="chatMenu">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=nhn.softwave@gmail.com" target="_blank" class="chat-option">
+                <i class="fas fa-envelope" style="color: #ea4335;"></i> Gửi Email
+            </a>
+            <div class="chat-option" onclick="toggleZaloQR()">
+                <i class="fas fa-comment-dots" style="color: #0068FF;"></i> Nhắn tin Zalo
+            </div>
+            <div class="zalo-qr-box" id="zaloQRBox">
+                <img src="../MyQr.jpg" alt="Mã QR Zalo">
+                <p>Quét mã QR bằng Zalo</p>
+            </div>
+        </div>
+        <button class="chat-bubble" id="chatButton" onclick="toggleChatMenu()" title="Liên hệ Admin">
+            <i class="fas fa-comment-dots" id="chatIcon"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // 1. HÀM XỬ LÝ ẢNH THÔNG MINH (LH3 siêu tốc)
+            function getImageUrl(source) {
+                if (!source || source.trim() === "") return "";
+                let fileId = "";
+                if (source.includes("drive.google.com")) {
+                    let match = source.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match && match[1]) {
+                        fileId = match[1];
+                    }
+                } else if (source.startsWith("http")) {
+                    return source;
+                } else {
+                    fileId = source;
+                }
+                if (fileId) {
+                    return "https://lh3.googleusercontent.com/d/" + fileId;
+                }
+                return "";
+            }
+
+            // 2. TỰ ĐỘNG CHÈN LINK VÀO THẺ IMG TRONG BÀI
+            if(document.getElementById('pic-1') && typeof IMG_1 !== 'undefined') document.getElementById('pic-1').src = getImageUrl(IMG_1);
+            if(document.getElementById('pic-2') && typeof IMG_2 !== 'undefined') document.getElementById('pic-2').src = getImageUrl(IMG_2);
+            if(document.getElementById('pic-3') && typeof IMG_3 !== 'undefined') document.getElementById('pic-3').src = getImageUrl(IMG_3);
+
+            // 3. TỰ ĐỘNG ĐẾM LƯỢT XEM
+            if(typeof ARTICLE_ID !== 'undefined') {
+                fetch(`https://api.counterapi.dev/v1/smartschool_io_vn/${ARTICLE_ID}/up`)
+                    .then(r => r.json())
+                    .then(d => {
+                        document.getElementById('visit-count').innerText = d.count.toLocaleString('vi-VN');
+                    })
+                    .catch(e => {
+                        document.getElementById('visit-count').innerText = "...";
+                    });
+            }
+        });
+
+        function toggleChatMenu() {
+            const menu = document.getElementById('chatMenu');
+            const icon = document.getElementById('chatIcon');
+            
+            menu.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                icon.classList.remove('fa-comment-dots');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-comment-dots');
+                document.getElementById('zaloQRBox').classList.remove('active'); 
+            }
+        }
+
+        function toggleZaloQR() {
+            document.getElementById('zaloQRBox').classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
