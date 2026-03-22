@@ -4,134 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;700;800;900&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-    <meta name="description" content="Trải nghiệm không gian học tập kỷ nguyên số tại N's Home - Smart School. Cung cấp tài liệu Toán học, tư duy logic và các khóa học lập trình chuyên sâu.">
-    <meta name="keywords" content="toán, tin học, lập trình, smart school, n's home, học trực tuyến, tài liệu luyện thi">
-    <meta property="og:title" content="N's Home - Smart School">
-    <meta property="og:description" content="Trải nghiệm không gian học tập kỷ nguyên số tại N's Home. Cung cấp tài liệu Toán học, tư duy logic và các khóa học lập trình.">
-    <meta property="og:image" content="LINK_HÌNH_ẢNH_BANNER_CỦA_WEB.jpg">
-    <meta property="og:type" content="website">
-    
     <title>N's Home - Smart School</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&family=Rajdhani:wght@500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="style.css">
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9531418462807701" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="rss-sidebar rss-left" id="rss-news-left">
-    <div class="rss-header"><i class="fas fa-newspaper"></i> TIN TỨC GIÁO DỤC</div>
-    <div class="rss-content" id="rss-content-left">
-        <div class="rss-placeholder">Đang kết nối RSS...</div>
-    </div>
-    </div>
-
-    <div class="rss-sidebar rss-right" id="rss-news-right">
-    <div class="rss-header"><i class="fas fa-microchip"></i> TIN CÔNG NGHỆ</div>
-    <div class="rss-content" id="rss-content-right">
-        <div class="rss-placeholder">Đang đợi dữ liệu...</div>
-    </div>
-    </div>
-
-
-
 
     <canvas id="hero-canvas"></canvas>
 
-    <div id="user-profile-container"></div>
-
-    <div class="page-header" style="margin-bottom: 5px;">
-        <h1 class="logo-title">SMART SCHOOL</h1>
-        <p class="version-text">Ver 3.02 || 2026</p>
-
-        <div style="margin-top: 3px; font-family: 'Roboto Mono', monospace; font-size: 0.85rem;">
-            <a href="about.html" style="color: var(--text-dim); text-decoration: none; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#22d3ee'" onmouseout="this.style.color='var(--text-dim)'">Về chúng tôi</a> | 
-            <a href="privacy.html" style="color: var(--text-dim); text-decoration: none; margin: 0 10px; transition: 0.3s;" onmouseover="this.style.color='#22d3ee'" onmouseout="this.style.color='var(--text-dim)'">Chính sách bảo mật</a>
+    <div class="smart-layout-wrapper">
+        
+        <div class="grid-panel panel-logo">
+            <div class="logo-icon-wrapper"><i class="fas fa-graduation-cap fa-4x"></i></div>
+            <h2 class="logo-text">N's HOME</h2>
+            <p class="version-text-sub">Ver 3.02 || 2026</p>
+            <div id="user-profile-container" class="profile-container"></div>
         </div>
-    </div>
 
-    <div class="seo-intro-content" style="max-width: 1060px; margin: 0 auto 30px auto; padding: 0 20px; color: var(--text-dim); font-size: 0.9rem; line-height: 1.6;">
-        <p style="text-align: center;"><strong>N's Home - Smart School</strong> là nền tảng giáo dục trực tuyến hàng đầu, cung cấp kho tài liệu học tập, chuyên đề Toán học, Tin học và Lập trình cơ bản. Chúng tôi giúp học sinh phát triển tư duy logic và kỹ năng giải quyết vấn đề.</p>
-    </div>
-
-    <div class="dashboard-container">
-        <div class="edu-grid" id="dynamic-grid">
-            <div class="loading-container">
-                <div class="loader-radar"></div>
-                <div class="loading-text">TRUY CẬP CƠ SỞ DỮ LIỆU....</div>
-            </div>
+        <div class="grid-panel panel-title" id="dynamic-panel-title" style="border: 1px solid #bae6fd; transition: background 1.5s ease-in-out; position: relative;">
+            <h1 class="glow-title" style="text-shadow: 2px 2px 10px rgba(255,255,255,0.8); z-index: 2; position: relative;">SMART SCHOOL</h1>
         </div>
-    </div>
 
-    <footer class="tech-footer">
-        <div class="tech-footer-desc" style="max-width: 1030px; margin: 0px auto 10px auto; padding: 0 20px; color: var(--text-dim); font-size: 0.9rem; line-height: 1.6;">
-            Kiến tạo giải pháp công nghệ giáo dục đột phá. N's SoftWave tự hào phát triển hệ sinh thái học tập thông minh, tối ưu hóa trải nghiệm trực tuyến và cung cấp công cụ sắc bén để nâng tầm tư duy cho thế hệ trẻ.
+        <div class="grid-panel panel-menu" id="panel-menu-container">
+            <nav class="main-nav" id="dynamic-main-nav">
+                <a href="index.html" class="nav-link-custom"><i class="fas fa-home"></i> Trang chủ</a>
+                <span id="menu-loading" class="menu-loading-text"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu khóa học...</span>
+            </nav>
+            <div id="dynamic-dropdowns-wrapper"></div>
         </div>
-        <div class="tech-footer-contact" style="margin-bottom: 0px;">
-            <i class="fas fa-envelope"></i> Liên hệ hợp tác: <a href="mailto:nhn.softwave@gmail.com">nhn.softwave@gmail.com</a>
-        </div>
-        <div class="tech-footer-copyright">
-            &copy; 2026 N's SoftWave. All rights reserved.
-        </div>
-    </footer>
 
-    <div class="dual-ad-wrapper">
-        <div class="split-ad">
-            
-            <div class="ad-side ad-left-adsense">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-9531418462807701"
-                     data-ad-slot="2720743350"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-
-            <div class="ad-side ad-right-aff">
-                <div class="aff-scroll-wrapper" id="dynamic-aff-container">
-                    <div style="color: #64748b; font-family: 'Roboto Mono', monospace; font-size: 0.8rem; width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; height: 100%;">
-                        <i class="fas fa-circle-notch fa-spin" style="margin-right: 8px;"></i> Đang tải dữ liệu quảng cáo...
-                    </div>
+        <div class="grid-panel panel-merged">
+            <div class="intro-half">
+                <h3 class="intro-title">GIỚI THIỆU WEBSITE</h3>
+                <h4 class="intro-domain">SMARTSCHOOL.IO.VN</h4>
+                <div class="seo-intro-content">
+                    <p><strong>N's Home - Smart School</strong> là nền tảng giáo dục trực tuyến hàng đầu, cung cấp hệ sinh thái tài liệu học tập toàn diện về Toán học, Tin học và Lập trình.</p>
+                    <p>Chúng tôi tập trung vào việc áp dụng công nghệ để giúp học sinh phát triển tư duy logic, rèn luyện kỹ năng tự học và làm chủ các công cụ giải quyết vấn đề trong kỷ nguyên số.</p>
                 </div>
             </div>
 
+            <div class="slideshow-half">
+                <div id="schoolCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3500" style="height: 100%;">
+                    <div class="carousel-indicators" id="carousel-indicators-container"></div>
+                    <div class="carousel-inner" id="carousel-inner-container" style="height: 100%;">
+                        <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #64748b; flex-direction: column;">
+                            <i class="fas fa-circle-notch fa-spin fa-2x" style="margin-bottom: 10px;"></i>
+                            <span style="font-family: 'Roboto Mono', monospace; font-size: 0.9rem;">Đang tải hình ảnh từ Drive...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div class="grid-panel panel-footer">
+            <div class="footer-inner">
+                <p><strong>Kiến tạo giải pháp công nghệ giáo dục đột phá.</strong> N's SoftWave tự hào phát triển hệ sinh thái học tập thông minh, tối ưu hóa trải nghiệm trực tuyến và cung cấp công cụ sắc bén để nâng tầm tư duy cho thế hệ trẻ.</p>
+                <div class="contact-line"><i class="fas fa-envelope"></i> Liên hệ hợp tác: <a href="mailto:nhn.softwave@gmail.com">nhn.softwave@gmail.com</a></div>
+                <div class="copyright-line">© 2026 N's SoftWave. All rights reserved.</div>
+            </div>
+        </div>
+
+        <div class="grid-panel panel-ads">
+            <div class="aff-scroll-wrapper" id="dynamic-aff-container">
+                <div class="ads-loading-text"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu quảng cáo...</div>
+            </div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
+    <div class="visit-badge" title="Tổng số lượt truy cập hệ thống"><i class="fas fa-satellite-dish"></i> <span id="visit-count">...</span></div>
 
-<script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const gridEl = document.querySelector('.edu-grid');
-            if (gridEl) {
-                gridEl.addEventListener('wheel', function(e) {
-                    // 1. Kiểm tra xem chuột có đang nằm trong thẻ menu cuộn dọc không
-                    const isInsideMenu = e.target.closest('.edu-menu');
-                    
-                    // 2. Nếu đang ở trong menu, Lệnh 'return' sẽ thoát hàm, trả lại quyền cuộn dọc bình thường
-                    if (isInsideMenu) {
-                        return; 
-                    }
-
-                    // 3. Nếu chuột nằm ngoài menu (ở tiêu đề hoặc viền card), áp dụng cuộn ngang
-                    if (e.deltaY !== 0) {
-                        e.preventDefault(); 
-                        gridEl.scrollLeft += e.deltaY * 1.5; // Nhân 1.5 để cuộn mượt hơn
-                    }
-                }, { passive: false });
-            }
-        });
-    </script>
-
-    <div class="visit-badge" title="Tổng số lượt truy cập hệ thống">
-        <i class="fas fa-satellite-dish"></i> <span id="visit-count">...</span>
-    </div>
 </body>
 </html>

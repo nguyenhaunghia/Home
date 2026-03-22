@@ -1,20 +1,20 @@
 // --- CONFIG ---
 const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyRYVaA8nrL6_YDj-F9Gk1Sj6wT5Gcyhr2IbXhGiD9PQD-WouO9rj30dk0SMge5nTs4bA/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQYy-sHngMGL4OcNRVz_TM1bwH6vb6nDOMW4zQ2iw3aOqN7Y_KcDywaWTIWy0tvVnsnQ/exec';
 
-// --- INITIALIZE ---
+
 window.addEventListener('DOMContentLoaded', () => {
     const userData = checkAuthAndRenderUI();
     initCanvas();
     animateCanvas();
     loadDataByPrivilege(userData);
+    initVisitCounter();
+    loadAffiliateAds();
+    loadDriveImagesAuto(); 
 });
 
 
-
-
-// --- HỆ THỐNG TOAST THÔNG BÁO ---
 function showToast(message, type = 'success') {
     let container = document.getElementById('toast-container');
     if (!container) {
@@ -22,89 +22,74 @@ function showToast(message, type = 'success') {
         container.id = 'toast-container';
         document.body.appendChild(container);
     }
-
     const toast = document.createElement('div');
     toast.className = `tech-toast ${type}`;
-    
-    let icon = 'fa-info-circle';
-    if (type === 'success') icon = 'fa-check-circle';
-    if (type === 'error') icon = 'fa-exclamation-triangle';
-    if (type === 'warning') icon = 'fa-exclamation-circle';
-
+    let icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : 'fa-exclamation-circle';
     toast.innerHTML = `<i class="fas ${icon}"></i> <div>${message}</div>`;
     container.appendChild(toast);
-
-    // Kích hoạt hiệu ứng trượt vào
     setTimeout(() => toast.classList.add('show'), 10);
-
-    // Tự động xóa sau 4 giây
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400); 
     }, 4000);
 }
 
-
-
-
-// --- GHI LOG HOẠT ĐỘNG ---
 function logActivity(uid, nickname, action) {
     if (!WEB_APP_URL || WEB_APP_URL.includes('DÁN_URL')) return;
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        mode: 'no-cors', 
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ uid: uid, nickname: nickname, action: action })
-    }).catch(err => console.log('Log Error:', err));
+    fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ uid, nickname, action }) }).catch(e=>e);
 }
 
-// --- AUTH & UI LOGIC ---
 function checkAuthAndRenderUI() {
     if (!window.location.href.includes('login.html')) {
         const isLoggedIn = sessionStorage.getItem('isLoggedIn');
         const userDataString = sessionStorage.getItem('userData');
-        
         if (isLoggedIn !== 'true' || !userDataString) {
-            renderUserProfile(null); 
-            return null;
+            renderUserProfile(null); return null;
         }
-
         const userData = JSON.parse(userDataString);
-        renderUserProfile(userData); 
-        return userData;
+        renderUserProfile(userData); return userData;
     }
     return null;
 }
 
+// 🌟 ĐÃ SỬA: Đưa thẻ Profile về lại dưới chân Ver, chia khối rõ ràng không bị đè Logo
 function renderUserProfile(user) {
     const container = document.getElementById('user-profile-container');
-    if (container) {
-        if (user) {
-            const avatarSrc = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`;
-            const userRole = user.object ? String(user.object).toUpperCase() : 'THÀNH VIÊN';
-            
-            container.innerHTML = `
-                <div class="tech-user-card">
-                    <div class="avatar-crystal-ring" onclick="openProfileModal()" style="cursor:pointer;" title="Cập nhật thông tin">
-                        <img src="${avatarSrc}" class="user-avatar" alt="Avatar">
-                    </div>
-                    <div class="user-info" onclick="openProfileModal()" style="cursor:pointer;" title="Cập nhật thông tin">
-                        <div class="user-role"><i class="fas fa-shield-alt"></i> ${userRole}</div>
-                        <div class="user-name">${user.name}</div>
-                    </div>
-                    <div class="logout-btn-wrapper" onclick="logout()" title="Ngắt kết nối hệ thống">
-                        <i class="fas fa-power-off"></i>
-                    </div>
+    if (!container) return;
+
+    // Reset lại style để không bay lung tung
+    container.style.position = 'relative';
+    container.style.top = 'auto';
+    container.style.left = 'auto';
+    container.style.transform = 'none';
+    
+    if (user) {
+        const userRole = user.object ? String(user.object).toUpperCase() : 'THÀNH VIÊN';
+        const avatarSrc = user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`;
+        
+        container.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; width: 100%; margin-top: 10px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.1);">
+                <div onclick="openProfileModal()" style="background: #e0f2fe; color: #2563eb; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; border: 1px solid #bae6fd; transition: 0.2s;" title="Cập nhật thông tin">
+                    <img src="${avatarSrc}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
+                    <span style="max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: #64748b;"></i>
                 </div>
-            `;
-        } else {
-            container.innerHTML = `
-                <div class="tech-login-btn" onclick="window.location.href='login.html'" title="Kết nối vào hệ thống">
-                    <i class="fas fa-user-astronaut"></i>
-                    <span>ĐĂNG NHẬP</span>
+
+                <div style="color: #1e293b; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 5px;">
+                    <i class="fas fa-user-tie" style="color: #1d4ed8;"></i> ${userRole}
                 </div>
-            `; 
-        }
+
+                <i class="fas fa-power-off" onclick="logout()" title="Đăng xuất" style="color: #ef4444; font-size: 1.2rem; cursor: pointer; transition: 0.2s; margin-left: 5px;" onmouseover="this.style.color='#dc2626'" onmouseout="this.style.color='#ef4444'"></i>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div style="width: 100%; display: flex; justify-content: center; margin-top: 10px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.1);">
+                <div onclick="window.location.href='login.html'" class="tech-login-btn" style="padding: 8px 24px; font-size: 0.9rem;">
+                    <i class="fas fa-user-astronaut"></i> ĐĂNG NHẬP
+                </div>
+            </div>
+        `; 
     }
 }
 
@@ -118,58 +103,38 @@ function logout() {
     setTimeout(() => { window.location.href = 'index.html'; }, 300);
 }
 
-// --- DATA LOADING LOGIC ---
+// --- GOOGLE SHEETS FETCH ---
 async function loadDataByPrivilege(user) {
     let loadNHN = false; let loadHocSinh = false;
-
     if (user) {
-        if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-            loadNHN = true; loadHocSinh = true; 
-        } 
-        if (user.object) {
-            const objStr = String(user.object).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            if (objStr.includes('hoc sinh')) loadHocSinh = true;
-        }
+        if (user.account && String(user.account).toLowerCase() === ADMIN_EMAIL.toLowerCase()) { loadNHN = true; loadHocSinh = true; } 
+        if (user.object && String(user.object).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes('hoc sinh')) loadHocSinh = true;
     }
-
     const [nhnData, csdlData, hocSinhData] = await Promise.all([
         loadNHN ? fetchSheetData('NHN') : Promise.resolve([]),
         fetchSheetData('CSDL'), 
         loadHocSinh ? fetchSheetData('Hoc_Sinh') : Promise.resolve([])
     ]);
-
-    let finalCards = [];
-    if (nhnData && nhnData.length > 0) finalCards = [...finalCards, ...nhnData];
-    if (csdlData && csdlData.length > 0) finalCards = [...finalCards, ...csdlData];
-    if (hocSinhData && hocSinhData.length > 0) finalCards = [...finalCards, ...hocSinhData];
-
-    renderDashboard(finalCards);
+    renderDynamicMenu([...(nhnData||[]), ...(csdlData||[]), ...(hocSinhData||[])]);
 }
 
-// --- GOOGLE SHEET FETCHING ---
 async function fetchSheetData(sheetName) {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}`;
     try {
-        const response = await fetch(url);
-        const text = await response.text();
-        const json = JSON.parse(text.substring(47).slice(0, -2));
-        return parseData(json);
-    } catch (error) { return []; }
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}`);
+        const text = await res.text();
+        return parseData(JSON.parse(text.substring(47).slice(0, -2)));
+    } catch (e) { return []; }
 }
 
-// --- PARSE DATA ---
 function parseData(json) {
     let colMap = {}; let startRow = 0;
     const cleanKey = (str) => str ? String(str).trim().toLowerCase() : '';
-    
-    const hasLabels = json.table.cols && json.table.cols.some(c => c && c.label);
-    if (hasLabels) {
+    if (json.table.cols && json.table.cols.some(c => c && c.label)) {
         json.table.cols.forEach((col, idx) => { if (col && col.label) colMap[cleanKey(col.label)] = idx; });
     } else if (json.table.rows && json.table.rows.length > 0) {
         json.table.rows[0].c.forEach((cell, idx) => { if (cell && cell.v) colMap[cleanKey(cell.v)] = idx; });
         startRow = 1;
     }
-
     const getVal = (row, colName, defaultVal = '') => {
         const idx = colMap[cleanKey(colName)];
         if (idx !== undefined && row.c[idx]) {
@@ -184,238 +149,242 @@ function parseData(json) {
     for (let i = startRow; i < json.table.rows.length; i++) {
         const row = json.table.rows[i];
         if (!row || !row.c) continue;
-
         const levelRaw = getVal(row, 'Level', null);
         if (levelRaw === null && !getVal(row, 'Label')) continue;
 
         const level = levelRaw !== null ? Number(levelRaw) : 0;
         const icon = getVal(row, 'Icon', 'fas fa-cube');
-        let color = getVal(row, 'Color', '#22d3ee');
-        if (color === '#000000') color = '#e2e8f0';
-        
-        const label = getVal(row, 'Label', 'Undefined');
-        const link = getVal(row, 'Link', '#');
-        const note = getVal(row, 'Note', '');
-        const item = { level, icon, color, label, link, note, children: [] };
+        let color = getVal(row, 'Color', '#2563eb'); if (color === '#000000') color = '#3b82f6'; 
+        const item = { level, icon, color, label: getVal(row, 'Label', 'Undefined'), link: getVal(row, 'Link', '#'), note: getVal(row, 'Note', ''), children: [] };
 
-        if (level === 0) { currentCard = item; cards.push(currentCard); currentL1 = null; currentL2 = null; currentL3 = null; currentL4 = null; } 
-        else if (level === 1) { if (currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = null; currentL3 = null; currentL4 = null; } } 
-        else if (level === 2) { if (currentL1) { currentL2 = item; currentL1.children.push(currentL2); currentL3 = null; currentL4 = null; } } 
-        else if (level === 3) { if (currentL2) { currentL3 = item; currentL2.children.push(currentL3); currentL4 = null; } }
-        else if (level === 4) { if (currentL3) { currentL4 = item; currentL3.children.push(currentL4); } }
-        else if (level === 5) { if (currentL4) { currentL4.children.push(item); } }
+        if (level === 0) { currentCard = item; cards.push(currentCard); currentL1 = currentL2 = currentL3 = currentL4 = null; } 
+        else if (level === 1 && currentCard) { currentL1 = item; currentCard.children.push(currentL1); currentL2 = currentL3 = currentL4 = null; } 
+        else if (level === 2 && currentL1) { currentL2 = item; currentL1.children.push(currentL2); currentL3 = currentL4 = null; } 
+        else if (level === 3 && currentL2) { currentL3 = item; currentL2.children.push(currentL3); currentL4 = null; }
+        else if (level === 4 && currentL3) { currentL4 = item; currentL3.children.push(currentL4); }
+        else if (level === 5 && currentL4) { currentL4.children.push(item); }
     }
     return cards;
 }
 
-// --- RENDER ---
-function renderDashboard(cards) {
-    const grid = document.getElementById('dynamic-grid');
-    grid.innerHTML = '';
-    if (cards.length === 0) { grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#94a3b8; font-family:\'Roboto Mono\'">NO DATA AVAILABLE</div>'; return; }
+// --- RENDER MENU ĐA CẤP ---
+function renderDynamicMenu(menuData) {
+    const menuContainer = document.getElementById('dynamic-main-nav');
+    if (!menuContainer) return;
 
-    cards.forEach((card, index) => {
-        const col = document.createElement('div');
-        col.className = 'edu-col';
-        col.style.animationDelay = `${index * 0.05}s`;
+    const panelMenu = menuContainer.closest('.panel-menu');
+    if (panelMenu) { panelMenu.id = 'panel-menu-container'; panelMenu.style.position = 'relative'; }
 
-        const cardColor = card.color;
-        const cardHtml = document.createElement('div');
-        cardHtml.className = 'edu-card';
-        cardHtml.style.borderTop = `3px solid ${cardColor}`;
+    let dropdownsWrapper = document.getElementById('dynamic-dropdowns-wrapper');
+    if (!dropdownsWrapper) {
+        dropdownsWrapper = document.createElement('div'); dropdownsWrapper.id = 'dynamic-dropdowns-wrapper';
+        if (panelMenu) panelMenu.appendChild(dropdownsWrapper);
+    }
 
-        const headerHtml = `
-            <div class="card-header-block">
-                <div class="edu-icon-box" style="color:${cardColor}; border-color:${cardColor}50;">
-                    <i class="${card.icon}"></i>
-                </div>
-                <h3 class="edu-title">${card.label}</h3>
-            </div>
-        `;
+    menuContainer.innerHTML = ''; dropdownsWrapper.innerHTML = '';
+    if (menuData.length === 0) { menuContainer.innerHTML = '<span style="color:#94a3b8; font-size:0.9rem;">Chưa có dữ liệu khóa học</span>'; return; }
+    menuContainer.innerHTML = `<div class="nav-item"><a href="index.html" class="nav-link-custom"><i class="fas fa-home" style="color: #2563eb; width: 18px; text-align: center; margin-right: 5px;"></i> Trang chủ</a></div>`;
 
-        const menuContainer = document.createElement('div');
-        menuContainer.className = 'edu-menu';
-        
-        if (card.children && card.children.length > 0) { card.children.forEach(child => menuContainer.appendChild(createMenuItem(child))); } 
-        else { menuContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8; font-size:0.85rem;">Coming Soon</div>`; }
+    function buildNestedHTML(item) {
+        const hasChildren = item.children && item.children.length > 0;
+        const iconHtml = `<i class="${item.icon}" style="color: ${item.color}; width: 18px; text-align: center; margin-right: 5px;"></i>`;
+        let hrefAttr = (item.link && item.link.length > 2 && item.link !== '#') ? `href="${item.link}" target="_blank"` : 'href="javascript:void(0)"';
 
-        cardHtml.innerHTML = headerHtml;
-        cardHtml.appendChild(menuContainer);
-        col.appendChild(cardHtml);
-        grid.appendChild(col);
+        if (hasChildren) {
+            let html = `<div class="nav-item-nested">`;
+            html += `<a href="#" class="nested-toggle" title="${item.note || ''}">${iconHtml} ${item.label} <i class="fas fa-caret-right caret-icon"></i></a>`;
+            html += `<div class="dropdown-content nested-dropdown">`;
+            item.children.forEach(child => { html += buildNestedHTML(child); });
+            html += `</div></div>`; return html;
+        } else {
+            return `<a ${hrefAttr} title="${item.note || ''}" onclick="event.stopPropagation();">${iconHtml} ${item.label}</a>`;
+        }
+    }
+
+    menuData.forEach((cardData, index) => {
+        const hasChildren = cardData.children && cardData.children.length > 0;
+        const dropId = `root-drop-${index}`;
+        const iconHtml = `<i class="${cardData.icon}" style="color: ${cardData.color}; width: 18px; text-align: center; margin-right: 5px;"></i>`;
+        let hrefAttr = (cardData.link && cardData.link.length > 2 && cardData.link !== '#') ? `href="${cardData.link}" target="_blank"` : 'href="javascript:void(0)"';
+
+        const navItem = document.createElement('div'); navItem.className = 'nav-item';
+        if (hasChildren) navItem.dataset.dropTarget = dropId; 
+        navItem.innerHTML = `<a ${hrefAttr} class="nav-link-custom root-toggle" title="${cardData.note || ''}">${iconHtml} ${cardData.label} ${hasChildren ? '<i class="fas fa-chevron-down root-caret"></i>' : ''}</a>`;
+        menuContainer.appendChild(navItem);
+
+        if (hasChildren) {
+            const dropMenu = document.createElement('div'); dropMenu.id = dropId; dropMenu.className = 'dropdown-content root-dropdown';
+            let childHtml = ''; cardData.children.forEach(child => { childHtml += buildNestedHTML(child); });
+            dropMenu.innerHTML = childHtml; dropdownsWrapper.appendChild(dropMenu);
+        }
     });
+
+    let activeRootDropdown = null;
+    const hideAllRootDropdowns = () => {
+        if (activeRootDropdown) { activeRootDropdown.classList.remove('show'); activeRootDropdown = null; }
+        document.querySelectorAll('.active-nested').forEach(el => el.classList.remove('active-nested'));
+    };
+
+    menuContainer.querySelectorAll('.nav-item[data-drop-target]').forEach(item => {
+        item.addEventListener('click', function(e) { 
+            e.preventDefault(); e.stopPropagation();
+            const targetId = this.dataset.dropTarget; const drop = document.getElementById(targetId);
+            if (activeRootDropdown && activeRootDropdown.id === targetId) { hideAllRootDropdowns(); } 
+            else {
+                hideAllRootDropdowns();
+                if (drop) {
+                    const rect = this.getBoundingClientRect(); const containerRect = document.getElementById('panel-menu-container').getBoundingClientRect();
+                    drop.style.left = (rect.left - containerRect.left) + 'px'; drop.style.top = (rect.bottom - containerRect.top) + 'px'; 
+                    drop.classList.add('show'); activeRootDropdown = drop;
+                }
+            }
+        });
+    });
+
+    dropdownsWrapper.querySelectorAll('.nested-toggle').forEach(toggleBtn => {
+        toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            const parentNested = this.parentElement; 
+            const isCurrentlyActive = parentNested.classList.contains('active-nested');
+            const siblings = parentNested.parentElement.querySelectorAll('.nav-item-nested');
+            siblings.forEach(sib => { if (sib !== parentNested) sib.classList.remove('active-nested'); });
+            if (isCurrentlyActive) { parentNested.classList.remove('active-nested'); } else { parentNested.classList.add('active-nested'); }
+        });
+    });
+
+    dropdownsWrapper.addEventListener('click', (e) => e.stopPropagation());
+    document.addEventListener('click', hideAllRootDropdowns);
+    menuContainer.addEventListener('wheel', function(e) {
+        if (e.deltaY !== 0) { e.preventDefault(); menuContainer.scrollLeft += e.deltaY * 1.5; }
+    }, { passive: false });
 }
 
-function createMenuItem(item) {
-    const hasChildren = item.children && item.children.length > 0;
-    const isLevel1 = item.level === 1;
-    let onClickAttr = '';
-    
-    if (hasChildren) onClickAttr = 'onclick="toggleSub(this)"';
-    else if (item.link && item.link.length > 5) onClickAttr = `onclick="window.open('${item.link}', '_blank')"`;
+// --- ADS SYSTEM ---
+async function loadAffiliateAds() {
+    try {
+        const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Advertisement`);
+        const text = await res.text();
+        const data = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
 
-    if (isLevel1) {
-        const div = document.createElement('div');
-        div.innerHTML = `
-            <div class="edu-menu-item" ${onClickAttr} title="${item.note || ''}">
-                <div class="menu-left">
-                    <i class="${item.icon}" style="color: ${item.color}; width:20px; text-align:center; font-size:0.9rem;"></i>
-                    <span>${item.label}</span>
-                </div>
-                ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
-            </div>
-        `;
-        if (hasChildren) {
-            const subDiv = document.createElement('div');
-            subDiv.className = 'submenu';
-            item.children.forEach(c => subDiv.appendChild(createMenuItem(c)));
-            div.appendChild(subDiv);
+        let headers = data.table.cols.map(c => c.label ? c.label.toLowerCase().trim() : '');
+        let dataRows = data.table.rows;
+        if (!headers.includes('title') && dataRows.length > 0) {
+            headers = dataRows[0].c.map(cell => cell && cell.v ? String(cell.v).toLowerCase().trim() : '');
+            dataRows.shift();
         }
-        return div;
-    } 
-    else {
-        const iconHtml = `<i class="${item.icon}" style="color:${item.color}; font-size:0.75rem; width:18px; text-align:center; margin-right:4px;"></i>`;
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = `
-            <div class="submenu-item" ${onClickAttr} title="${item.note || ''}">
-                <span style="display:flex; align-items:center; gap:6px;">${iconHtml} ${item.label}</span>
-                 ${hasChildren ? '<i class="fas fa-chevron-down rotate-icon"></i>' : ''}
-            </div>
-        `;
-        if (hasChildren) {
-            const subSubDiv = document.createElement('div');
-            subSubDiv.className = 'submenu';
-            item.children.forEach(c => subSubDiv.appendChild(createMenuItem(c)));
-            wrapper.appendChild(subSubDiv);
-        }
-        return wrapper;
-    }
+
+        const idxField = headers.findIndex(h => h.includes('field')); const idxAvatar = headers.findIndex(h => h.includes('avatar'));
+        const idxTitle = headers.findIndex(h => h.includes('title')); const idxLink = headers.findIndex(h => h.includes('link'));
+        const idxComment = headers.findIndex(h => h.includes('comment') || h.includes('note')); const idxEmbed = headers.findIndex(h => h.includes('embed') || h.includes('code'));
+        if (idxTitle === -1) throw new Error("Thiếu cột 'Title'");
+
+        let adsList = dataRows.map(row => {
+            const getVal = (index) => (index !== -1 && row.c[index] && row.c[index].v !== null) ? String(row.c[index].v) : '';
+            return { field: getVal(idxField), avatar: getVal(idxAvatar), title: getVal(idxTitle), link: getVal(idxLink) || '#', comment: getVal(idxComment), embed: getVal(idxEmbed) };
+        });
+        renderAffiliateAds(adsList.filter(ad => ad.title.trim() !== '').sort(() => 0.5 - Math.random()));
+    } catch (e) {}
 }
 
-function toggleSub(el) {
-    let sub = el.nextElementSibling;
-    if (!sub) sub = el.parentElement.querySelector('.submenu');
-    const icon = el.querySelector('.rotate-icon');
-    if (sub && sub.classList.contains('submenu')) {
-        sub.classList.toggle('active');
-        if (icon) icon.classList.toggle('active');
-    }
+function getAdIcon(field) {
+    const f = field.toLowerCase();
+    if (f.includes('lập trình') || f.includes('code')) return 'fa-laptop-code';
+    if (f.includes('toán') || f.includes('math')) return 'fa-square-root-variable';
+    if (f.includes('ngoại ngữ') || f.includes('tiếng')) return 'fa-language';
+    if (f.includes('kỹ năng') || f.includes('skill')) return 'fa-brain';
+    return 'fa-rocket'; 
+}
+
+function getDirectImageUrl(url) {
+    if (!url) return '';
+    let match = url.match(/[-\w]{25,}/); 
+    if (url.includes('drive.google.com') && match) return `http://googleusercontent.com/profile/picture/6{match[0]}`;
+    return url; 
+}
+
+function renderAffiliateAds(ads) {
+    const container = document.getElementById('dynamic-aff-container');
+    container.innerHTML = ''; 
+    ads.forEach(ad => {
+        const iconClass = getAdIcon(ad.field);
+        let leftColHtml = (ad.avatar && ad.avatar.length > 5) 
+            ? `<img src="${getDirectImageUrl(ad.avatar)}" class="aff-avatar" alt="Avatar" onerror="this.outerHTML='<i class=\\'fas ${iconClass} aff-icon\\'></i>'">` 
+            : `<i class="fas ${iconClass} aff-icon"></i>`;
+        let rightContentHtml = ad.embed ? `<div class="aff-embed">${ad.embed}</div>` : ad.comment ? `<span class="aff-desc">${ad.comment}</span>` : '';
+        
+        container.insertAdjacentHTML('beforeend', `
+            <div class="aff-item-card" title="${ad.title}" onclick="if('${ad.link}' !== '#') window.open('${ad.link}', '_blank');">
+                <div class="aff-icon-box">${leftColHtml}</div>
+                <div class="aff-content-box"><span class="aff-title">${ad.title}</span>${rightContentHtml}</div>
+            </div>
+        `);
+    });
+    container.addEventListener('wheel', function(e) {
+        if (e.deltaY !== 0) { e.preventDefault(); this.scrollBy({ left: e.deltaY > 0 ? 320 : -320, behavior: 'smooth' }); }
+    }, { passive: false });
+}
+
+// --- COUNTER ---
+function initVisitCounter() {
+    const counterElement = document.getElementById('visit-count');
+    if (!counterElement) return;
+    fetch(`https://api.counterapi.dev/v1/nshome_smartschool_2026/total_visits/up`)
+        .then(r => r.json())
+        .then(data => { counterElement.innerText = data.count.toLocaleString('en-US').padStart(4, '0'); })
+        .catch(e => { counterElement.innerText = 'ERROR'; });
 }
 
 // --- CANVAS ---
 const canvas = document.getElementById('hero-canvas');
-const ctx = canvas.getContext('2d');
-let width, height, particles = [];
-
-function initCanvas() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    particles = [];
-    const count = Math.floor(width / 9);
-    for (let i = 0; i < count; i++) {
-        particles.push({
-            x: Math.random() * width, y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15,
-            size: Math.random() * 1.8, alpha: Math.random()
-        });
+let ctx, width, height, particles = [];
+if (canvas) {
+    ctx = canvas.getContext('2d');
+    function initCanvas() {
+        width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; particles = [];
+        for (let i = 0; i < Math.floor(width / 9); i++) { particles.push({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - 0.5) * 0.15, vy: (Math.random() - 0.5) * 0.15, size: Math.random() * 1.8, alpha: Math.random() }); }
     }
-}
-function animateCanvas() {
-    ctx.clearRect(0, 0, width, height);
-    for (let i = 0; i < particles.length; i++) {
-        let p = particles[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
-        if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(224, 242, 254, ${p.alpha * 0.6})`;
-        ctx.fill();
+    function animateCanvas() {
+        ctx.clearRect(0, 0, width, height);
+        for (let i = 0; i < particles.length; i++) {
+            let p = particles[i]; p.x += p.vx; p.y += p.vy;
+            if (p.x < 0) p.x = width; if (p.x > width) p.x = 0; if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fillStyle = `rgba(224, 242, 254, ${p.alpha * 0.6})`; ctx.fill();
+        }
+        requestAnimationFrame(animateCanvas);
     }
-    requestAnimationFrame(animateCanvas);
-}
-window.addEventListener('resize', initCanvas);
-
-// =================================================================
-// HỆ THỐNG MODAL CẬP NHẬT THÔNG TIN TÀI KHOẢN
-// =================================================================
-function injectModalHTML() {
-    if(document.getElementById('profile-modal')) return;
-    const modalHTML = `
-        <div id="profile-modal" class="tech-modal-overlay">
-            <div class="tech-modal-content">
-                <div class="tech-modal-header">
-                    <h3><i class="fas fa-user-astronaut"></i> CẬP NHẬT THÔNG TIN TÀI KHOẢN NGƯỜI DÙNG</h3>
-                    <i class="fas fa-times close-modal" onclick="closeProfileModal()"></i>
-                </div>
-                <div class="tech-modal-body" id="profile-modal-body">
-                    <div style="text-align:center; color: var(--primary-neon);"><i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...</div>
-                </div>
-                <div class="modal-footer-btn">
-                    <button class="btn-save-modal" onclick="saveProfileModal()" id="btn-save-profile" style="display:none;">CẬP NHẬT</button>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    window.addEventListener('resize', initCanvas);
 }
 
+// --- MODAL PROFILE ---
 function openProfileModal() {
-    injectModalHTML();
-    const modal = document.getElementById('profile-modal');
-    modal.classList.add('active');
-    
+    if(!document.getElementById('profile-modal')) {
+        document.body.insertAdjacentHTML('beforeend', `<div id="profile-modal" class="tech-modal-overlay"><div class="tech-modal-content"><div class="tech-modal-header"><h3><i class="fas fa-user-astronaut"></i> CẬP NHẬT TÀI KHOẢN</h3><i class="fas fa-times close-modal" onclick="closeProfileModal()"></i></div><div class="tech-modal-body" id="profile-modal-body"><div style="text-align:center; color: var(--primary-neon);"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div></div><div class="modal-footer-btn"><button class="btn-save-modal" onclick="saveProfileModal()" id="btn-save-profile" style="display:none;">CẬP NHẬT</button></div></div></div>`);
+    }
+    document.getElementById('profile-modal').classList.add('active');
     const userStr = sessionStorage.getItem('userData');
-    if(!userStr) return;
-    const user = JSON.parse(userStr);
+    if(!userStr) return; const user = JSON.parse(userStr);
     
-    fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'getUserProfile', uid: user.uid })
-    })
-    .then(res => res.json())
-    .then(json => {
+    fetch(WEB_APP_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'getUserProfile', uid: user.uid }) })
+    .then(res => res.json()).then(json => {
         if(json.success) renderProfileForm(json.data);
         else document.getElementById('profile-modal-body').innerHTML = `<div style="color:#f87171;">Lỗi: ${json.error}</div>`;
-    })
-    .catch(err => {
-        document.getElementById('profile-modal-body').innerHTML = `<div style="color:#f87171;">Lỗi kết nối máy chủ!</div>`;
-    });
+    }).catch(err => { document.getElementById('profile-modal-body').innerHTML = `<div style="color:#f87171;">Lỗi kết nối máy chủ!</div>`; });
 }
 
-function closeProfileModal() {
-    const modal = document.getElementById('profile-modal');
-    if(modal) modal.classList.remove('active');
-}
+function closeProfileModal() { const m = document.getElementById('profile-modal'); if(m) m.classList.remove('active'); }
+function toggleModalPwd(id, icon) { const inp = document.getElementById(id); if(inp.type === 'password') { inp.type = 'text'; icon.classList.replace('fa-eye','fa-eye-slash'); } else { inp.type = 'password'; icon.classList.replace('fa-eye-slash','fa-eye'); } }
 
-function toggleModalPwd(inputId, iconEl) {
-    const inp = document.getElementById(inputId);
-    if(inp.type === 'password') { inp.type = 'text'; iconEl.classList.remove('fa-eye'); iconEl.classList.add('fa-eye-slash'); } 
-    else { inp.type = 'password'; iconEl.classList.remove('fa-eye-slash'); iconEl.classList.add('fa-eye'); }
-}
-
-
-// --- VẼ FORM VỚI BỐ CỤC MỚI TRÁI PHẢI ---
 function renderProfileForm(data) {
-    const body = document.getElementById('profile-modal-body');
     const avatarSrc = data.Avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(data.FullName)}`;
-    
-    const formHtml = `
+    document.getElementById('profile-modal-body').innerHTML = `
         <div class="modal-layout">
             <div class="modal-left-col">
-                <div class="avatar-preview-box">
-                    <img id="upd-avatar-img" src="${avatarSrc}">
-                </div>
+                <div class="avatar-preview-box"><img id="upd-avatar-img" src="${avatarSrc}"></div>
                 <input type="file" id="upd-avatar-file" style="display:none" accept="image/png, image/jpeg, image/gif">
                 <button class="btn-change-avatar" id="btn-trigger-upload" onclick="document.getElementById('upd-avatar-file').click()"><i class="fas fa-camera"></i></button>
             </div>
-
             <div class="modal-right-col">
-                <input type="hidden" id="upd-uid" value="${data.uid}">
-                <input type="hidden" id="upd-avatar-base64" value="">
-                <input type="hidden" id="upd-avatar-old" value="${data.Avatar || ''}">
-
+                <input type="hidden" id="upd-uid" value="${data.uid}"><input type="hidden" id="upd-avatar-base64" value=""><input type="hidden" id="upd-avatar-old" value="${data.Avatar || ''}">
                 <div class="form-grid-2">
                     <div class="form-group-modal"><label>HỌ VÀ TÊN</label><input type="text" id="upd-fullname" value="${data.FullName}"></div>
                     <div class="form-group-modal"><label>NICKNAME</label><input type="text" id="upd-nickname" value="${data.NickName}"></div>
@@ -426,455 +395,169 @@ function renderProfileForm(data) {
                 </div>
                 <div class="form-grid-2">
                     <div class="form-group-modal"><label>NGÀY SINH</label><input type="text" id="upd-birthday" placeholder="DD/MM/YYYY" value="${data.BirthDay}"></div>
-                    <div class="form-group-modal">
-                        <label>GIỚI TÍNH</label>
-                        <select id="upd-gender">
-                            <option value="Nam" ${data.Gender==='Nam'?'selected':''}>Nam</option>
-                            <option value="Nữ" ${data.Gender==='Nữ'?'selected':''}>Nữ</option>
-                            <option value="Khác" ${data.Gender==='Khác'?'selected':''}>Khác</option>
-                        </select>
-                    </div>
+                    <div class="form-group-modal"><label>GIỚI TÍNH</label><select id="upd-gender"><option value="Nam" ${data.Gender==='Nam'?'selected':''}>Nam</option><option value="Nữ" ${data.Gender==='Nữ'?'selected':''}>Nữ</option><option value="Khác" ${data.Gender==='Khác'?'selected':''}>Khác</option></select></div>
                 </div>
                 <div class="form-grid-2">
                     <div class="form-group-modal"><label>TRƯỜNG HỌC</label><input type="text" id="upd-school" value="${data.SchoolName || ''}"></div>
                     <div class="form-group-modal"><label>LỚP</label><input type="text" id="upd-class" value="${data.ClassName || ''}"></div>
                 </div>
                 <div class="form-group-modal" style="margin-bottom:15px;"><label>ĐỊA CHỈ</label><input type="text" id="upd-address" value="${data.Address || ''}"></div>
-                
                 <div class="form-grid-2">
-                    <div class="form-group-modal pos-relative">
-                        <label>ĐỔI MẬT KHẨU</label>
-                        <input type="password" id="upd-password" placeholder="Bỏ trống nếu không đổi" style="padding-right:35px;">
-                        <i class="fas fa-eye modal-pwd-toggle" onclick="toggleModalPwd('upd-password', this)"></i>
-                    </div>
-                    <div class="form-group-modal pos-relative">
-                        <label>XÁC NHẬN MẬT KHẨU</label>
-                        <input type="password" id="upd-password-confirm" placeholder="Nhập lại mật khẩu mới" style="padding-right:35px;">
-                        <i class="fas fa-eye modal-pwd-toggle" onclick="toggleModalPwd('upd-password-confirm', this)"></i>
-                    </div>
+                    <div class="form-group-modal pos-relative"><label>ĐỔI MẬT KHẨU</label><input type="password" id="upd-password" placeholder="Bỏ trống nếu không đổi" style="padding-right:35px;"><i class="fas fa-eye modal-pwd-toggle" onclick="toggleModalPwd('upd-password', this)"></i></div>
+                    <div class="form-group-modal pos-relative"><label>XÁC NHẬN MẬT KHẨU</label><input type="password" id="upd-password-confirm" placeholder="Nhập lại mật khẩu mới" style="padding-right:35px;"><i class="fas fa-eye modal-pwd-toggle" onclick="toggleModalPwd('upd-password-confirm', this)"></i></div>
                 </div>
             </div>
         </div>
         <div id="modal-msg" style="margin-top: 15px; font-size: 0.85rem; font-family:'Roboto Mono'; text-align:center;"></div>
     `;
-    body.innerHTML = formHtml;
     document.getElementById('btn-save-profile').style.display = 'block';
 
-    // XỬ LÝ ẢNH & BÁO HIỆU
     document.getElementById('upd-avatar-file').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if(!file) return;
-
-        // Thay vì alert, gọi showToast
-        if(file.size > 2.5 * 1024 * 1024) { 
-            showToast('Ảnh quá lớn. Vui lòng chọn ảnh dưới 2.5MB!', 'warning');
-            return; 
-        }
-
+        const file = e.target.files[0]; if(!file) return;
+        if(file.size > 2.5 * 1024 * 1024) { showToast('Ảnh quá lớn. Vui lòng chọn ảnh dưới 2.5MB!', 'warning'); return; }
         const reader = new FileReader();
         reader.onload = function(evt) {
             const img = new Image();
             img.onload = function() {
-                const MAX_WIDTH = 300; const MAX_HEIGHT = 300;
                 let width = img.width; let height = img.height;
-                if (width > height && width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } 
-                else if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
-
-                const canvas = document.createElement('canvas');
-                canvas.width = width; canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-
+                if (width > height && width > 300) { height *= 300 / width; width = 300; } else if (height > 300) { width *= 300 / height; height = 300; }
+                const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
+                const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, width, height);
                 const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                document.getElementById('upd-avatar-img').src = dataUrl; 
-                document.getElementById('upd-avatar-base64').value = dataUrl; 
-                
-                const btn = document.getElementById('btn-trigger-upload');
-                btn.innerHTML = '<i class="fas fa-check-circle"></i>';
-                btn.style.background = '#4ade80';
-                btn.style.color = '#000';
-            }
-            img.src = evt.target.result;
-        }
-        reader.readAsDataURL(file);
+                document.getElementById('upd-avatar-img').src = dataUrl; document.getElementById('upd-avatar-base64').value = dataUrl; 
+                const btn = document.getElementById('btn-trigger-upload'); btn.innerHTML = '<i class="fas fa-check-circle"></i>'; btn.style.background = '#4ade80'; btn.style.color = '#000';
+            }; img.src = evt.target.result;
+        }; reader.readAsDataURL(file);
     });
 }
 
-// --- GỬI DỮ LIỆU & BÁO TOAST ---
 async function saveProfileModal() {
-    const btn = document.getElementById('btn-save-profile');
-    const msg = document.getElementById('modal-msg');
-    
-    const pwd = document.getElementById('upd-password').value;
-    const pwdConf = document.getElementById('upd-password-confirm').value;
-    
-    if (pwd !== '' && pwd !== pwdConf) { 
-        showToast("Mật khẩu xác nhận không khớp!", "warning"); 
-        return; 
-    }
+    const btn = document.getElementById('btn-save-profile'); const msg = document.getElementById('modal-msg');
+    const pwd = document.getElementById('upd-password').value; const pwdConf = document.getElementById('upd-password-confirm').value;
+    if (pwd !== '' && pwd !== pwdConf) { showToast("Mật khẩu xác nhận không khớp!", "warning"); return; }
     
     const profileData = {
-        uid: document.getElementById('upd-uid').value,
-        FullName: document.getElementById('upd-fullname').value,
-        NickName: document.getElementById('upd-nickname').value,
-        Email: document.getElementById('upd-email').value,
-        BirthDay: document.getElementById('upd-birthday').value,
-        Gender: document.getElementById('upd-gender').value,
-        Phone: document.getElementById('upd-phone').value,
-        Address: document.getElementById('upd-address').value,
-        SchoolName: document.getElementById('upd-school').value,
-        ClassName: document.getElementById('upd-class').value,
-        Avatar: document.getElementById('upd-avatar-old').value, 
-        avatarBase64: document.getElementById('upd-avatar-base64').value, 
-        Password: pwd,
-        AccountUpdate: JSON.parse(sessionStorage.getItem('userData')).account || 'Unknown'
+        uid: document.getElementById('upd-uid').value, FullName: document.getElementById('upd-fullname').value, NickName: document.getElementById('upd-nickname').value,
+        Email: document.getElementById('upd-email').value, BirthDay: document.getElementById('upd-birthday').value, Gender: document.getElementById('upd-gender').value,
+        Phone: document.getElementById('upd-phone').value, Address: document.getElementById('upd-address').value, SchoolName: document.getElementById('upd-school').value,
+        ClassName: document.getElementById('upd-class').value, Avatar: document.getElementById('upd-avatar-old').value, avatarBase64: document.getElementById('upd-avatar-base64').value, 
+        Password: pwd, AccountUpdate: JSON.parse(sessionStorage.getItem('userData')).account || 'Unknown'
     };
 
     try {
-        btn.disabled = true; btn.innerText = "ĐANG TẢI LÊN...";
-        msg.style.color = "var(--primary-neon)"; msg.innerText = "Hệ thống đang đồng bộ dữ liệu...";
-
-        const response = await fetch(WEB_APP_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'updateUserProfile', profileData: profileData })
-        });
-
+        btn.disabled = true; btn.innerText = "ĐANG TẢI LÊN..."; msg.style.color = "var(--primary-neon)"; msg.innerText = "Đang đồng bộ dữ liệu...";
+        const response = await fetch(WEB_APP_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'updateUserProfile', profileData: profileData }) });
         const rawText = await response.text();
-
-        if (rawText.toLowerCase().includes("<!doctype html>") || rawText.toLowerCase().includes("<html")) {
-            showToast("Lỗi phân quyền hệ thống. Máy chủ từ chối kết nối.", "error");
-            throw new Error("Lỗi HTML");
-        }
-
-        let json;
-        try { json = JSON.parse(rawText); } 
-        catch (parseErr) {
-            showToast("Dữ liệu phản hồi bị lỗi định dạng.", "error");
-            throw new Error("Lỗi Parse JSON");
-        }
+        if (rawText.toLowerCase().includes("<!doctype html>")) { showToast("Lỗi phân quyền hệ thống.", "error"); throw new Error("Lỗi HTML"); }
+        let json; try { json = JSON.parse(rawText); } catch (e) { showToast("Lỗi định dạng dữ liệu.", "error"); throw new Error("JSON Error"); }
 
         if (json.success) {
-            msg.style.color = "#4ade80"; msg.innerText = "Cập nhật thành công!";
-            showToast("Hồ sơ đã được cập nhật thành công!", "success");
-            
+            msg.style.color = "#4ade80"; msg.innerText = "Thành công!"; showToast("Đã cập nhật hồ sơ!", "success");
             let userSession = JSON.parse(sessionStorage.getItem('userData'));
-            userSession.name = profileData.FullName;
-            userSession.nickname = profileData.NickName;
-            if(json.newAvatar) userSession.avatar = json.newAvatar; 
+            userSession.name = profileData.FullName; userSession.nickname = profileData.NickName; if(json.newAvatar) userSession.avatar = json.newAvatar; 
             sessionStorage.setItem('userData', JSON.stringify(userSession));
-            
-            renderUserProfile(userSession);
-            logActivity(profileData.uid, profileData.NickName, 'Cập nhật Profile');
+            renderUserProfile(userSession); logActivity(profileData.uid, profileData.NickName, 'Cập nhật Profile');
             setTimeout(closeProfileModal, 1500);
-        } else {
-            showToast(json.error, "error");
-            throw new Error(json.error);
-        }
-
+        } else { showToast(json.error, "error"); throw new Error(json.error); }
     } catch (err) {
-        msg.style.color = "#f87171"; msg.innerText = ""; // Xóa chữ chờ
-        if (err.message.includes("Failed to fetch") || err.message.includes("NetworkError")) {
-            showToast("Lỗi kết nối mạng. Vui lòng thử lại sau!", "error");
-        }
-    } finally {
-        btn.disabled = false; btn.innerText = "CẬP NHẬT";
-    }
+        msg.style.color = "#f87171"; msg.innerText = ""; 
+    } finally { btn.disabled = false; btn.innerText = "CẬP NHẬT"; }
 }
+
 
 // ==========================================
-// HỆ THỐNG FETCH QUẢNG CÁO TỪ GOOGLE SHEETS (FIX ẢNH GOOGLE DRIVE & FALLBACK)
+// HỆ THỐNG KÉO & RENDER HÌNH ẢNH TỪ GOOGLE DRIVE
 // ==========================================
-async function loadAffiliateAds() {
-    const sheetId = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
-    const sheetName = 'Advertisement';
-    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+function loadDriveImagesAuto() {
+    // ID Thư mục của bạn
+    const PANEL_FOLDER_ID = '1dBOxexPs8Y3UfFQ2mf78DLiwj8DEKhGA';
+    const CAROUSEL_FOLDER_ID = '1UuCdEpKT9mpuAmJnUeqZxlvmBjlImM2c';
 
-    try {
-        const response = await fetch(url);
-        const text = await response.text();
-        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-        const data = JSON.parse(jsonString);
-
-        let headers = data.table.cols.map(c => c.label ? c.label.toLowerCase().trim() : '');
-        let dataRows = data.table.rows;
-
-        // Xử lý dòng tiêu đề
-        if (!headers.includes('title') && dataRows.length > 0) {
-            headers = dataRows[0].c.map(cell => cell && cell.v ? String(cell.v).toLowerCase().trim() : '');
-            dataRows.shift();
+    // 1. Kéo ảnh cho Khối Panel Tiêu đề
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'getDriveImages', folderId: PANEL_FOLDER_ID })
+    })
+    .then(res => res.json())
+    .then(json => {
+        if (json.success && json.data.length > 0) {
+            startPanelSlideshow(json.data);
         }
+    }).catch(err => console.log("Lỗi tải ảnh Panel:", err));
 
-        // Dò tìm vị trí cột
-        const idxField   = headers.findIndex(h => h.includes('field'));
-        const idxAvatar  = headers.findIndex(h => h.includes('avatar'));
-        const idxTitle   = headers.findIndex(h => h.includes('title'));
-        const idxLink    = headers.findIndex(h => h.includes('link'));
-        const idxComment = headers.findIndex(h => h.includes('comment') || h.includes('note')); 
-        const idxEmbed   = headers.findIndex(h => h.includes('embed') || h.includes('code'));
-
-        if (idxTitle === -1) throw new Error("Thiếu cột 'Title'");
-
-        // Rút trích dữ liệu
-        let adsList = dataRows.map(row => {
-            const getVal = (index) => (index !== -1 && row.c[index] && row.c[index].v !== null) ? String(row.c[index].v) : '';
-            return {
-                field:   getVal(idxField),
-                avatar:  getVal(idxAvatar),
-                title:   getVal(idxTitle),
-                link:    getVal(idxLink) || '#',
-                comment: getVal(idxComment),
-                embed:   getVal(idxEmbed)
-            };
-        });
-
-        // Lọc thẻ trống & Xáo trộn ngẫu nhiên
-        adsList = adsList.filter(ad => ad.title.trim() !== '');
-        adsList = adsList.sort(() => 0.5 - Math.random());
-
-        renderAffiliateAds(adsList);
-
-    } catch (error) {
-        console.error('Lỗi tải dữ liệu quảng cáo:', error);
-    }
-}
-
-function getAdIcon(field) {
-    const f = field.toLowerCase();
-    if (f.includes('lập trình') || f.includes('code')) return 'fa-laptop-code';
-    if (f.includes('toán') || f.includes('math')) return 'fa-square-root-variable';
-    if (f.includes('ngoại ngữ') || f.includes('tiếng')) return 'fa-language';
-    if (f.includes('kỹ năng') || f.includes('skill')) return 'fa-brain';
-    if (f.includes('sách') || f.includes('book')) return 'fa-book-open';
-    return 'fa-rocket'; 
-}
-
-// Hàm "Phép thuật": Vượt rào bảo mật của Google Drive để nhúng ảnh
-function getDirectImageUrl(url) {
-    if (!url) return '';
-    url = url.trim();
-    // Bắt ID của file Google Drive (chuỗi dài >= 25 ký tự)
-    let match = url.match(/[-\w]{25,}/); 
-    if (url.includes('drive.google.com') && match) {
-        // Sử dụng Server lh3.googleusercontent.com để render ảnh trực tiếp
-        return `https://lh3.googleusercontent.com/d/${match[0]}`;
-    }
-    return url; // Trả lại bình thường nếu không phải link Drive
-}
-
-function renderAffiliateAds(ads) {
-    const container = document.getElementById('dynamic-aff-container');
-    container.innerHTML = ''; 
-
-    ads.forEach(ad => {
-        const iconClass = getAdIcon(ad.field);
-        
-        // --- XỬ LÝ CỘT TRÁI (TỈ LỆ 1: Avatar hoặc Icon) ---
-        let leftColHtml = '';
-        if (ad.avatar && ad.avatar.length > 5) {
-            let directImgUrl = getDirectImageUrl(ad.avatar);
-            // Kỹ thuật Fallback: onerror sẽ tự động biến ảnh lỗi thành Icon
-            leftColHtml = `<img src="${directImgUrl}" class="aff-avatar" alt="Avatar" onerror="this.outerHTML='<i class=\\'fas ${iconClass} aff-icon\\'></i>'">`;
+    // 2. Kéo ảnh cho Khối Slideshow Carousel
+    fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'getDriveImages', folderId: CAROUSEL_FOLDER_ID })
+    })
+    .then(res => res.json())
+    .then(json => {
+        if (json.success && json.data.length > 0) {
+            renderCarousel(json.data);
         } else {
-            leftColHtml = `<i class="fas ${iconClass} aff-icon"></i>`;
+            document.getElementById('carousel-inner-container').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #f87171;">Không có ảnh trong thư mục.</div>';
         }
+    }).catch(err => {
+        document.getElementById('carousel-inner-container').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #f87171;">Lỗi kết nối ảnh.</div>';
+    });
+}
 
-        // --- XỬ LÝ CỘT PHẢI (TỈ LỆ 3: Title + [Embed OR Comment]) ---
-        let rightContentHtml = '';
-        if (ad.embed && ad.embed.trim() !== '') {
-            rightContentHtml = `<div class="aff-embed">${ad.embed}</div>`;
-        } else if (ad.comment && ad.comment.trim() !== '') {
-            rightContentHtml = `<span class="aff-comment-sm">${ad.comment}</span>`;
-        }
+// Hàm đổi hình ảnh Background cho Panel (Đổi sau mỗi 5 giây)
+function startPanelSlideshow(images) {
+    const panel = document.getElementById('dynamic-panel-title');
+    if (!panel || images.length === 0) return;
+    
+    let currentIndex = 0;
+    
+    const changeBackground = () => {
+        const imgId = images[currentIndex].id;
+        // DÙNG CẤU TRÚC LINK MỚI ĐỂ HIỂN THỊ ẢNH TỪ DRIVE (sz=w1920 để ảnh sắc nét)
+        const imgUrl = `https://drive.google.com/thumbnail?id=${imgId}&sz=w1920`;
+        
+        // Gắn ảnh nền và phủ lớp màu mờ để chữ luôn dễ đọc
+        panel.style.background = `linear-gradient(rgba(240, 249, 255, 0.7), rgba(224, 242, 254, 0.7)), url('${imgUrl}')`;
+        panel.style.backgroundSize = 'cover';
+        panel.style.backgroundPosition = 'center';
+        
+        // Tăng index, nếu hết vòng thì quay lại ảnh số 0
+        currentIndex = (currentIndex + 1) % images.length;
+    };
+    
+    changeBackground(); // Kích hoạt ngay lập tức
+    setInterval(changeBackground, 5000); // 5000ms = 5 giây đổi hình 1 lần
+}
 
+// Hàm vẽ ảnh vào Slideshow Carousel
+function renderCarousel(images) {
+    const innerContainer = document.getElementById('carousel-inner-container');
+    const indicatorsContainer = document.getElementById('carousel-indicators-container');
+    
+    if (!innerContainer || !indicatorsContainer) return;
+
+    innerContainer.innerHTML = '';
+    indicatorsContainer.innerHTML = '';
+
+    images.forEach((img, index) => {
+        const isActive = index === 0 ? 'active' : '';
+        const imgUrl = `https://drive.google.com/thumbnail?id=${img.id}&sz=w1200`; // Link mới
+        
+        // Vẽ nút tròn (Indicators)
+        indicatorsContainer.insertAdjacentHTML('beforeend', `
+            <button type="button" data-bs-target="#schoolCarousel" data-bs-slide-to="${index}" class="${isActive}"></button>
+        `);
+
+        // Vẽ Hình ảnh
         const html = `
-            <div class="aff-item" title="${ad.title}" onclick="if('${ad.link}' !== '#') window.open('${ad.link}', '_blank');">
-                <div class="aff-left-col">${leftColHtml}</div>
-                <div class="aff-right-col">
-                    <span class="aff-title-sm">${ad.title}</span>
-                    ${rightContentHtml}
+            <div class="carousel-item ${isActive}" style="height: 100%;">
+                <img src="${imgUrl}" alt="${img.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                <div class="carousel-caption d-none d-md-block" style="background: rgba(15, 23, 42, 0.6); border-radius: 8px; padding: 10px; backdrop-filter: blur(4px);">
+                    <h5 style="margin: 0; font-weight: 700;">N's Home Smart School</h5>
+                    <p style="margin: 0; font-size: 0.9rem;">Hệ sinh thái công nghệ giáo dục.</p>
                 </div>
             </div>
         `;
-        container.insertAdjacentHTML('beforeend', html);
+        innerContainer.insertAdjacentHTML('beforeend', html);
     });
-
-    // --- BẮT SỰ KIỆN LĂN CHUỘT GIỮA ---
-    container.addEventListener('wheel', function(e) {
-        if (e.deltaY !== 0) {
-            e.preventDefault(); 
-            this.scrollBy({
-                left: e.deltaY > 0 ? 320 : -320, 
-                behavior: 'smooth'
-            });
-        }
-    }, { passive: false });
 }
-
-window.addEventListener('DOMContentLoaded', loadAffiliateAds);
-
-
-
-
-// ==========================================
-// HỆ THỐNG ĐẾM LƯỢT TRUY CẬP (HIT COUNTER API)
-// ==========================================
-function initVisitCounter() {
-    const counterElement = document.getElementById('visit-count');
-    if (!counterElement) return;
-
-    // Namespace định danh duy nhất cho dự án của bạn (tránh trùng lặp với web khác)
-    const namespace = 'nshome_smartschool_2026'; 
-    const key = 'total_visits';
-
-    // Gọi API miễn phí từ counterapi.dev
-    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-        .then(response => response.json())
-        .then(data => {
-            // Hiển thị số, tự động thêm dấu phẩy (vd: 1,234) và đệm số 0 ở đầu
-            counterElement.innerText = data.count.toLocaleString('en-US').padStart(4, '0');
-        })
-        .catch(error => {
-            console.error('Lỗi hệ thống đếm truy cập:', error);
-            counterElement.innerText = 'ERROR';
-        });
-}
-
-// Bổ sung gọi hàm initVisitCounter vào sự kiện DOMContentLoaded hiện có
-window.addEventListener('DOMContentLoaded', () => {
-    initVisitCounter();
-});
-
-
-
-// HÀM LẤY TIN TỪ RSS VÀ HIỂN THỊ
-function loadRSScu(url, containerId) {
-    const container = document.getElementById(containerId);
-    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
-
-    fetch(proxyUrl)
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                let html = '';
-                data.items.slice(0, 10).forEach(item => {
-                    // Xử lý ngày tháng cho gọn
-                    const pubDate = new Date(item.pubDate);
-                    const dateString = pubDate.toLocaleDateString('vi-VN');
-
-                    html += `
-                        <a href="${item.link}" target="_blank" class="rss-item">
-                            <div class="rss-item-title">${item.title}</div>
-                            <div class="rss-item-date"><i class="far fa-calendar-alt"></i> ${dateString}</div>
-                        </a>
-                    `;
-                });
-                container.innerHTML = html;
-            }
-        })
-        .catch(err => {
-            console.error("Lỗi RSS:", err);
-            container.innerHTML = '<div class="rss-placeholder">Tín hiệu từ Bộ GD đang bận...</div>';
-        });
-}
-
-function loadRSScu2(url, containerId) {
-    const container = document.getElementById(containerId);
-    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
-
-    fetch(proxyUrl)
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                let html = '';
-                
-                // DANH SÁCH MÃ MÀU (10 màu khác nhau, bạn có thể tự do thay đổi)
-                const colors = [
-                    '#3b82f6', // Xanh dương
-                    '#10b981', // Xanh ngọc
-                    '#f59e0b', // Cam
-                    '#ef4444', // Đỏ
-                    '#8b5cf6', // Tím
-                    '#ec4899', // Hồng
-                    '#06b6d4', // Xanh lơ
-                    '#84cc16', // Xanh lá mạ
-                    '#f43f5e', // Đỏ hồng
-                    '#14b8a6'  // Xanh mòng két
-                ];
-
-                data.items.slice(0, 10).forEach((item, index) => {
-                    // Xử lý ngày tháng
-                    const pubDate = new Date(item.pubDate);
-                    const dateString = pubDate.toLocaleDateString('vi-VN');
-                    
-                    // Lấy màu tuần tự theo danh sách bên trên
-                    const itemColor = colors[index % colors.length]; 
-
-                    // Gắn màu vào viền trái, tiêu đề và icon
-                    html += `
-                        <a href="${item.link}" target="_blank" class="rss-item" style="border-left: 3px solid ${itemColor}; padding-left: 10px; margin-bottom: 10px; display: block;">
-                            <div class="rss-item-title" style="color: ${itemColor}; font-weight: bold; margin-bottom: 4px;">${item.title}</div>
-                            <div class="rss-item-date" style="font-size: 0.85rem; color: #94a3b8;"><i class="far fa-calendar-alt" style="color: ${itemColor};"></i> ${dateString}</div>
-                        </a>
-                    `;
-                });
-                container.innerHTML = html;
-            }
-        })
-        .catch(err => {
-            console.error("Lỗi RSS:", err);
-            container.innerHTML = '<div class="rss-placeholder">Tín hiệu từ nguồn cấp đang bận...</div>';
-        });
-}
-
-// HÀM LẤY TIN TỪ RSS VÀ HIỂN THỊ (CHỈ ĐỔI MÀU BORDER TRÁI)
-function loadRSS(url, containerId) {
-    const container = document.getElementById(containerId);
-    const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}`;
-
-    fetch(proxyUrl)
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === 'ok') {
-                let html = '';
-                
-                // Bảng 10 màu cho thanh viền trái
-                const colors = [
-                    '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', 
-                    '#ec4899', '#06b6d4', '#84cc16', '#f43f5e', '#14b8a6'
-                ];
-
-                data.items.slice(0, 10).forEach((item, index) => {
-                    const pubDate = new Date(item.pubDate);
-                    const dateString = pubDate.toLocaleDateString('vi-VN');
-                    
-                    // Lấy màu tuần tự
-                    const itemColor = colors[index % colors.length];
-
-                    // Chỉ chèn thêm style="border-left: 4px solid Mã_Màu" vào thẻ a
-                    html += `
-                        <a href="${item.link}" target="_blank" class="rss-item" style="border-left: 4px solid ${itemColor} !important;">
-                            <div class="rss-item-title">${item.title}</div>
-                            <div class="rss-item-date"><i class="far fa-calendar-alt"></i> ${dateString}</div>
-                        </a>
-                    `;
-                });
-                container.innerHTML = html;
-            }
-        })
-        .catch(err => {
-            console.error("Lỗi RSS:", err);
-            container.innerHTML = '<div class="rss-placeholder">Tín hiệu từ nguồn cấp đang bận...</div>';
-        });
-}
-
-// KÍCH HOẠT KHI TRANG LOAD XONG
-document.addEventListener("DOMContentLoaded", function() {
-    // 1. Cột trái: Lấy tin Giáo dục từ Báo Thanh Niên (thay thế cho nguồn Bộ GD bị chặn)
-    const leftRss = "https://thanhnien.vn/rss/giao-duc.rss";
-    loadRSS(leftRss, "rss-content-left");
-
-    // 2. Cột phải: Tin Công nghệ từ VnExpress (Số hóa / Công nghệ)
-    const rightRss = "https://vnexpress.net/rss/so-hoa.rss"; 
-    loadRSS(rightRss, "rss-content-right");
-});
