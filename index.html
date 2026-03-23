@@ -29,11 +29,17 @@
             <h1 class="glow-title" style="text-shadow: 2px 2px 10px rgba(255,255,255,0.8); z-index: 2; position: relative;">SMART SCHOOL</h1>
         </div>
 
-        <div class="grid-panel panel-menu" id="panel-menu-container">
+        
+        <div class="grid-panel panel-menu" id="panel-menu-container" style="position: relative;">
+            
+            <div class="menu-scroll-indicator left" id="scroll-indicator-left"><i class="fas fa-chevron-left"></i></div>
+
             <nav class="main-nav" id="dynamic-main-nav">
-                <a href="index.html" class="nav-link-custom"><i class="fas fa-home"></i> Trang chủ</a>
                 <span id="menu-loading" class="menu-loading-text"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu khóa học...</span>
             </nav>
+
+            <div class="menu-scroll-indicator right" id="scroll-indicator-right"><i class="fas fa-chevron-right"></i></div>
+            
             <div id="dynamic-dropdowns-wrapper"></div>
         </div>
 
@@ -48,7 +54,7 @@
             </div>
 
             <div class="slideshow-half">
-                <div id="schoolCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3500" style="height: 100%;">
+                <div id="schoolCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000" style="height: 100%;">
                     <div class="carousel-indicators" id="carousel-indicators-container"></div>
                     <div class="carousel-inner" id="carousel-inner-container" style="height: 100%;">
                         <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #64748b; flex-direction: column;">
@@ -68,9 +74,19 @@
             </div>
         </div>
 
-        <div class="grid-panel panel-ads">
-            <div class="aff-scroll-wrapper" id="dynamic-aff-container">
-                <div class="ads-loading-text"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu quảng cáo...</div>
+        <div class="grid-panel panel-ads sticky-ads-footer">
+            <div class="ads-layout-1-2">
+                
+                <div class="ads-left-google">
+                    <span style="color:#94a3b8; font-size: 0.85rem; font-family:'Roboto Mono'; text-align:center;">[ Khu vực dành cho Script Google Ads ]</span>
+                </div>
+                
+                <div class="ads-right-affiliate">
+                    <div class="aff-scroll-wrapper" id="dynamic-aff-container">
+                        <div class="ads-loading-text"><i class="fas fa-circle-notch fa-spin"></i> Đang tải dữ liệu quảng cáo...</div>
+                    </div>
+                </div>
+                
             </div>
         </div>
 

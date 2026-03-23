@@ -70,8 +70,8 @@ function renderUserProfile(user) {
         container.innerHTML = `
             <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; width: 100%; margin-top: 10px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.1);">
                 <div onclick="openProfileModal()" style="background: #e0f2fe; color: #2563eb; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; border: 1px solid #bae6fd; transition: 0.2s;" title="Cập nhật thông tin">
-                    <img src="${avatarSrc}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover;">
-                    <span style="max-width: 110px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</span>
+                    <img src="${avatarSrc}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">
+                    <span style="max-width: 300px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${user.name}</span>
                     <i class="fas fa-chevron-down" style="font-size: 0.7rem; color: #64748b;"></i>
                 </div>
 
@@ -183,7 +183,8 @@ function renderDynamicMenu(menuData) {
 
     menuContainer.innerHTML = ''; dropdownsWrapper.innerHTML = '';
     if (menuData.length === 0) { menuContainer.innerHTML = '<span style="color:#94a3b8; font-size:0.9rem;">Chưa có dữ liệu khóa học</span>'; return; }
-    menuContainer.innerHTML = `<div class="nav-item"><a href="index.html" class="nav-link-custom"><i class="fas fa-home" style="color: #2563eb; width: 18px; text-align: center; margin-right: 5px;"></i> Trang chủ</a></div>`;
+    
+    // ĐÃ BỎ: Dòng code chèn nút "Trang chủ" tại đây theo đúng yêu cầu của bạn.
 
     function buildNestedHTML(item) {
         const hasChildren = item.children && item.children.length > 0;
@@ -257,7 +258,48 @@ function renderDynamicMenu(menuData) {
     menuContainer.addEventListener('wheel', function(e) {
         if (e.deltaY !== 0) { e.preventDefault(); menuContainer.scrollLeft += e.deltaY * 1.5; }
     }, { passive: false });
+
+    // ----------------------------------------------------
+    // THUẬT TOÁN KIỂM TRA VÀ HIỂN THỊ MŨI TÊN BÁO HIỆU
+    // ----------------------------------------------------
+    const leftIndicator = document.getElementById('scroll-indicator-left');
+    const rightIndicator = document.getElementById('scroll-indicator-right');
+
+    function checkMenuOverflow() {
+        if (!leftIndicator || !rightIndicator) return;
+        
+        // Kiểm tra xem menu có dài hơn khung hiển thị không
+        const isScrollable = menuContainer.scrollWidth > menuContainer.clientWidth;
+        
+        if (isScrollable) {
+            // Nếu đã cuộn sang phải (thì bên trái đang bị che) -> Hiện mũi tên trái
+            if (menuContainer.scrollLeft > 5) leftIndicator.classList.add('visible');
+            else leftIndicator.classList.remove('visible');
+            
+            // Nếu cuộn chưa chạm mép phải (thì bên phải đang bị che) -> Hiện mũi tên phải
+            // (-1 để bù trừ sai số pixel của một số trình duyệt)
+            if (menuContainer.scrollLeft < menuContainer.scrollWidth - menuContainer.clientWidth - 1) {
+                rightIndicator.classList.add('visible');
+            } else {
+                rightIndicator.classList.remove('visible');
+            }
+        } else {
+            // Nếu menu ngắn, hiển thị đủ -> Ẩn cả 2 mũi tên
+            leftIndicator.classList.remove('visible');
+            rightIndicator.classList.remove('visible');
+        }
+    }
+
+    // Gắn sự kiện để máy tính liên tục kiểm tra khi người dùng cuộn hoặc co giãn trình duyệt
+    menuContainer.addEventListener('scroll', checkMenuOverflow);
+    window.addEventListener('resize', checkMenuOverflow);
+    
+    // Chạy kiểm tra ngay sau khi menu vừa tải xong (Delay 100ms để đợi DOM vẽ xong)
+    setTimeout(checkMenuOverflow, 100);
 }
+
+
+
 
 // --- ADS SYSTEM ---
 async function loadAffiliateAds() {
@@ -295,21 +337,30 @@ function getAdIcon(field) {
     return 'fa-rocket'; 
 }
 
+
+// Hàm chuyển đổi Link Google Drive sang Link ảnh Thumbnail sắc nét
 function getDirectImageUrl(url) {
     if (!url) return '';
     let match = url.match(/[-\w]{25,}/); 
-    if (url.includes('drive.google.com') && match) return `http://googleusercontent.com/profile/picture/6{match[0]}`;
+    if (url.includes('drive.google.com') && match) {
+        // Dùng API thumbnail của Drive để load ảnh mượt và không bị lỗi quyền truy cập
+        return `https://drive.google.com/thumbnail?id=${match[0]}&sz=w200`; 
+    }
     return url; 
 }
 
+// Hàm render thẻ quảng cáo và cài đặt Auto-scroll
 function renderAffiliateAds(ads) {
     const container = document.getElementById('dynamic-aff-container');
     container.innerHTML = ''; 
     ads.forEach(ad => {
         const iconClass = getAdIcon(ad.field);
+        
+        // Render hình ảnh thay vì icon nếu có link Avatar
         let leftColHtml = (ad.avatar && ad.avatar.length > 5) 
-            ? `<img src="${getDirectImageUrl(ad.avatar)}" class="aff-avatar" alt="Avatar" onerror="this.outerHTML='<i class=\\'fas ${iconClass} aff-icon\\'></i>'">` 
+            ? `<img src="${getDirectImageUrl(ad.avatar)}" class="aff-avatar" alt="Avatar" style="width:100%; height:100%; border-radius:6px; object-fit:cover;" onerror="this.outerHTML='<i class=\\'fas ${iconClass} aff-icon\\'></i>'">` 
             : `<i class="fas ${iconClass} aff-icon"></i>`;
+            
         let rightContentHtml = ad.embed ? `<div class="aff-embed">${ad.embed}</div>` : ad.comment ? `<span class="aff-desc">${ad.comment}</span>` : '';
         
         container.insertAdjacentHTML('beforeend', `
@@ -319,10 +370,45 @@ function renderAffiliateAds(ads) {
             </div>
         `);
     });
+
+    // ----------------------------------------------------
+    // TÍNH NĂNG TỰ ĐỘNG CUỘN (AUTO SCROLL)
+    // ----------------------------------------------------
+    let scrollAmount = 1; // Số pixel cuộn mỗi lần (Tốc độ)
+    let adScrollInterval = setInterval(autoScroll, 40); // 40ms cuộn 1 lần (để tạo độ mượt như video)
+
+    function autoScroll() {
+        // Nếu cuộn đến kịch lề phải (-1px sai số) thì quay lại đầu tiên
+        if(container.scrollLeft >= (container.scrollWidth - container.clientWidth - 1)) {
+            container.scrollLeft = 0;
+        } else {
+            container.scrollLeft += scrollAmount;
+        }
+    }
+
+    // Khi người dùng rê chuột vào -> DỪNG CUỘN để họ đọc và bấm
+    container.addEventListener('mouseenter', () => clearInterval(adScrollInterval));
+    
+    // Khi người dùng đưa chuột ra -> TIẾP TỤC CUỘN
+    container.addEventListener('mouseleave', () => {
+        adScrollInterval = setInterval(autoScroll, 40);
+    });
+
+    // Vẫn cho phép người dùng cuộn tay bằng con lăn chuột (Wheel)
     container.addEventListener('wheel', function(e) {
-        if (e.deltaY !== 0) { e.preventDefault(); this.scrollBy({ left: e.deltaY > 0 ? 320 : -320, behavior: 'smooth' }); }
+        if (e.deltaY !== 0) { 
+            e.preventDefault(); 
+            this.scrollBy({ left: e.deltaY > 0 ? 320 : -320, behavior: 'smooth' }); 
+        }
     }, { passive: false });
 }
+
+
+
+
+
+
+
 
 // --- COUNTER ---
 function initVisitCounter() {
@@ -504,7 +590,7 @@ function loadDriveImagesAuto() {
     });
 }
 
-// Hàm đổi hình ảnh Background cho Panel (Đổi sau mỗi 5 giây)
+// Hàm đổi hình ảnh Background cho Panel (Đổi sau mỗi 12 giây)
 function startPanelSlideshow(images) {
     const panel = document.getElementById('dynamic-panel-title');
     if (!panel || images.length === 0) return;
@@ -513,20 +599,24 @@ function startPanelSlideshow(images) {
     
     const changeBackground = () => {
         const imgId = images[currentIndex].id;
-        // DÙNG CẤU TRÚC LINK MỚI ĐỂ HIỂN THỊ ẢNH TỪ DRIVE (sz=w1920 để ảnh sắc nét)
         const imgUrl = `https://drive.google.com/thumbnail?id=${imgId}&sz=w1920`;
         
-        // Gắn ảnh nền và phủ lớp màu mờ để chữ luôn dễ đọc
-        panel.style.background = `linear-gradient(rgba(240, 249, 255, 0.7), rgba(224, 242, 254, 0.7)), url('${imgUrl}')`;
-        panel.style.backgroundSize = 'cover';
-        panel.style.backgroundPosition = 'center';
+        // KỸ THUẬT PRELOAD: Tải ngầm ảnh xong mới thay đổi nền để không bị chớp đen
+        const tempImg = new Image();
+        tempImg.src = imgUrl;
         
-        // Tăng index, nếu hết vòng thì quay lại ảnh số 0
-        currentIndex = (currentIndex + 1) % images.length;
+        tempImg.onload = () => {
+            // Khi ảnh mới đã tải xong 100%, tiến hành đè lên ảnh cũ với hiệu ứng CSS transition đã có sẵn ở HTML
+            panel.style.background = `linear-gradient(rgba(240, 249, 255, 0.7), rgba(224, 242, 254, 0.7)), url('${imgUrl}')`;
+            panel.style.backgroundSize = 'cover';
+            panel.style.backgroundPosition = 'center';
+            
+            currentIndex = (currentIndex + 1) % images.length;
+        };
     };
     
-    changeBackground(); // Kích hoạt ngay lập tức
-    setInterval(changeBackground, 5000); // 5000ms = 5 giây đổi hình 1 lần
+    changeBackground(); 
+    setInterval(changeBackground, 12000); 
 }
 
 // Hàm vẽ ảnh vào Slideshow Carousel

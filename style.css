@@ -37,7 +37,7 @@ body {
 .panel-title { grid-column: 2 / 3; grid-row: 1 / 2; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd; min-height: 285px;}
 .panel-menu { grid-column: 2 / 3; grid-row: 2 / 3; padding: 10px; display: flex; align-items: center; justify-content: center; z-index: 999; max-height: 65px;}
 .panel-merged { grid-column: 1 / 3; grid-row: 3 / 4; display: flex; gap: 30px; align-items: stretch; padding: 30px; }
-.intro-half { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.intro-half { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 
 /* CHUẨN TỈ LỆ 3:2 CAROUSEL */
 .slideshow-half { 
@@ -52,13 +52,13 @@ body {
 }
 
 .panel-footer { grid-column: 1 / 3; grid-row: 4 / 5; text-align: center; background: rgba(248, 250, 252, 0.9); }
-.panel-ads { grid-column: 1 / 3; grid-row: 5 / 6; padding: 15px; display: flex; align-items: center; overflow: hidden; }
+.panel-ads { grid-column: 1 / 3; grid-row: 5 / 6; padding: 5px; display: flex; align-items: center; overflow: hidden; }
 
 /* TYPOGRAPHY LOGO & TIÊU ĐỀ */
 .logo-icon-wrapper { width: 120px; height: 120px; background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 15px; box-shadow: 0 10px 25px rgba(29, 78, 216, 0.3); }
 .logo-text { font-family: 'Montserrat', sans-serif; font-weight: 900; color: #1e293b; letter-spacing: 1px; margin: 0; font-size: 1.8rem; }
 .version-text-sub { color: #64748b; font-family: 'Roboto Mono', monospace; font-size: 0.9rem; margin-top: 5px; margin-bottom: 0px; }
-.glow-title { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 3.8rem; text-transform: uppercase; margin: 0; background: linear-gradient(to right, #096d72, #082b77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 4px 8px rgba(37, 99, 235, 0.2)); letter-spacing: 2px; }
+.glow-title { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 4.8rem; text-transform: uppercase; margin: 0; background: linear-gradient(to right, #0e0c83, #082b77); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0px 4px 8px rgba(37, 99, 235, 0.2)); letter-spacing: 2px; }
 
 /* NỘI DUNG GIỚI THIỆU & SLIDESHOW */
 .intro-title { font-family: 'Montserrat', sans-serif; font-weight: 800; color: #1e293b; border-bottom: 2px dashed #cbd5e1; padding-bottom: 12px; margin-bottom: 20px; font-size: 1.4rem; }
@@ -132,7 +132,7 @@ body {
 .nav-item-nested.active-nested > a > .caret-icon { transform: rotate(90deg); color: #2563eb; }
 .nav-item-nested.active-nested > a { background: #f0f9ff; color: #2563eb; border-left: 3px solid #2563eb; padding-left: 26px; }
 
-.dropdown-content a, .nav-item-nested > a { color: #475569; padding: 12px 20px; text-decoration: none; display: block; transition: 0.3s; font-size: 0.95rem; border-bottom: 1px solid #f8fafc; font-weight: 500; cursor: pointer; user-select: none; }
+.dropdown-content a, .nav-item-nested > a { color: #475569; padding: 10px 10px; text-decoration: none; display: block; transition: 1.0s; font-size: 0.95rem; border-bottom: 1px solid #f8fafc; font-weight: 400; cursor: pointer; user-select: none; }
 .dropdown-content a:last-child { border-bottom: none; }
 .dropdown-content a:hover:not(.nested-toggle) { background: #f0f9ff; color: #2563eb; padding-left: 26px; border-left: 3px solid #2563eb; }
 
@@ -148,9 +148,9 @@ body {
 /* =========================================
    THANH QUẢNG CÁO AFFILIATE 
    ========================================= */
-.aff-scroll-wrapper { display: flex; gap: 15px; overflow-x: auto; width: 100%; padding-bottom: 10px; scroll-behavior: smooth; }
+.aff-scroll-wrapper { display: flex; gap: 5px; overflow-x: auto; width: 100%; padding-bottom: 5px; scroll-behavior: smooth; }
 .ads-loading-text { color: #64748b; font-family: 'Roboto Mono', monospace; font-size: 0.8rem; width: 100%; text-align: center; margin-top: 10px; }
-.aff-item-card { display: flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 15px; min-width: 250px; max-width: 300px; flex-shrink: 0; cursor: pointer; transition: 0.2s; }
+.aff-item-card { display: flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 5px 5px; min-width: 200px; max-width: 250px; flex-shrink: 0; cursor: pointer; transition: 0.2s; }
 .aff-item-card:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.1); transform: translateY(-2px); }
 .aff-icon-box { width: 40px; height: 40px; background: #e0f2fe; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 12px; flex-shrink: 0; }
 .aff-icon-box i { color: #0284c7; font-size: 1.2rem; }
@@ -246,4 +246,132 @@ body {
     .modal-left-col { width: 100%; border-right: none; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-right: 0; padding-bottom: 25px; margin-bottom: 20px; }
     .form-grid-2 { grid-template-columns: 1fr; }
     .visit-badge { bottom: 25px; right: 15px; }
+}
+
+
+/* =========================================
+   STYLE CHO NÚT ĐĂNG NHẬP Ở KHỐI PROFILE
+   ========================================= */
+.tech-login-btn {
+    background: var(--primary-neon);
+    color: #ffffff !important;
+    border-radius: 8px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(8, 145, 178, 0.2);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hiệu ứng khi di chuột vào (Hover): Nút nảy lên nhẹ và tỏa bóng */
+.tech-login-btn:hover {
+    background: #0e7490; /* Đổi sang màu xanh đậm hơn */
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(8, 145, 178, 0.4);
+}
+
+/* Hiệu ứng khi bấm chuột (Active): Nút lún xuống */
+.tech-login-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(8, 145, 178, 0.2);
+}
+
+
+
+
+
+
+
+
+
+/* =========================================
+   HIỆU ỨNG BÁO HIỆU MENU BỊ CHE KHUẤT
+   ========================================= */
+.menu-scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: calc(100% - 20px); /* Vừa vặn với panel menu */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    color: #0891b2;
+    font-size: 1.1rem;
+    z-index: 1000;
+    pointer-events: none; /* Tránh cản trở thao tác click/scroll của người dùng */
+    opacity: 0; /* Mặc định ẩn */
+    transition: opacity 0.3s ease;
+}
+/* Bóng mờ bên trái */
+.menu-scroll-indicator.left {
+    left: 10px;
+    background: linear-gradient(to right, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
+    justify-content: flex-start;
+}
+/* Bóng mờ bên phải */
+.menu-scroll-indicator.right {
+    right: 10px;
+    background: linear-gradient(to left, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
+    justify-content: flex-end;
+}
+/* Lớp hiển thị khi có menu bị che */
+.menu-scroll-indicator.visible {
+    opacity: 1;
+}
+/* Hiệu ứng nhịp đập nhẹ cho mũi tên */
+.menu-scroll-indicator i {
+    animation: pulseIcon 1.5s infinite;
+}
+@keyframes pulseIcon {
+    0%, 100% { opacity: 0.5; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+
+
+
+
+
+
+
+/* =========================================
+   THANH QUẢNG CÁO STICKY & TỈ LỆ 1:2
+   ========================================= */
+.sticky-ads-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1000; /* Luôn nổi lên trên cùng */
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 2px solid var(--primary-neon); /* Vạch kẻ nổi bật */
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05); /* Đổ bóng ngược lên trên */
+}
+.ads-layout-1-2 {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+}
+.ads-left-google {
+    flex: 1; /* Tỉ lệ 1 */
+    display: flex; align-items: center; justify-content: center;
+    border-right: 1px dashed #cbd5e1;
+    min-height: 60px;
+    padding-right: 10px;
+}
+.ads-right-affiliate {
+    flex: 2; /* Tỉ lệ 2 */
+    overflow: hidden; /* Cực kỳ quan trọng để cuộn ngang không làm bể layout */
+}
+
+/* Fix mobile: Chuyển thành xếp dọc nếu màn hình nhỏ */
+@media (max-width: 992px) {
+    .ads-layout-1-2 { flex-direction: column; }
+    .ads-left-google, .ads-right-affiliate { flex: none; width: 100%; border-right: none; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; }
 }
