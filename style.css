@@ -196,7 +196,7 @@ body {
 .modal-pwd-toggle { position: absolute; right: 12px; top: 35px; color: var(--text-dim); cursor: pointer; z-index: 5; }
 
 /* BỘ ĐẾM TRUY CẬP */
-.visit-badge { position: fixed; bottom: 25px; right: 25px; z-index: 9990; display: inline-flex; align-items: center; gap: 8px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; color: var(--primary-neon); font-weight: bold; background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--border-tech); padding: 6px 16px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); cursor: default; }
+.visit-badge { position: fixed; bottom: 55px; right: 0px; z-index: 9990; display: inline-flex; align-items: center; gap: 8px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; color: var(--primary-neon); font-weight: bold; padding: 6px 16px; cursor: default; }
 
 /* =========================================
    PHỤC HỒI CSS CHO TRANG ĐĂNG NHẬP LOGIN
