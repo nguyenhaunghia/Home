@@ -23,7 +23,6 @@ body {
         linear-gradient(90deg, rgba(8, 145, 178, 0.015) 1px, transparent 1px);
     background-size: 100px 100px, 100px 100px, 200px 200px, 200px 200px;
     background-attachment: fixed;
-    padding-bottom: 90px !important; /* Tạo khoảng trống đáy cho thanh quảng cáo fixed */
 }
 #hero-canvas { display: none; }
 
@@ -36,7 +35,10 @@ body {
 
 .panel-logo { grid-column: 1 / 2; grid-row: 1 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; padding-top: 40px; }
 .panel-title { grid-column: 2 / 3; grid-row: 1 / 2; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd; min-height: 285px;}
-.panel-menu { grid-column: 2 / 3; grid-row: 2 / 3; padding: 10px; display: flex; align-items: center; justify-content: center; z-index: 999; max-height: 65px; position: relative; overflow: hidden; }
+
+/* ĐÃ SỬA: Tăng z-index lên 9999 để đè lên thanh quảng cáo, thêm overflow: visible để không cắt menu dọc */
+.panel-menu { grid-column: 2 / 3; grid-row: 2 / 3; padding: 10px; display: flex; align-items: center; justify-content: center; z-index: 9999; max-height: 65px; position: relative; overflow: visible !important;}
+
 .panel-merged { grid-column: 1 / 3; grid-row: 3 / 4; display: flex; gap: 30px; align-items: stretch; padding: 30px; }
 .intro-half { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 
@@ -87,8 +89,9 @@ body {
 /* =========================================
    HỆ THỐNG MENU ĐA CẤP (NEON SCROLL)
    ========================================= */
-/* TRẢ LẠI NGUYÊN TRẠNG THANH MENU NGANG VÀ THANH SCROLL DẠ QUANG */
-.main-nav { display: flex; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; align-items: center; gap: 5px; width: 100%; padding: 1px 15px 1px 15px !important; max-height: 50px; scroll-behavior: smooth; }
+
+/* ĐÃ SỬA: Tăng padding trái/phải lên 45px để chữ không bị lớp sương mù che lấp khi cuộn */
+.main-nav { display: flex; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; align-items: center; gap: 5px; width: 100%; padding: 1px 45px 1px 45px !important; max-height: 50px; scroll-behavior: smooth; }
 .menu-loading-text { color: #64748b; font-size: 0.9rem; margin-left: 15px; }
 
 /* Thanh Scroll Neon Highlight */
@@ -113,7 +116,7 @@ body {
 
 .nav-item-nested { position: relative; }
 
-/* SỬA LỖI MENU BỊ CHE: Menu Cấp 2, 3, 4 sẽ xổ dọc (Accordion) đẩy mục dưới xuống thay vì bay ngang! */
+/* Menu Cấp 2, 3, 4 xổ dọc (Accordion) */
 .nested-dropdown { 
     display: none; 
     position: relative; /* Bí quyết là ở đây: thả tự do theo chiều dọc */
@@ -147,82 +150,8 @@ body {
 @keyframes slideDownTree { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
 /* =========================================
-   HIỆU ỨNG BÁO HIỆU MENU BỊ CHE KHUẤT
+   THANH QUẢNG CÁO AFFILIATE 
    ========================================= */
-.menu-scroll-indicator {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    height: calc(100% - 20px); 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    color: #0891b2;
-    font-size: 1.1rem;
-    z-index: 1000;
-    pointer-events: none; 
-    opacity: 0; 
-    transition: opacity 0.3s ease;
-}
-.menu-scroll-indicator.left {
-    left: 10px;
-    background: linear-gradient(to right, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
-    justify-content: flex-start;
-}
-.menu-scroll-indicator.right {
-    right: 10px;
-    background: linear-gradient(to left, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
-    justify-content: flex-end;
-}
-.menu-scroll-indicator.visible { opacity: 1; }
-.menu-scroll-indicator i { animation: pulseIcon 1.5s infinite; }
-@keyframes pulseIcon {
-    0%, 100% { opacity: 0.5; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
-}
-
-/* =========================================
-   THANH QUẢNG CÁO FIXED DÍNH ĐÁY MÀN HÌNH & TỈ LỆ 1:2
-   ========================================= */
-.sticky-ads-footer {
-    position: fixed; 
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9999; 
-    margin: 0;
-    padding: 10px 0;
-    border-radius: 0; 
-    border-top: 2px solid var(--primary-neon); 
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.1); 
-    background: var(--bg-card); 
-    backdrop-filter: blur(12px);
-}
-
-.ads-layout-1-2 {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-    max-width: 1400px; 
-    margin: 0 auto;    
-    padding: 0 20px;
-    align-items: center;
-}
-
-.ads-left-google {
-    flex: 1; 
-    display: flex; align-items: center; justify-content: center;
-    border-right: 1px dashed #cbd5e1;
-    min-height: 60px;
-    padding-right: 10px;
-}
-
-.ads-right-affiliate {
-    flex: 2; 
-    overflow: hidden; 
-}
-
 .aff-scroll-wrapper { display: flex; gap: 5px; overflow-x: auto; width: 100%; padding-bottom: 5px; scroll-behavior: smooth; }
 .ads-loading-text { color: #64748b; font-family: 'Roboto Mono', monospace; font-size: 0.8rem; width: 100%; text-align: center; margin-top: 10px; }
 .aff-item-card { display: flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 5px; padding: 5px 5px; min-width: 200px; max-width: 250px; flex-shrink: 0; cursor: pointer; transition: 0.2s; }
@@ -233,14 +162,6 @@ body {
 .aff-content-box { display: flex; flex-direction: column; overflow: hidden; }
 .aff-title { font-family: 'Inter', sans-serif; font-weight: 700; color: #0f172a; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
 .aff-desc { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* Fix mobile cho phần quảng cáo sticky */
-@media (max-width: 992px) {
-    body { padding-bottom: 150px !important; } 
-    .ads-layout-1-2 { flex-direction: column; }
-    .ads-left-google, .ads-right-affiliate { flex: none; width: 100%; border-right: none; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; }
-    .ads-left-google { min-height: 40px; }
-}
 
 /* =========================================
    MODAL HỒ SƠ & TOAST 
@@ -314,7 +235,7 @@ body {
 /* MOBILE RESPONSIVE CĂN BẢN */
 @media (max-width: 992px) {
     .smart-layout-wrapper { grid-template-columns: 1fr; }
-    .panel-logo, .panel-title, .panel-menu, .panel-merged, .panel-footer { grid-column: 1 / -1; grid-row: auto; }
+    .panel-logo, .panel-title, .panel-menu, .panel-merged, .panel-footer, .panel-ads { grid-column: 1 / -1; grid-row: auto; }
     .glow-title { font-size: 2.5rem; }
     .panel-merged { flex-direction: column; } 
     .intro-half, .slideshow-half { width: 100%; }
@@ -330,7 +251,6 @@ body {
     .form-grid-2 { grid-template-columns: 1fr; }
     .visit-badge { bottom: 25px; right: 15px; }
 }
-
 
 /* =========================================
    STYLE CHO NÚT ĐĂNG NHẬP Ở KHỐI PROFILE
@@ -362,4 +282,84 @@ body {
 .tech-login-btn:active {
     transform: translateY(1px);
     box-shadow: 0 2px 5px rgba(8, 145, 178, 0.2);
+}
+
+/* =========================================
+   HIỆU ỨNG BÁO HIỆU MENU BỊ CHE KHUẤT
+   ========================================= */
+.menu-scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: calc(100% - 20px); /* Vừa vặn với panel menu */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    color: #0891b2;
+    font-size: 1.1rem;
+    z-index: 1000;
+    pointer-events: none; /* Tránh cản trở thao tác click/scroll của người dùng */
+    opacity: 0; /* Mặc định ẩn */
+    transition: opacity 0.3s ease;
+}
+/* Bóng mờ bên trái */
+.menu-scroll-indicator.left {
+    left: 10px;
+    background: linear-gradient(to right, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
+    justify-content: flex-start;
+}
+/* Bóng mờ bên phải */
+.menu-scroll-indicator.right {
+    right: 10px;
+    background: linear-gradient(to left, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
+    justify-content: flex-end;
+}
+/* Lớp hiển thị khi có menu bị che */
+.menu-scroll-indicator.visible {
+    opacity: 1;
+}
+/* Hiệu ứng nhịp đập nhẹ cho mũi tên */
+.menu-scroll-indicator i {
+    animation: pulseIcon 1.5s infinite;
+}
+@keyframes pulseIcon {
+    0%, 100% { opacity: 0.5; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* =========================================
+   THANH QUẢNG CÁO STICKY & TỈ LỆ 1:2
+   ========================================= */
+.sticky-ads-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1000; /* Luôn nổi lên trên cùng */
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 2px solid var(--primary-neon); /* Vạch kẻ nổi bật */
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05); /* Đổ bóng ngược lên trên */
+}
+.ads-layout-1-2 {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+}
+.ads-left-google {
+    flex: 1; /* Tỉ lệ 1 */
+    display: flex; align-items: center; justify-content: center;
+    border-right: 1px dashed #cbd5e1;
+    min-height: 60px;
+    padding-right: 10px;
+}
+.ads-right-affiliate {
+    flex: 2; /* Tỉ lệ 2 */
+    overflow: hidden; /* Cực kỳ quan trọng để cuộn ngang không làm bể layout */
+}
+
+/* Fix mobile: Chuyển thành xếp dọc nếu màn hình nhỏ */
+@media (max-width: 992px) {
+    .ads-layout-1-2 { flex-direction: column; }
+    .ads-left-google, .ads-right-affiliate { flex: none; width: 100%; border-right: none; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; }
 }
