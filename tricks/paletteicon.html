@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <title>Từ Điển Mã Màu & Code Icon Toàn Diện | SMART SCHOOL</title>
+
+    <meta name="description" content="Hệ thống tra cứu 400 mã màu ma trận chuẩn và 200 Icon FontAwesome lĩnh vực Giáo dục, IT, Văn phòng.">
+    <meta name="keywords" content="bảng mã màu, hex color, code icon, fontawesome, mã màu thiết kế, icon web, smart school">
+    <meta name="author" content="Admin - SMART SCHOOL">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="tricks_style.css">
+    
+    <style>
+        /* 1. BẢNG MÀU MA TRẬN 8x50 */
+        .color-matrix {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* Chính xác 8 cột theo yêu cầu */
+            gap: 1px; 
+            background: #cbd5e1; 
+            border: 1px solid #cbd5e1;
+            margin: 20px 0 40px 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .matrix-cell {
+            height: 45px; /* Chiều cao tối ưu để hiển thị 50 dòng không bị quá dài */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.1s;
+            position: relative;
+        }
+        .matrix-cell:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        /* 2. BẢNG ICON CHUẨN */
+        .icon-section-title { margin-top: 40px; padding-bottom: 10px; border-bottom: 2px solid #0891b2; color: #1e293b; display: flex; align-items: center; gap: 10px; }
+        .icon-table-wrapper { overflow-x: auto; margin: 15px 0 30px 0; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; max-height: 600px; /* Thêm thanh cuộn dọc để bảng gọn gàng */ }
+        .icon-table { width: 100%; border-collapse: collapse; background: #ffffff; }
+        .icon-table thead th { position: sticky; top: 0; z-index: 5; background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+        .icon-table th, .icon-table td { padding: 12px 15px; border-bottom: 1px solid #e2e8f0; text-align: left; vertical-align: middle; }
+        .icon-table th { font-family: 'Montserrat', sans-serif; font-weight: 700; color: #0f172a; white-space: nowrap; }
+        .icon-table tr:hover td { background: #f0f9ff; }
+        .icon-demo { font-size: 1.5rem; color: #334155; text-align: center; width: 60px; }
+        .code-snippet { font-family: 'Roboto Mono', monospace; color: #db2777; background: #fdf2f8; padding: 5px 10px; border-radius: 6px; font-size: 0.9rem; border: 1px solid #fbcfe8; display: inline-block; cursor: pointer; transition: 0.2s; }
+        .code-snippet:hover { background: #fce7f3; transform: translateY(-2px); box-shadow: 0 2px 5px rgba(219, 39, 119, 0.2); }
+
+        /* THÔNG BÁO COPY */
+        #copy-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: #10b981; color: #fff; padding: 10px 20px; border-radius: 50px; font-family: 'Inter', sans-serif; font-weight: 600; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); opacity: 0; transition: 0.3s; z-index: 99999; }
+        #copy-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <aside class="ad-sidebar"><div class="sticky-ad-box"><i class="fas fa-ad fa-2x"></i><div>Ads 300x600</div></div></aside>
+
+        <main class="main-column">
+            <div class="hero-panel">
+                <a href="../index.html" class="home-btn-absolute" title="Về trang chủ"><i class="fas fa-home"></i></a>
+                <div class="hero-content">
+                    <h1 class="hero-title">Từ Điển Mã Màu Ma Trận & 200+ Code Icon</h1>
+                    <div class="hero-meta">
+                        <span class="hero-category"><i class="fas fa-laptop-code"></i> Tài nguyên Web</span>
+                        <span><i class="far fa-user"></i> Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <article class="article-content">
+                <p>Khám phá kho tàng tài nguyên thiết kế Web khổng lồ với <strong>Bảng màu ma trận 8x50 (400 màu dải chuẩn)</strong> và hơn <strong>200 mã Icon FontAwesome</strong> được phân loại khoa học dành riêng cho lĩnh vực Giáo dục, Công nghệ, Tin học văn phòng.</p>
+                <div class="cyber-tip">
+                    <div class="cyber-tip-title"><i class="fas fa-lightbulb"></i> Tính năng Thông minh</div>
+                    <p>Chỉ cần <strong>Nhấp chuột (Click)</strong> vào bất kỳ Ô MÀU hay ĐOẠN CODE nào, hệ thống sẽ tự động Copy vào bộ nhớ tạm của bạn ngay lập tức!</p>
+                </div>
+
+                <h2 id="phan-1">Phần 1: Bảng Mã Màu Ma Trận 8 Cột (400 Cấp Độ)</h2>
+                <p>Hệ thống tự động nội suy 50 cấp độ sáng/tối cho 8 tông màu chính (Grayscale, Red, Orange, Yellow, Green, Cyan, Blue, Purple). Kéo chuột để quét và click để lấy mã HEX.</p>
+                
+                <div class="color-matrix" id="color-matrix-container"></div>
+
+                <h3 class="icon-section-title" id="phan-2"><i class="fas fa-microchip"></i> Phần 2: 100 Icon Giáo dục, VP & IT (FontAwesome Solid - fas)</h3>
+                <div class="icon-table-wrapper">
+                    <table class="icon-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Icon</th>
+                                <th>Mã Code (Nhấp để Copy)</th>
+                                <th>Chủ đề / Ý nghĩa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fas-table-body"></tbody>
+                    </table>
+                </div>
+
+                <h3 class="icon-section-title" id="phan-3"><i class="fab fa-aws"></i> Phần 3: 100 Icon Thương hiệu & Công nghệ (FontAwesome Brands - fab)</h3>
+                <div class="icon-table-wrapper">
+                    <table class="icon-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">Icon</th>
+                                <th>Mã Code (Nhấp để Copy)</th>
+                                <th>Thương hiệu / Công nghệ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fab-table-body"></tbody>
+                    </table>
+                </div>
+
+            </article>
+        </main>
+
+        <aside class="ad-sidebar"><div class="sticky-ad-box"><i class="fas fa-ad fa-2x"></i><div>Ads 300x600</div></div></aside>
+    </div>
+
+    <div id="copy-toast">Đã copy thành công!</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // ==========================================
+            // A. THUẬT TOÁN VẼ BẢNG MÀU MA TRẬN 8x50
+            // ==========================================
+            const matrixContainer = document.getElementById('color-matrix-container');
+            const HUES = [0, 0, 30, 60, 120, 180, 240, 280]; // 8 Cột: Gray, Red, Orange, Yellow, Green, Cyan, Blue, Purple
+            const SATURATIONS = [0, 100, 100, 100, 100, 100, 100, 100]; // Cột 1 không có độ bão hòa (Đen trắng)
+            
+            // Hàm chuyển đổi HSL sang mã HEX
+            function hslToHex(h, s, l) {
+                l /= 100;
+                const a = s * Math.min(l, 1 - l) / 100;
+                const f = n => {
+                    const k = (n + h / 30) % 12;
+                    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                    return Math.round(255 * color).toString(16).padStart(2, '0');
+                };
+                return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
+            }
+
+            // Vẽ 50 Dòng x 8 Cột = 400 Ô
+            let colorHTML = '';
+            for (let row = 0; row < 50; row++) {
+                // Ánh sáng (Lightness) đi từ 98% (Sáng nhất) xuống 2% (Tối nhất)
+                let lightness = 98 - (row * 1.96); 
+                
+                for (let col = 0; col < 8; col++) {
+                    let hex = hslToHex(HUES[col], SATURATIONS[col], lightness);
+                    // Đổi màu chữ (Trắng/Đen) dựa trên độ tối của nền để dễ đọc
+                    let textColor = lightness < 50 ? '#ffffff' : '#000000';
+                    colorHTML += `<div class="matrix-cell" style="background:${hex}; color:${textColor};" data-copy="${hex}">${hex}</div>`;
+                }
+            }
+            matrixContainer.innerHTML = colorHTML;
+
+
+            // ==========================================
+            // B. DỮ LIỆU & VẼ BẢNG 100 ICON FAS (GIÁO DỤC, VĂN PHÒNG, IT)
+            // ==========================================
+            const fasData = [
+                // Giáo dục / Đào tạo
+                { c: 'fa-graduation-cap', n: 'Mũ Cử nhân / Khóa học' }, { c: 'fa-user-graduate', n: 'Học sinh / Sinh viên' }, { c: 'fa-chalkboard-teacher', n: 'Giáo viên / Giảng dạy' }, { c: 'fa-book', n: 'Sách / Giáo trình' }, { c: 'fa-book-open', n: 'Sách mở / Đọc sách' }, { c: 'fa-book-reader', n: 'Người đọc sách' }, { c: 'fa-school', n: 'Trường học / Cơ sở GD' }, { c: 'fa-university', n: 'Đại học / Viện hàn lâm' }, { c: 'fa-microscope', n: 'Kính hiển vi / Nghiên cứu' }, { c: 'fa-atom', n: 'Nguyên tử / Vật lý / Hóa học' }, { c: 'fa-shapes', n: 'Hình khối / Toán học / Logic' }, { c: 'fa-brain', n: 'Bộ não / Tư duy / Trí tuệ' }, { c: 'fa-award', n: 'Bằng khen / Giải thưởng' }, { c: 'fa-certificate', n: 'Chứng chỉ / Chứng nhận' },
+                
+                // Tin học / Thiết bị / Tech
+                { c: 'fa-laptop', n: 'Laptop / Máy tính xách tay' }, { c: 'fa-desktop', n: 'Máy tính bàn (PC)' }, { c: 'fa-mobile-alt', n: 'Điện thoại di động' }, { c: 'fa-tablet-alt', n: 'Máy tính bảng (Tablet)' }, { c: 'fa-keyboard', n: 'Bàn phím' }, { c: 'fa-mouse', n: 'Chuột máy tính' }, { c: 'fa-print', n: 'Máy in / In ấn' }, { c: 'fa-server', n: 'Máy chủ (Server)' }, { c: 'fa-database', n: 'Cơ sở dữ liệu (Database)' }, { c: 'fa-network-wired', n: 'Mạng nội bộ / LAN' }, { c: 'fa-wifi', n: 'Mạng không dây / Wi-Fi' }, { c: 'fa-microchip', n: 'Vi mạch / CPU' }, { c: 'fa-memory', n: 'Thẻ nhớ / RAM' }, { c: 'fa-hdd', n: 'Ổ cứng / Lưu trữ' }, { c: 'fa-code', n: 'Mã nguồn / Code' }, { c: 'fa-laptop-code', n: 'Lập trình viên / Coding' }, { c: 'fa-terminal', n: 'Cửa sổ lệnh (Terminal/CMD)' }, { c: 'fa-bug', n: 'Lỗi phần mềm (Bug)' },
+                
+                // Văn phòng / Hành chính
+                { c: 'fa-briefcase', n: 'Cặp xách / Công việc' }, { c: 'fa-building', n: 'Tòa nhà / Văn phòng công ty' }, { c: 'fa-folder', n: 'Thư mục (Đóng)' }, { c: 'fa-folder-open', n: 'Thư mục (Mở)' }, { c: 'fa-file', n: 'Tệp tin (File)' }, { c: 'fa-file-alt', n: 'Tệp văn bản / Đoạn văn' }, { c: 'fa-file-pdf', n: 'Tệp PDF' }, { c: 'fa-file-word', n: 'Tệp Word (.doc)' }, { c: 'fa-file-excel', n: 'Tệp Excel (.xls)' }, { c: 'fa-file-powerpoint', n: 'Tệp PowerPoint (.ppt)' }, { c: 'fa-file-signature', n: 'Tệp ký tên / Hợp đồng' }, { c: 'fa-copy', n: 'Sao chép (Copy)' }, { c: 'fa-paste', n: 'Dán (Paste)' }, { c: 'fa-save', n: 'Lưu trữ (Save)' }, { c: 'fa-edit', n: 'Chỉnh sửa (Edit)' }, { c: 'fa-trash-alt', n: 'Thùng rác / Xóa' }, { c: 'fa-paperclip', n: 'Đính kèm / Đinh ghim' }, { c: 'fa-calculator', n: 'Máy tính cầm tay' }, { c: 'fa-calendar-alt', n: 'Lịch / Lên lịch trình' }, { c: 'fa-clock', n: 'Đồng hồ / Chấm công' }, { c: 'fa-chart-line', n: 'Biểu đồ tăng / Thống kê' }, { c: 'fa-chart-pie', n: 'Biểu đồ tròn' }, { c: 'fa-project-diagram', n: 'Sơ đồ dự án' },
+                
+                // Giao diện Web / UI
+                { c: 'fa-home', n: 'Trang chủ (Home)' }, { c: 'fa-search', n: 'Tìm kiếm' }, { c: 'fa-cog', n: 'Cài đặt / Bánh răng' }, { c: 'fa-cogs', n: 'Hệ thống cấu hình' }, { c: 'fa-tools', n: 'Công cụ (Tools)' }, { c: 'fa-wrench', n: 'Sửa chữa / Cờ lê' }, { c: 'fa-user', n: 'Người dùng (Tài khoản)' }, { c: 'fa-users', n: 'Nhóm người dùng' }, { c: 'fa-user-cog', n: 'Quản trị viên (Admin)' }, { c: 'fa-envelope', n: 'Email / Thư tín' }, { c: 'fa-phone-alt', n: 'Điện thoại liên hệ' }, { c: 'fa-comment-dots', n: 'Khung chat / Bình luận' }, { c: 'fa-bell', n: 'Chuông thông báo' }, { c: 'fa-lock', n: 'Khóa bảo mật' }, { c: 'fa-unlock-alt', n: 'Mở khóa' }, { c: 'fa-key', n: 'Chìa khóa / Mật khẩu' }, { c: 'fa-shield-alt', n: 'Khiên bảo vệ / Security' }, { c: 'fa-sign-in-alt', n: 'Đăng nhập' }, { c: 'fa-sign-out-alt', n: 'Đăng xuất' }, { c: 'fa-power-off', n: 'Tắt máy / Shutdown' },
+                
+                // Trạng thái / Điều hướng
+                { c: 'fa-check-circle', n: 'Thành công (Success)' }, { c: 'fa-times-circle', n: 'Lỗi / Thất bại (Error)' }, { c: 'fa-exclamation-triangle', n: 'Cảnh báo (Warning)' }, { c: 'fa-info-circle', n: 'Thông tin chi tiết (Info)' }, { c: 'fa-question-circle', n: 'Câu hỏi / Trợ giúp' }, { c: 'fa-sync-alt', n: 'Tải lại / Đồng bộ' }, { c: 'fa-download', n: 'Tải xuống (Download)' }, { c: 'fa-upload', n: 'Tải lên (Upload)' }, { c: 'fa-cloud-download-alt', n: 'Tải từ Đám mây' }, { c: 'fa-arrow-right', n: 'Mũi tên Phải' }, { c: 'fa-arrow-left', n: 'Mũi tên Trái' }, { c: 'fa-chevron-down', n: 'Mở rộng Dropdown' }, { c: 'fa-list-ul', n: 'Danh sách Bullet' }, { c: 'fa-th-large', n: 'Lưới hiển thị (Grid)' }
+            ];
+
+            let fasHTML = '';
+            fasData.forEach(item => {
+                fasHTML += `<tr><td class="icon-demo"><i class="fas ${item.c}"></i></td><td><span class="code-snippet" data-copy='<i class="fas ${item.c}"></i>'>&lt;i class="fas ${item.c}"&gt;&lt;/i&gt;</span></td><td>${item.n}</td></tr>`;
+            });
+            document.getElementById('fas-table-body').innerHTML = fasHTML;
+
+            // ==========================================
+            // C. DỮ LIỆU & VẼ BẢNG 100 ICON FAB (BRANDS & TECH)
+            // ==========================================
+            const fabData = [
+                // Hệ điều hành / Môi trường
+                { c: 'fa-apple', n: 'Apple / macOS / iOS', col: '#555' }, { c: 'fa-windows', n: 'Microsoft Windows', col: '#0078D7' }, { c: 'fa-android', n: 'Android OS', col: '#3DDC84' }, { c: 'fa-linux', n: 'Linux OS', col: '#000' }, { c: 'fa-ubuntu', n: 'Ubuntu Linux', col: '#E95420' }, { c: 'fa-centos', n: 'CentOS', col: '#262577' }, { c: 'fa-redhat', n: 'Red Hat', col: '#EE0000' },
+                
+                // Mạng xã hội / App Giao tiếp
+                { c: 'fa-facebook', n: 'Facebook', col: '#1877F2' }, { c: 'fa-facebook-messenger', n: 'Messenger', col: '#00B2FF' }, { c: 'fa-youtube', n: 'YouTube', col: '#FF0000' }, { c: 'fa-instagram', n: 'Instagram', col: '#E1306C' }, { c: 'fa-tiktok', n: 'TikTok', col: '#000' }, { c: 'fa-twitter', n: 'Twitter (X)', col: '#1DA1F2' }, { c: 'fa-linkedin', n: 'LinkedIn', col: '#0A66C2' }, { c: 'fa-pinterest', n: 'Pinterest', col: '#E60023' }, { c: 'fa-whatsapp', n: 'WhatsApp', col: '#25D366' }, { c: 'fa-telegram', n: 'Telegram', col: '#0088cc' }, { c: 'fa-viber', n: 'Viber', col: '#665CAC' }, { c: 'fa-skype', n: 'Skype', col: '#00AFF0' }, { c: 'fa-discord', n: 'Discord', col: '#5865F2' }, { c: 'fa-slack', n: 'Slack', col: '#4A154B' }, { c: 'fa-zoom', n: 'Zoom Meeting', col: '#2D8CFF' }, { c: 'fa-reddit', n: 'Reddit', col: '#FF4500' }, { c: 'fa-snapchat', n: 'Snapchat', col: '#FFFC00' },
+                
+                // Ngôn ngữ Lập trình / Công nghệ Web
+                { c: 'fa-html5', n: 'HTML5', col: '#E34F26' }, { c: 'fa-css3-alt', n: 'CSS3', col: '#1572B6' }, { c: 'fa-js', n: 'JavaScript (JS)', col: '#F7DF1E' }, { c: 'fa-react', n: 'ReactJS', col: '#61DAFB' }, { c: 'fa-vuejs', n: 'Vue.js', col: '#4FC08D' }, { c: 'fa-angular', n: 'Angular', col: '#DD0031' }, { c: 'fa-node-js', n: 'Node.js', col: '#339933' }, { c: 'fa-python', n: 'Python', col: '#3776AB' }, { c: 'fa-java', n: 'Java', col: '#007396' }, { c: 'fa-php', n: 'PHP', col: '#777BB4' }, { c: 'fa-sass', n: 'SASS', col: '#CC6699' }, { c: 'fa-less', n: 'LESS', col: '#1D365D' }, { c: 'fa-bootstrap', n: 'Bootstrap', col: '#7952B3' },
+                
+                // Nền tảng Dev / Server / Cloud
+                { c: 'fa-github', n: 'GitHub', col: '#333' }, { c: 'fa-gitlab', n: 'GitLab', col: '#FCA121' }, { c: 'fa-bitbucket', n: 'Bitbucket', col: '#0052CC' }, { c: 'fa-aws', n: 'Amazon Web Services (AWS)', col: '#FF9900' }, { c: 'fa-digital-ocean', n: 'DigitalOcean', col: '#0080FF' }, { c: 'fa-docker', n: 'Docker', col: '#2496ED' }, { c: 'fa-npm', n: 'NPM (Node Package Manager)', col: '#CB3837' }, { c: 'fa-cpanel', n: 'cPanel', col: '#FF6C2C' }, { c: 'fa-cloudflare', n: 'Cloudflare', col: '#F38020' }, { c: 'fa-codepen', n: 'CodePen', col: '#000' },
+                
+                // Công cụ Thiết kế / CMS
+                { c: 'fa-figma', n: 'Figma UI/UX', col: '#F24E1E' }, { c: 'fa-sketch', n: 'Sketch App', col: '#F7B500' }, { c: 'fa-wordpress', n: 'WordPress', col: '#21759B' }, { c: 'fa-magento', n: 'Magento', col: '#EE672F' }, { c: 'fa-joomla', n: 'Joomla', col: '#5091CD' }, { c: 'fa-drupal', n: 'Drupal', col: '#0678BE' }, { c: 'fa-wix', n: 'Wix', col: '#000' }, { c: 'fa-shopify', n: 'Shopify', col: '#95BF47' },
+                
+                // Các Công ty / Dịch vụ lớn
+                { c: 'fa-google', n: 'Google', col: '#DB4437' }, { c: 'fa-google-drive', n: 'Google Drive', col: '#1FA463' }, { c: 'fa-google-play', n: 'Google Play', col: '#414141' }, { c: 'fa-microsoft', n: 'Microsoft', col: '#00A4EF' }, { c: 'fa-yahoo', n: 'Yahoo', col: '#410093' }, { c: 'fa-amazon', n: 'Amazon', col: '#FF9900' }, { c: 'fa-dropbox', n: 'Dropbox', col: '#0061FF' }, { c: 'fa-evernote', n: 'Evernote', col: '#00A82D' }, { c: 'fa-trello', n: 'Trello', col: '#0052CC' }, { c: 'fa-spotify', n: 'Spotify', col: '#1DB954' },
+                
+                // Thanh toán / Tài chính
+                { c: 'fa-paypal', n: 'PayPal', col: '#00457C' }, { c: 'fa-stripe', n: 'Stripe', col: '#008CDD' }, { c: 'fa-cc-visa', n: 'Visa Card', col: '#1A1F71' }, { c: 'fa-cc-mastercard', n: 'MasterCard', col: '#EB001B' }, { c: 'fa-cc-amex', n: 'American Express', col: '#227BBC' }, { c: 'fa-cc-jcb', n: 'JCB', col: '#0033A0' }, { c: 'fa-cc-discover', n: 'Discover', col: '#FF6000' }, { c: 'fa-bitcoin', n: 'Bitcoin (BTC)', col: '#F7931A' }, { c: 'fa-ethereum', n: 'Ethereum (ETH)', col: '#3C3C3D' }, { c: 'fa-google-wallet', n: 'Google Wallet', col: '#4285F4' }
+            ];
+
+            let fabHTML = '';
+            fabData.forEach(item => {
+                fabHTML += `<tr><td class="icon-demo"><i class="fab ${item.c}" style="color:${item.col};"></i></td><td><span class="code-snippet" data-copy='<i class="fab ${item.c}"></i>'>&lt;i class="fab ${item.c}"&gt;&lt;/i&gt;</span></td><td>${item.n}</td></tr>`;
+            });
+            document.getElementById('fab-table-body').innerHTML = fabHTML;
+
+
+            // ==========================================
+            // D. TÍNH NĂNG COPY & HIỂN THỊ TOAST
+            // ==========================================
+            const toast = document.getElementById('copy-toast');
+            let toastTimeout;
+            function showToast(message) {
+                toast.innerText = message;
+                toast.classList.add('show');
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 2000);
+            }
+
+            document.querySelectorAll('[data-copy]').forEach(el => {
+                el.addEventListener('click', function() {
+                    const textToCopy = this.getAttribute('data-copy');
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        showToast(`Đã copy: ${textToCopy}`);
+                    });
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
