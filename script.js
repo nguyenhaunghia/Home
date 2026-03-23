@@ -3,7 +3,6 @@ const SHEET_ID = '1HoArwLdyt3SOLSF19L6D5Bhl0GXEYKALb2kPijZLet4';
 const ADMIN_EMAIL = 'nguyenhaunghia@gmail.com'; 
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQYy-sHngMGL4OcNRVz_TM1bwH6vb6nDOMW4zQ2iw3aOqN7Y_KcDywaWTIWy0tvVnsnQ/exec';
 
-
 window.addEventListener('DOMContentLoaded', () => {
     const userData = checkAuthAndRenderUI();
     initCanvas();
@@ -13,7 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
     loadAffiliateAds();
     loadDriveImagesAuto(); 
 });
-
 
 function showToast(message, type = 'success') {
     let container = document.getElementById('toast-container');
@@ -184,8 +182,6 @@ function renderDynamicMenu(menuData) {
     menuContainer.innerHTML = ''; dropdownsWrapper.innerHTML = '';
     if (menuData.length === 0) { menuContainer.innerHTML = '<span style="color:#94a3b8; font-size:0.9rem;">Chưa có dữ liệu khóa học</span>'; return; }
     
-    // ĐÃ BỎ: Dòng code chèn nút "Trang chủ" tại đây theo đúng yêu cầu của bạn.
-
     function buildNestedHTML(item) {
         const hasChildren = item.children && item.children.length > 0;
         const iconHtml = `<i class="${item.icon}" style="color: ${item.color}; width: 18px; text-align: center; margin-right: 5px;"></i>`;
@@ -261,6 +257,7 @@ function renderDynamicMenu(menuData) {
 
     // ----------------------------------------------------
     // THUẬT TOÁN KIỂM TRA VÀ HIỂN THỊ MŨI TÊN BÁO HIỆU
+    // CẢI TIẾN: CLICK ĐỂ TRƯỢT MENU (SMOOTH SCROLL)
     // ----------------------------------------------------
     const leftIndicator = document.getElementById('scroll-indicator-left');
     const rightIndicator = document.getElementById('scroll-indicator-right');
@@ -272,33 +269,45 @@ function renderDynamicMenu(menuData) {
         const isScrollable = menuContainer.scrollWidth > menuContainer.clientWidth;
         
         if (isScrollable) {
-            // Nếu đã cuộn sang phải (thì bên trái đang bị che) -> Hiện mũi tên trái
             if (menuContainer.scrollLeft > 5) leftIndicator.classList.add('visible');
             else leftIndicator.classList.remove('visible');
             
-            // Nếu cuộn chưa chạm mép phải (thì bên phải đang bị che) -> Hiện mũi tên phải
-            // (-1 để bù trừ sai số pixel của một số trình duyệt)
             if (menuContainer.scrollLeft < menuContainer.scrollWidth - menuContainer.clientWidth - 1) {
                 rightIndicator.classList.add('visible');
             } else {
                 rightIndicator.classList.remove('visible');
             }
         } else {
-            // Nếu menu ngắn, hiển thị đủ -> Ẩn cả 2 mũi tên
             leftIndicator.classList.remove('visible');
             rightIndicator.classList.remove('visible');
         }
+    }
+
+    // Gắn sự kiện click cho mũi tên trái -> trượt về sát mép trái
+    if (leftIndicator) {
+        leftIndicator.style.pointerEvents = 'auto'; // Cho phép click xuyên qua
+        leftIndicator.style.cursor = 'pointer';
+        leftIndicator.addEventListener('click', () => {
+            menuContainer.scrollTo({ left: 0, behavior: 'smooth' });
+        });
+    }
+
+    // Gắn sự kiện click cho mũi tên phải -> trượt về sát mép phải
+    if (rightIndicator) {
+        rightIndicator.style.pointerEvents = 'auto'; // Cho phép click xuyên qua
+        rightIndicator.style.cursor = 'pointer';
+        rightIndicator.addEventListener('click', () => {
+            menuContainer.scrollTo({ left: menuContainer.scrollWidth, behavior: 'smooth' });
+        });
     }
 
     // Gắn sự kiện để máy tính liên tục kiểm tra khi người dùng cuộn hoặc co giãn trình duyệt
     menuContainer.addEventListener('scroll', checkMenuOverflow);
     window.addEventListener('resize', checkMenuOverflow);
     
-    // Chạy kiểm tra ngay sau khi menu vừa tải xong (Delay 100ms để đợi DOM vẽ xong)
+    // Chạy kiểm tra ngay sau khi menu vừa tải xong
     setTimeout(checkMenuOverflow, 100);
 }
-
-
 
 
 // --- ADS SYSTEM ---
@@ -349,14 +358,19 @@ function getDirectImageUrl(url) {
     return url; 
 }
 
-// Hàm render thẻ quảng cáo và cài đặt Auto-scroll
+// Hàm render thẻ quảng cáo và cài đặt Auto-scroll VÒNG LẶP VÔ TẬN
 function renderAffiliateAds(ads) {
     const container = document.getElementById('dynamic-aff-container');
     container.innerHTML = ''; 
-    ads.forEach(ad => {
+    
+    if (!ads || ads.length === 0) return;
+
+    // CẢI TIẾN: Nhân bản mảng ads để tạo cảm giác vòng lặp không bao giờ hết (1,2,3,1,2,3)
+    const clonedAds = [...ads, ...ads];
+
+    clonedAds.forEach(ad => {
         const iconClass = getAdIcon(ad.field);
         
-        // Render hình ảnh thay vì icon nếu có link Avatar
         let leftColHtml = (ad.avatar && ad.avatar.length > 5) 
             ? `<img src="${getDirectImageUrl(ad.avatar)}" class="aff-avatar" alt="Avatar" style="width:100%; height:100%; border-radius:6px; object-fit:cover;" onerror="this.outerHTML='<i class=\\'fas ${iconClass} aff-icon\\'></i>'">` 
             : `<i class="fas ${iconClass} aff-icon"></i>`;
@@ -372,15 +386,18 @@ function renderAffiliateAds(ads) {
     });
 
     // ----------------------------------------------------
-    // TÍNH NĂNG TỰ ĐỘNG CUỘN (AUTO SCROLL)
+    // TÍNH NĂNG TỰ ĐỘNG CUỘN (INFINITE AUTO SCROLL)
     // ----------------------------------------------------
-    let scrollAmount = 1; // Số pixel cuộn mỗi lần (Tốc độ)
-    let adScrollInterval = setInterval(autoScroll, 40); // 40ms cuộn 1 lần (để tạo độ mượt như video)
+    let scrollAmount = 1; // Số pixel cuộn mỗi lần
+    let adScrollInterval = setInterval(autoScroll, 40); 
 
     function autoScroll() {
-        // Nếu cuộn đến kịch lề phải (-1px sai số) thì quay lại đầu tiên
-        if(container.scrollLeft >= (container.scrollWidth - container.clientWidth - 1)) {
-            container.scrollLeft = 0;
+        // Lấy tọa độ một nửa chiều rộng (Điểm kết thúc của mảng gốc, bắt đầu của mảng clone)
+        const halfScrollWidth = container.scrollWidth / 2;
+
+        // Nếu cuộn vượt qua một nửa -> Giật tọa độ lùi lại đúng 1 nửa (về 0) mà không có animation
+        if (container.scrollLeft >= halfScrollWidth) {
+            container.scrollLeft = container.scrollLeft - halfScrollWidth;
         } else {
             container.scrollLeft += scrollAmount;
         }
@@ -402,12 +419,6 @@ function renderAffiliateAds(ads) {
         }
     }, { passive: false });
 }
-
-
-
-
-
-
 
 
 // --- COUNTER ---
