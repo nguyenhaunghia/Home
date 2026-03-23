@@ -23,6 +23,7 @@ body {
         linear-gradient(90deg, rgba(8, 145, 178, 0.015) 1px, transparent 1px);
     background-size: 100px 100px, 100px 100px, 200px 200px, 200px 200px;
     background-attachment: fixed;
+    padding-bottom: 90px !important; /* Tạo khoảng trống đáy cho thanh quảng cáo fixed */
 }
 #hero-canvas { display: none; }
 
@@ -33,12 +34,9 @@ body {
 .grid-panel { background: var(--bg-card); backdrop-filter: blur(12px); border: 1px solid var(--border-tech); border-radius: 6px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); padding: 25px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .grid-panel:hover { box-shadow: 0 10px 40px rgba(0, 195, 255, 0.1); }
 
-.panel-logo { grid-column: 1 / 2; grid-row: 1 / 3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; padding-top: 40px; }
-.panel-title { grid-column: 2 / 3; grid-row: 1 / 2; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd; min-height: 285px;}
-
-/* ĐÃ SỬA: Tăng z-index lên 9999 để đè lên thanh quảng cáo, thêm overflow: visible để không cắt menu dọc */
-.panel-menu { grid-column: 2 / 3; grid-row: 2 / 3; padding: 10px; display: flex; align-items: center; justify-content: center; z-index: 9999; max-height: 65px; position: relative; overflow: visible !important;}
-
+.panel-logo { grid-column: 1 / 2; grid-row: 1 / 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; padding-top: 5px; padding-bottom: 20px;}
+.panel-title { grid-column: 2 / 3; grid-row: 1 / 2; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); display: flex; align-items: center; justify-content: center; border: 1px solid #bae6fd; min-height: 250px;}
+.panel-menu { grid-column: 2 / 3; grid-row: 2 / 2; padding: 10px; display: flex; align-items: center; justify-content: center; z-index: 9999; max-height: 55px; position: relative; overflow: visible !important; }
 .panel-merged { grid-column: 1 / 3; grid-row: 3 / 4; display: flex; gap: 30px; align-items: stretch; padding: 30px; }
 .intro-half { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; }
 
@@ -46,7 +44,7 @@ body {
 .slideshow-half { 
     flex: 1; 
     position: relative; 
-    aspect-ratio: 3 / 2; /* Tỉ lệ vàng 3:2 */
+    aspect-ratio: 3 / 2; 
     height: auto; 
     border-radius: 12px; 
     overflow: hidden; 
@@ -54,7 +52,7 @@ body {
     border: 1px solid #e2e8f0; 
 }
 
-.panel-footer { grid-column: 1 / 3; grid-row: 4 / 5; text-align: center; background: rgba(248, 250, 252, 0.9); }
+.panel-footer { grid-column: 1 / 3; grid-row: 4 / 5; padding: 10px; text-align: center; background: rgba(248, 250, 252, 0.9); }
 .panel-ads { grid-column: 1 / 3; grid-row: 5 / 6; padding: 5px; display: flex; align-items: center; overflow: hidden; }
 
 /* TYPOGRAPHY LOGO & TIÊU ĐỀ */
@@ -82,15 +80,14 @@ body {
 .carousel-caption p { margin: 0; font-size: 0.9rem; }
 .footer-inner { max-width: 900px; margin: 0 auto; color: #475569; font-size: 0.95rem; line-height: 1.6; }
 .footer-inner p { margin-bottom: 10px; }
-.contact-line { font-weight: 600; color: #1e293b; margin-top: 15px; }
+.contact-line { font-weight: 600; color: #1e293b; margin-top: 10px; }
 .contact-line a { color: #2563eb; text-decoration: none; }
-.copyright-line { font-family: 'Roboto Mono', monospace; font-size: 0.85rem; margin-top: 15px; color: #94a3b8; }
+.copyright-line { font-family: 'Roboto Mono', monospace; font-size: 0.85rem; margin-top: px; color: #142b5c; }
 
 /* =========================================
    HỆ THỐNG MENU ĐA CẤP (NEON SCROLL)
    ========================================= */
 
-/* ĐÃ SỬA: Tăng padding trái/phải lên 45px để chữ không bị lớp sương mù che lấp khi cuộn */
 .main-nav { display: flex; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; align-items: center; gap: 5px; width: 100%; padding: 1px 45px 1px 45px !important; max-height: 50px; scroll-behavior: smooth; }
 .menu-loading-text { color: #64748b; font-size: 0.9rem; margin-left: 15px; }
 
@@ -110,16 +107,14 @@ body {
 .root-caret { font-size: 0.7rem; margin-left: 5px; color: #64748b; transition: transform 0.3s; }
 .caret-icon { float: right; margin-top: 4px; color: #94a3b8; transition: transform 0.3s; }
 
-/* Menu Cấp 1: Vẫn thả xuống bình thường */
 .root-dropdown { display: none; position: absolute; background: white; min-width: 240px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-radius: 8px; z-index: 9999; border: 1px solid #e2e8f0; padding: 5px 0; }
 .root-dropdown.show { display: block; animation: fadeInMenu 0.2s ease; }
 
 .nav-item-nested { position: relative; }
 
-/* Menu Cấp 2, 3, 4 xổ dọc (Accordion) */
 .nested-dropdown { 
     display: none; 
-    position: relative; /* Bí quyết là ở đây: thả tự do theo chiều dọc */
+    position: relative; 
     top: 0; left: 0; 
     width: 100%; 
     margin-left: 0; 
@@ -140,7 +135,6 @@ body {
 .dropdown-content a:last-child { border-bottom: none; }
 .dropdown-content a:hover:not(.nested-toggle) { background: #f0f9ff; color: #2563eb; padding-left: 26px; border-left: 3px solid #2563eb; }
 
-/* Thụt dòng để nhận diện cấp độ menu */
 .nested-dropdown a { padding-left: 35px !important; border-bottom: 1px dashed #e2e8f0; }
 .nested-dropdown .nested-dropdown a { padding-left: 50px !important; }
 .nested-dropdown .nested-dropdown .nested-dropdown a { padding-left: 65px !important; }
@@ -148,6 +142,7 @@ body {
 
 @keyframes fadeInMenu { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideDownTree { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
 
 /* =========================================
    THANH QUẢNG CÁO AFFILIATE 
@@ -252,6 +247,7 @@ body {
     .visit-badge { bottom: 25px; right: 15px; }
 }
 
+
 /* =========================================
    STYLE CHO NÚT ĐĂNG NHẬP Ở KHỐI PROFILE
    ========================================= */
@@ -329,21 +325,29 @@ body {
 }
 
 /* =========================================
-   THANH QUẢNG CÁO STICKY & TỈ LỆ 1:2
+   THANH QUẢNG CÁO FIXED DÍNH ĐÁY MÀN HÌNH & TỈ LỆ 1:2
    ========================================= */
 .sticky-ads-footer {
-    position: sticky;
+    position: fixed; /* BẢO ĐẢM KHÔNG BỊ TRƯỢT THEO TRANG */
     bottom: 0;
-    z-index: 1000; /* Luôn nổi lên trên cùng */
-    margin-top: 20px;
-    padding: 10px;
-    border-top: 2px solid var(--primary-neon); /* Vạch kẻ nổi bật */
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.05); /* Đổ bóng ngược lên trên */
+    left: 0;
+    width: 100%;
+    z-index: 9999; /* Luôn nổi lên trên cùng */
+    margin: 0;
+    padding: 5px 0;
+    border-radius: 0; 
+    border-top: 2px solid var(--primary-neon); 
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.1); 
+    background: var(--bg-card); 
+    backdrop-filter: blur(12px);
 }
 .ads-layout-1-2 {
     display: flex;
-    gap: 15px;
+    gap: 5px;
     width: 100%;
+    max-width: 1400px; 
+    margin: 0 auto;    
+    padding: 0 10px;
     align-items: center;
 }
 .ads-left-google {
@@ -360,6 +364,118 @@ body {
 
 /* Fix mobile: Chuyển thành xếp dọc nếu màn hình nhỏ */
 @media (max-width: 992px) {
+    body { padding-bottom: 150px !important; } 
     .ads-layout-1-2 { flex-direction: column; }
     .ads-left-google, .ads-right-affiliate { flex: none; width: 100%; border-right: none; border-bottom: 1px dashed #cbd5e1; padding-bottom: 10px; }
+    .ads-left-google { min-height: 40px; }
+}
+
+
+/* =========================================
+   BONG BÓNG CHAT LIÊN HỆ TẠI TRANG CHỦ
+   ========================================= */
+.chat-widget-container {
+    position: fixed;
+    bottom: 100px; /* Cách đáy 100px để không đè lên thanh quảng cáo */
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Nút bong bóng tròn */
+.chat-bubble {
+    width: 55px;
+    height: 55px;
+    background-color: var(--primary-neon);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(8, 145, 178, 0.4);
+    border: none;
+    transition: transform 0.3s ease, background-color 0.3s;
+    outline: none;
+}
+.chat-bubble:hover {
+    transform: scale(1.1);
+    background-color: #0e7490;
+}
+
+/* Khung menu Zalo/Email ẩn/hiện */
+.chat-menu {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-tech);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    min-width: 180px;
+    backdrop-filter: blur(10px);
+}
+.chat-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Các nút lựa chọn bên trong */
+.chat-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: var(--text-glow);
+    text-decoration: none !important;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.chat-option:hover {
+    background: rgba(8, 145, 178, 0.1);
+    color: var(--primary-neon);
+}
+
+/* Hộp chứa mã QR Zalo */
+.zalo-qr-box {
+    display: none;
+    text-align: center;
+    padding: 15px 10px 5px 10px;
+    border-top: 1px dashed rgba(0,0,0,0.1);
+    margin-top: 5px;
+}
+.zalo-qr-box.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+.zalo-qr-box img {
+    width: 130px;
+    height: 130px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 2px solid var(--primary-neon);
+    object-fit: cover;
+}
+.zalo-qr-box p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 600;
 }
