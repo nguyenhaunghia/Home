@@ -301,13 +301,13 @@ body {
 }
 /* Bóng mờ bên trái */
 .menu-scroll-indicator.left {
-    left: 10px;
+    left: 1px;
     background: linear-gradient(to right, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
     justify-content: flex-start;
 }
 /* Bóng mờ bên phải */
 .menu-scroll-indicator.right {
-    right: 10px;
+    right: 1px;
     background: linear-gradient(to left, rgba(255,255,255,1) 40%, rgba(255,255,255,0));
     justify-content: flex-end;
 }
@@ -506,14 +506,14 @@ body {
     text-transform: uppercase;
     border-bottom: 2px dashed #cbd5e1;
     padding-bottom: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 /* Cấu trúc từng hàng (Row) */
 .zz-row {
     display: flex;
     gap: 30px;
-    align-items: center; /* Căn giữa theo chiều dọc */
+    align-items: top; /* Căn giữa theo chiều dọc */
 }
 
 /* Chìa khóa tạo hiệu ứng Zig-zag: Đảo ngược vị trí trên Desktop */
@@ -539,6 +539,14 @@ body {
     line-height: 1.7;
     text-align: justify;
 }
+
+/* Thụt đầu dòng cho các đoạn văn trong khối giới thiệu Zig-zag và khối chi tiết */
+.zz-text-col p, .full-content-detail p {
+    text-indent: 30px; /* Độ thụt đầu dòng (bạn có thể chỉnh từ 20px - 40px tùy ý) */
+    margin-bottom: 15px; /* Khoảng cách giữa các đoạn văn để nhìn thoáng hơn */
+    text-align: justify; /* Canh đều hai bên để khối văn bản vuông vức, chuyên nghiệp */
+}
+
 .zz-text-col ul {
     padding-left: 20px;
 }
