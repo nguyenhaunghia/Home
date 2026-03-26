@@ -50,7 +50,7 @@
         .header-container { height: 9vh; display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .home-btn { width: 35px; height: 35px; border-radius: 10px; display: flex; justify-content: center; align-items: center; color: var(--primary-neon); background: #fff; border: 1px solid var(--border-tech); text-decoration: none; }
         .header-title { 
-            font-family: 'Montserrat', sans-serif; /* ĐỔI Ở ĐÂY */
+            font-family: 'Montserrat', sans-serif; 
             font-weight: 800; 
             font-size: 1.6rem; 
             text-transform: uppercase; 
@@ -63,7 +63,6 @@
             color: transparent; 
             white-space: nowrap; 
         }
-
 
         .visit-badge { display: flex; align-items: center; gap: 5px; background: #fff; border: 1px solid var(--border-tech); padding: 4px 10px; border-radius: 10px; font-family: 'Roboto Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--primary-neon); }
 
@@ -108,9 +107,9 @@
            FIX CSS: ĐỘ TIÊU ĐỀ BÀI HỌC (NẰM TRÊN KHUNG VẼ)
            ========================================= */
         .tool-title { 
-            font-family: 'Montserrat', sans-serif; /* ĐỔI Ở ĐÂY */
+            font-family: 'Montserrat', sans-serif; 
             font-weight: 800; 
-            font-size: 2rem; /* Giảm size một chút vì font Montserrat khá to */
+            font-size: 2rem; 
             text-transform: uppercase; 
             letter-spacing: 2px;
             margin-bottom: 5px;
@@ -281,8 +280,10 @@
         const imgRuler = new Image(); imgRuler.src = 'assets/Ruler.png'; 
         const imgPencil = new Image(); imgPencil.src = 'assets/Pencil.png';
         const imgEke = new Image(); imgEke.src = 'assets/Eke.png';
+        // ĐÃ SỬA: Thêm 'assets/' vào đường dẫn Thước đo góc
+        const imgProtractor = new Image(); imgProtractor.src = 'assets/Protractor.png'; 
 
-        const geoEngine = new GeometryEngine(ctxDraw, ctxTools, imgRuler, imgPencil, imgEke, 800, 600);
+        const geoEngine = new GeometryEngine(ctxDraw, ctxTools, imgRuler, imgPencil, imgEke, imgProtractor, 800, 600);
         
         const environment = {
             container: container,

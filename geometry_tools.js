@@ -19,24 +19,30 @@ const CONFIG = {
 
     // 4. THÔNG SỐ THỜI GIAN (Điều khiển nhịp độ bài học)
     DELAY_SHORT: 500,      
-    DELAY_NORMAL: 1000,    
-    DELAY_LONG: 1500,      
-    SPEED_MOVE: 1500,      
-    SPEED_DRAW: 3500       
+    DELAY_NORMAL: 2000,    
+    DELAY_LONG: 2500,      
+    SPEED_MOVE: 2500,      
+    SPEED_DRAW: 3500,
+    
+    // 5. SAI SỐ THƯỚC ĐO GÓC (Protractor) - ĐÃ SỬA: Đưa vào trong ngoặc của CONFIG
+    PROTRACTOR_OFFSET_X: 0, // Dịch trái/phải để tâm thước khớp đỉnh góc
+    PROTRACTOR_OFFSET_Y: 0  // Dịch lên/xuống mép dưới của thước
 };
+
 
 // ==========================================
 // THƯ VIỆN ĐỘNG CƠ HÌNH HỌC - SMART SCHOOL
 // ==========================================
 
 class GeometryEngine {
-    // NÂNG CẤP: Bổ sung imgEke vào hàm khởi tạo
-    constructor(ctxDraw, ctxTools, imgRuler, imgPencil, imgEke, canvasWidth = 800, canvasHeight = 600) {
+    // NÂNG CẤP: Bổ sung imgEke và imgProtractor vào hàm khởi tạo
+    constructor(ctxDraw, ctxTools, imgRuler, imgPencil, imgEke, imgProtractor, canvasWidth = 800, canvasHeight = 600) {
         this.ctxDraw = ctxDraw;     
         this.ctxTools = ctxTools;   
         this.imgRuler = imgRuler;   
         this.imgPencil = imgPencil; 
-        this.imgEke = imgEke;       // <--- TÀI SẢN MỚI
+        this.imgEke = imgEke;       
+        this.imgProtractor = imgProtractor; // <--- KHAI BÁO THÊM THƯỚC ĐO GÓC
         this.width = canvasWidth;
         this.height = canvasHeight;
     }
@@ -76,11 +82,6 @@ class GeometryEngine {
             canvas.addEventListener('click', handleClick);
         });
     }
-
-
-
-
-
 
     // ------------------------------------------
     // CÁC HÀM PHỤ TRỢ (VẼ TĨNH)
@@ -126,8 +127,6 @@ class GeometryEngine {
         }
     }
 
-
-
     drawRulerSprite(A, B, customPos = null) {
         let angle = Math.atan2(B.y - A.y, B.x - A.x);
         let distance = Math.hypot(B.x - A.x, B.y - A.y);
@@ -149,7 +148,6 @@ class GeometryEngine {
         this.ctxTools.restore();
     }
 
-    // THÊM MỚI: Vẽ Ê-ke tĩnh
     drawEkeSprite(H, angle, flipY = 1, customPos = null) {
         let posX = customPos ? customPos.x : H.x;
         let posY = customPos ? customPos.y : H.y;
@@ -168,6 +166,52 @@ class GeometryEngine {
 
         this.ctxTools.drawImage(this.imgEke, offsetX, offsetY, ekeWidth, ekeHeight); 
         this.ctxTools.restore();
+    }
+
+   // THAY THẾ 2 HÀM NÀY TRONG class GeometryEngine (geometry_tools.js)
+
+    drawProtractorSprite(centerPt, angle, customPos = null, proWidth = 280) {
+        let posX = customPos ? customPos.x : centerPt.x;
+        let posY = customPos ? customPos.y : centerPt.y;
+
+        this.ctxTools.save();
+        this.ctxTools.translate(posX, posY);
+        this.ctxTools.rotate(angle);
+
+        let proHeight = proWidth * (this.imgProtractor.height / this.imgProtractor.width);
+
+        let offsetX = -proWidth / 2 + CONFIG.PROTRACTOR_OFFSET_X;
+        let offsetY = -proHeight + CONFIG.PROTRACTOR_OFFSET_Y;
+
+        this.ctxTools.drawImage(this.imgProtractor, offsetX, offsetY, proWidth, proHeight); 
+        this.ctxTools.restore();
+    }
+
+    async animateProtractorMove(centerPt, angle, duration, proWidth = 280) {
+        const startTime = performance.now();
+        const startX = -100; 
+        const startY = this.height + 100;
+
+        return new Promise(resolve => {
+            const step = (now) => {
+                let progress = (now - startTime) / duration;
+                if(progress > 1) progress = 1;
+
+                let easeProgress = 1 - Math.pow(1 - progress, 3);
+                let currentX = startX + (centerPt.x - startX) * easeProgress;
+                let currentY = startY + (centerPt.y - startY) * easeProgress;
+
+                this.clearTools();
+                this.drawProtractorSprite(centerPt, angle, {x: currentX, y: currentY}, proWidth);
+
+                if(progress < 1) {
+                    requestAnimationFrame(step); 
+                } else {
+                    resolve(); 
+                }
+            }
+            requestAnimationFrame(step);
+        });
     }
 
     drawPencilSprite(x, y) {
@@ -241,7 +285,6 @@ class GeometryEngine {
         });
     }
 
-    // THÊM MỚI: Di chuyển Ê-ke bay vào
     async animateEkeMove(H, angle, flipY, duration) {
         const startTime = performance.now();
         const startX = -100; 
@@ -268,6 +311,7 @@ class GeometryEngine {
             requestAnimationFrame(step);
         });
     }
+
 
     async animateLineDraw(A, B, duration) {
         const startTime = performance.now();
@@ -307,7 +351,6 @@ class GeometryEngine {
         });
     }
 
-    // THÊM MỚI: Đặt Ê-ke đứng yên, kéo bút kẻ nét đứt
     async animateLineDrawEke(startPt, endPt, H, angle, flipY, duration) {
         const startTime = performance.now();
         return new Promise(resolve => {
@@ -402,8 +445,7 @@ class GeometryEngine {
     // HÀM CHÍNH 1 & 2: VẼ ĐOẠN, ĐƯỜNG THẲNG & TRUNG ĐIỂM
     // ==========================================
     
-
-async drawSegment(pt1, pt2, label1 = "", label2 = "", isLine = false) {
+    async drawSegment(pt1, pt2, label1 = "", label2 = "", isLine = false) {
         let A, B, labelA, labelB;
         if (pt1.x < pt2.x) {
             A = pt1; B = pt2; labelA = label1; labelB = label2;
@@ -435,7 +477,6 @@ async drawSegment(pt1, pt2, label1 = "", label2 = "", isLine = false) {
 
         // ==========================================
         // CẬP NHẬT LUẬT SƯ PHẠM: TAY TRÁI THƯỚC, TAY PHẢI BÚT
-        // Ưu tiên kẻ từ TRÊN xuống DƯỚI để thước luôn nằm bên Trái/Dưới
         // ==========================================
         let drawA, drawB;
         if (drawStart.y < drawEnd.y) {
@@ -447,7 +488,6 @@ async drawSegment(pt1, pt2, label1 = "", label2 = "", isLine = false) {
             drawB = (drawStart.x < drawEnd.x) ? drawEnd : drawStart;
         }
 
-        // Dùng drawA và drawB cho các hiệu ứng bay vào và vẽ
         await this.animateRulerMove(drawA, drawB, CONFIG.SPEED_MOVE);
         await this.sleep(CONFIG.DELAY_NORMAL); 
         this.drawRulerSprite(drawA, drawB); 
@@ -461,11 +501,9 @@ async drawSegment(pt1, pt2, label1 = "", label2 = "", isLine = false) {
         this.clearTools(); 
         await this.sleep(CONFIG.DELAY_SHORT);
 
-        // Đóng mộc chữ lên trên cùng với góc né đã tính
         this.drawPoint(A, labelA, angleAwayB, "point");
         this.drawPoint(B, labelB, angleAwayA, "point");
     }
-
 
     async drawMidpoint(pt1, pt2, label = "M", markType = null) {
         let A, B;
@@ -500,24 +538,13 @@ async drawSegment(pt1, pt2, label1 = "", label2 = "", isLine = false) {
     }
 
 
-
     // ==========================================
-    // HÀM CHÍNH 4: VẼ TIA (Ray)
+    // HÀM CHÍNH 4: VẼ TIA (LUÔN VẼ TỪ GỐC ĐI RA)
     // ==========================================
-    
-// ==========================================
-    // HÀM CHÍNH 4: VẼ TIA (Đã nâng cấp tự nhận diện Hoa/Thường)
-    // Tham số bổ sung: dirStyle (Nếu null, hệ thống sẽ tự quét chữ cái để quyết định)
-    // ==========================================
-async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirStyle = null) {
-        // TỰ ĐỘNG NHẬN DIỆN SƯ PHẠM:
-        // Nếu không truyền dirStyle, hệ thống quét chữ cái: Chữ HOA -> Điểm (point), Chữ thường -> Hướng (direction)
+    async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirStyle = null) {
         if (dirStyle === null) {
-            if (labelDirection !== "" && labelDirection === labelDirection.toUpperCase()) {
-                dirStyle = "point";
-            } else {
-                dirStyle = "direction";
-            }
+            if (labelDirection !== "" && labelDirection === labelDirection.toUpperCase()) dirStyle = "point";
+            else dirStyle = "direction";
         }
 
         let angleLine = Math.atan2(directionPt.y - originPt.y, directionPt.x - originPt.x);
@@ -529,7 +556,10 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
 
         let dx = directionPt.x - originPt.x, dy = directionPt.y - originPt.y;
         let length = Math.hypot(dx, dy);
-        let drawStart = originPt, drawEnd = directionPt;
+        
+        // LUẬT SƯ PHẠM ĐÃ SỬA: Luôn lấy điểm xuất phát là Gốc (originPt)
+        let drawStart = originPt;
+        let drawEnd = directionPt;
 
         if (length > 0) {
             let extendLen = 60; 
@@ -537,29 +567,16 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
             drawEnd = { x: directionPt.x + ux * extendLen, y: directionPt.y + uy * extendLen };
         }
 
-        // ==========================================
-        // CẬP NHẬT LUẬT SƯ PHẠM: TAY TRÁI THƯỚC, TAY PHẢI BÚT
-        // Ưu tiên kẻ từ TRÊN xuống DƯỚI. Đảm bảo thước luôn nằm Trái/Dưới.
-        // ==========================================
-        let A, B;
-        if (drawStart.y < drawEnd.y) {
-            A = drawStart; B = drawEnd; 
-        } else if (drawStart.y > drawEnd.y) {
-            A = drawEnd; B = drawStart; 
-        } else {
-            A = (drawStart.x < drawEnd.x) ? drawStart : drawEnd;
-            B = (drawStart.x < drawEnd.x) ? drawEnd : drawStart;
-        }
-
-        await this.animateRulerMove(A, B, CONFIG.SPEED_MOVE);
+        // Bắt đầu mô phỏng: Kéo từ trong Gốc ra ngoài ngọn
+        await this.animateRulerMove(drawStart, drawEnd, CONFIG.SPEED_MOVE);
         await this.sleep(CONFIG.DELAY_NORMAL); 
-        this.drawRulerSprite(A, B); 
-        this.drawPencilSprite(A.x, A.y); 
+        this.drawRulerSprite(drawStart, drawEnd); 
+        this.drawPencilSprite(drawStart.x, drawStart.y); 
         await this.sleep(CONFIG.DELAY_NORMAL); 
-        await this.animateLineDraw(A, B, CONFIG.SPEED_DRAW);
+        await this.animateLineDraw(drawStart, drawEnd, CONFIG.SPEED_DRAW);
         await this.sleep(CONFIG.DELAY_NORMAL); 
         this.clearTools(); 
-        this.drawRulerSprite(A, B); 
+        this.drawRulerSprite(drawStart, drawEnd); 
         await this.sleep(CONFIG.DELAY_NORMAL); 
         this.clearTools(); 
         await this.sleep(CONFIG.DELAY_SHORT);
@@ -568,17 +585,13 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         this.drawPoint(directionPt, labelDirection, angleLabelDir, dirStyle);
     }
 
-// ==========================================
+    // ==========================================
     // HÀM CHÍNH 5: VẼ GÓC (Angle)
     // ==========================================
     async drawAngle(originPt, pt1, pt2, labelOrigin = "O", label1 = "x", label2 = "y") {
-        // Lần 1: Truyền rỗng ("") cho điểm gốc để drawRay không tự in O
         await this.drawRay(originPt, pt1, "", label1);
-        
-        // Lần 2: Truyền rỗng ("") cho điểm gốc
         await this.drawRay(originPt, pt2, "", label2);
 
-        // TOÁN HỌC ĐÓN ĐẦU: Đẩy nhãn O ra xa khỏi góc nhọn
         let angleLine1 = Math.atan2(pt1.y - originPt.y, pt1.x - originPt.x);
         let angleLine2 = Math.atan2(pt2.y - originPt.y, pt2.x - originPt.x);
         
@@ -588,10 +601,8 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         }
         let angleAwayOrigin = midAngle + Math.PI;
         
-        // Đóng mộc chữ O một lần duy nhất ở vị trí né đẹp nhất
         this.drawPoint(originPt, labelOrigin, angleAwayOrigin, "point");
 
-        // Vẽ vòng cung đỏ
         let startAngle = angleLine1;
         let endAngle = angleLine2;
         let diff = endAngle - startAngle;
@@ -611,18 +622,12 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         this.ctxDraw.stroke();
     }
 
-
     // ==========================================
-    // HÀM CHÍNH 3: VẼ ĐƯỜNG / ĐOẠN THẲNG VUÔNG GÓC (Kịch bản chuẩn SGK)
-    // Tham số: (A, B) tạo đường gốc, C là điểm đi qua.
-    // Các tùy chọn: isLine (Đường thẳng/Đoạn thẳng), labelLine (Tên đường), labelIntersection (Tên điểm H), showRightAngle (Ký hiệu vuông)
-    // Đã Fix lỗi H nằm ngoài AB
-    // Bổ sung tham số labelC ở cuối cùng để đóng mộc bảo vệ điểm C
+    // HÀM CHÍNH 3: VẼ ĐƯỜNG / ĐOẠN THẲNG VUÔNG GÓC
     // ==========================================
     async drawPerpendicular(A, B, C, isLine = false, labelLine = "", labelIntersection = "H", showRightAngle = true, labelC = "C") {
         let H = this.getProjectionPoint(A, B, C);
         
-        // 1. Kẻ nét đứt nếu H nằm ngoài AB
         let dx = B.x - A.x, dy = B.y - A.y;
         let param = ((H.x - A.x) * dx + (H.y - A.y) * dy) / (dx * dx + dy * dy);
         if (param < 0 || param > 1) {
@@ -642,7 +647,6 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
             this.ctxDraw.restore();
         }
 
-        // 2. Tính toán góc lật Ê-ke và góc né của H, C
         let angleAB = Math.atan2(B.y - A.y, B.x - A.x);
         let lenHA = Math.hypot(A.x - H.x, A.y - H.y);
         let lenHB = Math.hypot(B.x - H.x, B.y - H.y);
@@ -652,11 +656,9 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         let localCy = -cx * Math.sin(angleAB) + cy * Math.cos(angleAB);
         let flipY = localCy > 0 ? -1 : 1; 
 
-        // TOÁN HỌC ĐÓN ĐẦU: H dạt ra xa C, C dạt ra xa H
         let angleH_dodge = Math.atan2(H.y - C.y, H.x - C.x);
         let angleC_dodge = Math.atan2(C.y - H.y, C.x - H.x);
 
-        // 3. Ê-ke hoạt động
         await this.animateEkeMove(H, angleAB, flipY, CONFIG.SPEED_MOVE);
         await this.sleep(CONFIG.DELAY_NORMAL); 
         this.drawEkeSprite(H, angleAB, flipY);
@@ -670,7 +672,6 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         this.clearTools(); 
         await this.sleep(CONFIG.DELAY_NORMAL); 
 
-        // 4. Tính toán độ dài đường kẻ
         let drawStart = C, drawEnd = H;
         if (isLine) {
             let lineDx = H.x - C.x, lineDy = H.y - C.y;
@@ -683,10 +684,6 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
             }
         }
 
-        // ==========================================
-        // CẬP NHẬT LUẬT SƯ PHẠM: TAY TRÁI THƯỚC, TAY PHẢI BÚT
-        // Ưu tiên kẻ từ TRÊN xuống DƯỚI. Đảm bảo thước luôn nằm Trái/Dưới.
-        // ==========================================
         let drawA, drawB;
         if (drawStart.y < drawEnd.y) {
             drawA = drawStart; drawB = drawEnd; 
@@ -697,7 +694,6 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
             drawB = (drawStart.x < drawEnd.x) ? drawEnd : drawStart;
         }
 
-        // 5. Thước thẳng hoạt động
         await this.animateRulerMove(drawA, drawB, CONFIG.SPEED_MOVE);
         await this.sleep(CONFIG.DELAY_NORMAL); 
         this.drawRulerSprite(drawA, drawB); 
@@ -708,7 +704,6 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         this.clearTools(); 
         await this.sleep(CONFIG.DELAY_SHORT); 
 
-        // 6. Đóng mộc ký hiệu và nhãn đè lên đường kẻ
         if (showRightAngle) {
             this.drawRightAngleMark(this.ctxDraw, A, B, C, H);
         }
@@ -722,9 +717,108 @@ async drawRay(originPt, directionPt, labelOrigin = "", labelDirection = "", dirS
         if (labelIntersection !== "") {
             this.drawPoint(H, labelIntersection, angleH_dodge, "point");
         }
-        // SỬA LỖI BÓNG MA: Dùng 'true' để đóng mộc trùng khít 100% với vị trí lúc click chuột
         if (labelC !== "") {
             this.drawPoint(C, labelC, true, "point");
         }
     }
+} // <--- Đóng ngoặc của class GeometryEngine tại đây
+
+
+/**
+ * Hàm vẽ góc động tuân thủ chuẩn Sư phạm Hình học (Nằm độc lập ngoài class)
+ * @param {CanvasRenderingContext2D} ctx - Context 2D của Canvas
+ * @param {Object} vertex - Tọa độ đỉnh góc {x, y}
+ * @param {Object|null} ray1Point - Tọa độ 1 điểm để định hướng tia 1 {x, y}
+ * @param {number} measure - Số đo góc (đơn vị: độ)
+ * @param {Object} labels - Nhãn tên { vertex: 'O', ray1: 'x', ray2: 'y' }
+ * @param {Object} options - Tùy chỉnh độ dài, màu sắc...
+ */
+
+/**
+ * Hàm vẽ góc động tuân thủ chuẩn Sư phạm Hình học (Nằm độc lập ngoài class)
+ */
+function drawPedagogicalAngle(ctx, vertex, ray1Point, measure, labels = {}, options = {}) {
+    const {
+        rayLength = 150,       
+        arcRadius = 35,        
+        color = '#0891b2',     
+        lineWidth = 2,
+        showMeasure = true,
+        drawLines = true       // <--- THÊM CÔNG TẮC: Mặc định là có vẽ tia
+    } = options;
+
+    let startRad;
+    if (ray1Point && typeof ray1Point.x === 'number' && typeof ray1Point.y === 'number') {
+        startRad = Math.atan2(ray1Point.y - vertex.y, ray1Point.x - vertex.x);
+    } else {
+        startRad = Math.random() * Math.PI * 2;
+    }
+
+    const endRad = startRad - (measure * Math.PI / 180);
+
+    const end1 = { x: vertex.x + rayLength * Math.cos(startRad), y: vertex.y + rayLength * Math.sin(startRad) };
+    const end2 = { x: vertex.x + rayLength * Math.cos(endRad), y: vertex.y + rayLength * Math.sin(endRad) };
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = lineWidth;
+    ctx.font = 'bold 16px "Roboto Mono", monospace';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+
+    ctx.beginPath();
+    ctx.arc(vertex.x, vertex.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // DÙNG CÔNG TẮC: Chỉ vẽ đè tia nếu được cho phép
+    if (drawLines) {
+        ctx.beginPath();
+        ctx.moveTo(vertex.x, vertex.y);
+        ctx.lineTo(end1.x, end1.y);
+        ctx.moveTo(vertex.x, vertex.y);
+        ctx.lineTo(end2.x, end2.y);
+        ctx.stroke();
+    }
+
+    ctx.beginPath();
+    if (measure === 90) {
+        const sqSize = arcRadius * 0.6; 
+        const p1 = { x: vertex.x + sqSize * Math.cos(startRad), y: vertex.y + sqSize * Math.sin(startRad) };
+        const p2 = { 
+            x: vertex.x + Math.sqrt(2) * sqSize * Math.cos(startRad - Math.PI/4), 
+            y: vertex.y + Math.sqrt(2) * sqSize * Math.sin(startRad - Math.PI/4) 
+        };
+        const p3 = { x: vertex.x + sqSize * Math.cos(endRad), y: vertex.y + sqSize * Math.sin(endRad) };
+        
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.stroke();
+    } else {
+        ctx.arc(vertex.x, vertex.y, arcRadius, startRad, endRad, true);
+        ctx.stroke();
+    }
+
+    const bisectRad = (startRad + endRad) / 2; 
+
+    if (labels.vertex) {
+        const oppRad = bisectRad + Math.PI;
+        ctx.fillText(labels.vertex, vertex.x + 20 * Math.cos(oppRad), vertex.y + 20 * Math.sin(oppRad));
+    }
+
+    if (labels.ray1) {
+        ctx.fillText(labels.ray1, end1.x + 15 * Math.cos(startRad), end1.y + 15 * Math.sin(startRad));
+    }
+
+    if (labels.ray2) {
+        ctx.fillText(labels.ray2, end2.x + 15 * Math.cos(endRad), end2.y + 15 * Math.sin(endRad));
+    }
+
+    if (showMeasure && measure !== 90) {
+        const textDist = arcRadius + 20; 
+        ctx.fillText(`${measure}°`, vertex.x + textDist * Math.cos(bisectRad), vertex.y + textDist * Math.sin(bisectRad));
+    }
+
+    ctx.restore();
 }
