@@ -10,16 +10,16 @@ window.startLesson = async function(env) {
     
     while (true) {
         // 1. CHỌN ĐỈNH: Truyền chữ O để hiện ngay lập tức
-        textInst.innerText = "Hãy nhấp chuột chọn Đỉnh của góc (O)";
+        textInst.innerText = "Hãy nhấp chuột chọn đỉnh O của góc";
         textInst.style.color = "#d93025";
         let pointOrigin = await geoEngine.getClickPoint('O', false, "point"); 
 
         // 2. CHỌN TIA 1: Truyền chữ x để hiện ngay lập tức
-        textInst.innerText = "Hãy nhấp chuột chọn Hướng tia thứ nhất (x)";
+        textInst.innerText = "Hãy nhấp chuột chọn hướng tia Ox";
         let pt1 = await geoEngine.getClickPoint('x', false, "direction");
 
         // 3. CHỌN TIA 2: Truyền chữ y để hiện ngay lập tức
-        textInst.innerText = "Hãy nhấp chuột chọn Hướng tia thứ hai (y)";
+        textInst.innerText = "Hãy nhấp chuột chọn hướng của tia Oy";
         let pt2 = await geoEngine.getClickPoint('y', false, "direction");
 
         // 4. THỰC THI VẼ GÓC

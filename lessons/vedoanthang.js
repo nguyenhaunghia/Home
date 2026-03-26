@@ -7,7 +7,7 @@ window.startLesson = async function(env) {
     const { ctxDraw, textInst, geoEngine } = env;
 
     // 2. Cài đặt tiêu đề bài học lên Header (thay thế chữ MATH) và ẩn tiêu đề phụ
-    document.querySelector('.header-title').innerText = "VẼ TRUNG ĐIỂM ĐOẠN THẲNG";
+    document.querySelector('.header-title').innerText = "VẼ ĐOẠN THẲNG";
     document.querySelector('.tool-title').style.display = "none";
     
     // Vòng lặp vĩnh cửu giúp bài học tự động lặp lại mà không cần tải lại trang
