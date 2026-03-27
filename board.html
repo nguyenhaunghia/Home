@@ -234,6 +234,16 @@
         const btnContainer = document.getElementById('dynamic-buttons');
         const headerTitle = document.querySelector('.header-title');
 
+        // BẮT ĐẦU THÊM MỚI: Hàm xử lý link Google Docs
+        function cleanGoogleDocUrl(url) {
+            if (!url) return "";
+            if (url.includes("docs.google.com/document/d/")) {
+                return url.replace(/\/edit.*$/, "/preview");
+            }
+            return url;
+        }
+        // KẾT THÚC THÊM MỚI
+
         function loadLessonScript(lessonName) {
             const script = document.createElement('script');
             script.src = `lessons/${lessonName}.js`;
@@ -254,14 +264,16 @@
         else if (!bai && docUrl) {
             docView.style.display = 'block';
             boardWrapper.style.display = 'none';
-            iframe.src = docUrl;
+            // CẬP NHẬT GỌI HÀM
+            iframe.src = cleanGoogleDocUrl(docUrl);
             headerTitle.innerText = "LÝ THUYẾT BÀI HỌC";
             document.querySelector('.tool-title').style.display = 'none'; 
         } 
         else if (bai && docUrl) {
             docView.style.display = 'block';
             boardWrapper.style.display = 'none'; 
-            iframe.src = docUrl;
+            // CẬP NHẬT GỌI HÀM
+            iframe.src = cleanGoogleDocUrl(docUrl);
             headerTitle.innerText = "LÝ THUYẾT & THỰC HÀNH";
             btnContainer.innerHTML = '<button onclick="openBoardModal()" class="action-btn primary"><i class="fas fa-pencil-ruler"></i> Thực Hành Vẽ</button>';
             loadLessonScript(bai);
@@ -280,7 +292,6 @@
         const imgRuler = new Image(); imgRuler.src = 'assets/Ruler.png'; 
         const imgPencil = new Image(); imgPencil.src = 'assets/Pencil.png';
         const imgEke = new Image(); imgEke.src = 'assets/Eke.png';
-        // ĐÃ SỬA: Thêm 'assets/' vào đường dẫn Thước đo góc
         const imgProtractor = new Image(); imgProtractor.src = 'assets/Protractor.png'; 
 
         const geoEngine = new GeometryEngine(ctxDraw, ctxTools, imgRuler, imgPencil, imgEke, imgProtractor, 800, 600);
