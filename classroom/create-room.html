@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý phòng học - Smart School</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col min-h-screen bg-slate-50 m-0 p-0">
+
+    <div class="w-full flex-1 flex flex-col overflow-hidden">
+        
+        <div id="smart-header"></div>
+
+        <main class="flex-1 w-full flex flex-col p-0 m-0"> <div class="table-container custom-scrollbar flex-1 relative bg-white min-h-[500px] !border-0 !rounded-none w-full max-w-none">
+                <table class="w-full min-w-max border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[130px]">Meet ID</div></th>
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[180px]">Trường</div></th>
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[100px]">Lớp</div></th>
+                            
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[350px]">Danh sách học sinh</div></th>
+                            
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[120px]">Bắt đầu</div></th>
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[120px]">Kết thúc</div></th>
+                            
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[200px]">Ghi chú</div></th>
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[200px]">Lưu ý</div></th>
+                            
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[180px]">Người tạo phòng</div></th>
+                            <th class="p-0 border-b border-r border-blue-100/50 whitespace-nowrap"><div class="th-resize w-[150px]">Khởi tạo lúc</div></th>
+                            
+                            <th class="p-4 text-center border-b border-blue-100 whitespace-nowrap sticky right-0 bg-blue-50/90 backdrop-blur-sm shadow-[-5px_0_10px_rgba(0,0,0,0.02)]">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roomList" class="text-sm">
+                        </tbody>
+                </table>
+            </div>
+            
+        </main>
+
+        <div id="smart-footer"></div>
+
+    </div>
+
+    <div id="createRoomModal" class="modal-overlay">
+        <div class="modal-content p-6 md:p-8">
+            <button id="btnCloseModal" class="modal-close-btn">
+                <i class="fas fa-times fa-lg"></i>
+            </button>
+            <div class="border-b border-blue-100 pb-4 mb-6">
+                <h2 class="text-center text-blue-900 text-2xl font-black uppercase"><i class="fas fa-laptop-house text-cyan-500 mr-2"></i> THIẾT LẬP PHÒNG HỌC</h2>
+            </div>
+            <form id="createRoomForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-4 bg-slate-50/50 p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-blue-800 border-b border-blue-100 pb-2"><i class="fas fa-layer-group mr-1 text-cyan-600"></i> 1. Phân bổ lớp học</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Lớp học *</label>
+                        <select id="classId" required class="form-input-custom"><option value="">Đang tải danh sách lớp...</option></select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Tên bài học *</label>
+                        <input type="text" id="lessonName" required class="form-input-custom" placeholder="Ví dụ: Đại số chương 1...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Lưu ý nội bộ</label>
+                        <input type="text" id="note" class="form-input-custom" placeholder="Chỉ hiển thị cho người tạo...">
+                    </div>
+                </div>
+
+                <div class="space-y-4 bg-slate-50/50 p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="font-bold text-blue-800 border-b border-blue-100 pb-2"><i class="far fa-clock mr-1 text-cyan-600"></i> 2. Thời gian</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Bắt đầu *</label>
+                        <input type="datetime-local" id="startTime" required class="form-input-custom">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Kết thúc *</label>
+                        <input type="datetime-local" id="endTime" required class="form-input-custom">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 mb-1 uppercase tracking-wider">Ghi chú cho HS</label>
+                        <textarea id="description" rows="1" class="form-input-custom" placeholder="Nhắc học sinh chuẩn bị bài..."></textarea>
+                    </div>
+                </div>
+
+                <div class="space-y-4 bg-slate-50/50 p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col h-full">
+                    <div class="flex justify-between items-center border-b border-blue-100 pb-2">
+                        <h3 class="font-bold text-blue-800"><i class="fas fa-users mr-1 text-cyan-600"></i> 3. Học sinh</h3>
+                        <label class="flex items-center space-x-2 text-xs font-bold text-blue-600 cursor-pointer hover:text-blue-800 transition-colors">
+                            <input type="checkbox" id="selectAllStudents" class="rounded text-blue-600 focus:ring-blue-500">
+                            <span>Chọn tất cả</span>
+                        </label>
+                    </div>
+                    <div id="studentChecklist" class="flex-1 overflow-y-auto max-h-[180px] custom-scrollbar bg-white p-3 rounded-lg border border-slate-200">
+                        <div class="flex flex-col items-center justify-center h-full text-gray-400"><i class="fas fa-user-friends text-2xl mb-2"></i><p class="text-xs text-center">Vui lòng chọn Lớp học (Cột 1).</p></div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-200 mt-auto">
+                        <label class="flex items-start space-x-3 cursor-pointer group p-3 rounded-lg hover:bg-cyan-50 transition-colors border border-dashed border-cyan-200 bg-white">
+                            <input type="checkbox" id="sendEmailCheckbox" class="toggle-checkbox mt-1 flex-shrink-0">
+                            <span class="text-xs text-gray-600"><b class="block text-cyan-700 text-sm mb-1"><i class="fas fa-envelope-open-text mr-1"></i> Tự động gửi Email</b></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-3 mt-4">
+                    <button type="submit" id="submitBtn" class="w-full btn-primary-neon py-4 text-lg"><i class="fas fa-rocket mr-2"></i> TIẾN HÀNH KHỞI TẠO</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentUser = null;
+
+        // Hàm này được script.js gọi ngầm khi bấm nút "Khởi tạo" trên Menu
+        function openCreateRoomModal() {
+            const modal = document.getElementById('createRoomModal');
+            modal.classList.add('show');
+            
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('startTime').value = now.toISOString().slice(0, 16);
+            const end = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+            document.getElementById('endTime').value = end.toISOString().slice(0, 16);
+
+            const classSelect = document.getElementById('classId');
+            classSelect.innerHTML = '<option value="">Đang tải lớp...</option>';
+            fetch(`/api/options/classes/${currentUser.SchoolID}`).then(r => r.json()).then(classes => {
+                classSelect.innerHTML = '<option value="">-- Chọn Lớp --</option>';
+                classes.forEach(c => classSelect.innerHTML += `<option value="${c.ClassID}">${c.ClassName}</option>`);
+                if(currentUser && currentUser.ClassID) {
+                    classSelect.value = currentUser.ClassID;
+                    classSelect.dispatchEvent(new Event('change')); 
+                }
+            });
+        }
+
+        document.getElementById('btnCloseModal').addEventListener('click', () => document.getElementById('createRoomModal').classList.remove('show'));
+
+    
+        // Load Dữ liệu vào Bảng
+// Load Dữ liệu vào Bảng
+// Load Dữ liệu vào Bảng
+        async function loadRoomTable() {
+            const data = await initSmartSchool('create-room'); // Chạy hàm chung trước
+            if(!data || !data.profile) return;
+            currentUser = data.profile;
+
+            // 1. TẠO TỪ ĐIỂN ÁNH XẠ CLASS ID -> CLASS NAME
+            let classMap = {};
+            try {
+                const classRes = await fetch(`/api/options/classes/${currentUser.SchoolID}`);
+                const classes = await classRes.json();
+                classes.forEach(c => classMap[c.ClassID] = c.ClassName);
+            } catch(e) { console.log("Lỗi tải danh mục Lớp để ánh xạ"); }
+
+            const tbody = document.getElementById('roomList');
+            if (!data.rooms || data.rooms.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" class="p-12 text-center text-gray-400"><i class="fas fa-folder-open text-4xl mb-3 block"></i> Chưa có phòng học nào.</td></tr>';
+                return;
+            }
+
+            // 2. [CẬP NHẬT] TẠO TỪ ĐIỂN ÁNH XẠ USER ID -> FULL NAME
+            let studentMap = {};
+            try {
+                // Lọc ra các ClassID không trùng lặp từ danh sách phòng hiện tại
+                const uniqueClassIds = [...new Set(data.rooms.map(r => r.ClassID).filter(Boolean))];
+                
+                // Lấy danh sách học sinh của tất cả các lớp này cùng lúc để tăng tốc độ
+                const studentPromises = uniqueClassIds.map(cId => 
+                    fetch(`/api/options/students/${currentUser.SchoolID}/${cId}`)
+                    .then(r => r.json())
+                    .catch(() => [])
+                );
+                
+                const studentsArrays = await Promise.all(studentPromises);
+                
+                // Đổ tất cả học sinh vào từ điển studentMap
+                studentsArrays.flat().forEach(st => {
+                    if (st && st.UserID) {
+                        studentMap[st.UserID] = st.FullName;
+                    }
+                });
+            } catch(e) { console.log("Lỗi tải danh mục Học sinh để ánh xạ"); }
+
+            // 3. RENDER BẢNG DỮ LIỆU
+            tbody.innerHTML = data.rooms.map(room => {
+                // Dịch Tên Lớp
+                const displayClassName = classMap[room.ClassID] || room.ClassName || room.ClassID || '';
+
+                // [CẬP NHẬT] Dịch Tên Học Sinh
+                let displayStudentList = '';
+                if (room.StudentIDList) {
+                    displayStudentList = room.StudentIDList.split(',') // Tách chuỗi bằng dấu phẩy
+                        .map(id => id.trim()) // Xóa khoảng trắng thừa
+                        .map(id => studentMap[id] ? studentMap[id] : id) // Nếu có tên thì phiên dịch, không thì giữ nguyên ID
+                        .join(', '); // Ghép lại bằng dấu phẩy và khoảng trắng
+                }
+
+                return `
+                <tr>
+                    <td class="font-bold text-blue-600"><a href="https://meet.google.com/${room.RomID}" target="_blank" class="hover:underline"><i class="fas fa-video mr-1 text-red-500"></i>${room.RomID || ''}</a></td>
+                    <td class="font-semibold text-slate-700">${room.SchoolName || room.SchoolID || ''}</td>
+                    <td class="font-bold text-cyan-700" title="Mã lớp: ${room.ClassID || ''}">${displayClassName}</td>
+                    
+                    <td class="truncate max-w-[200px]" title="${displayStudentList}">${displayStudentList}</td>
+                    
+                    <td><span class="bg-green-50 text-green-700 px-2 py-1 rounded text-xs font-bold">${room.Begin || ''}</span></td>
+                    <td><span class="bg-red-50 text-red-700 px-2 py-1 rounded text-xs font-bold">${room.End || ''}</span></td>
+                    <td class="truncate max-w-[150px]" title="${room.Comment || ''}">${room.Comment || ''}</td>
+                    <td class="truncate max-w-[150px]" title="${room.Note || ''}">${room.Note || ''}</td>
+                    <td class="text-xs font-bold text-slate-500"><i class="fas fa-user-edit mr-1"></i>${room.AccountUpdate || ''}</td>
+                    <td class="text-xs text-gray-400">${room.TimeUpdate || ''}</td>
+                    <td class="text-center sticky right-0 bg-white shadow-[-5px_0_10px_rgba(0,0,0,0.02)]">
+                        <div class="flex justify-center gap-2">
+                            <a href="https://meet.google.com/${room.RomID}" target="_blank" class="bg-cyan-50 text-cyan-600 hover:bg-cyan-100 px-3 py-1 rounded text-xs font-bold transition-colors">Vào Lớp</a>
+                            ${canDelete(room) ? `<button onclick="deleteRoom('${room.RomID}')" class="bg-red-50 text-red-500 hover:bg-red-100 px-3 py-1 rounded text-xs font-bold transition-colors">Xóa</button>` : ''}
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        function canDelete(room) {
+            if (currentUser.Email === 'nguyenhaunghia@gmail.com' || currentUser.Object === 'Admin') return true;
+            if (currentUser.Object === 'Giáo viên' && room.AccountUpdate === currentUser.Email) {
+                return new Date().getTime() < new Date(room.Begin.replace(' ', 'T')).getTime(); 
+            }
+            return false;
+        }
+
+        async function deleteRoom(romId) {
+            if (confirm("Thao tác này không thể hoàn tác. Bạn có chắc chắn xóa phòng học này?")) {
+                const res = await fetch('/api/delete-room', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ romId }) });
+                if (res.ok) loadRoomTable(); 
+                else alert("Lỗi: " + (await res.json()).error);
+            }
+        }
+
+        const studentBox = document.getElementById('studentChecklist');
+        document.getElementById('classId').addEventListener('change', async (e) => {
+            const cId = e.target.value;
+            if (!cId) return studentBox.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-gray-400"><i class="fas fa-user-friends text-2xl mb-2"></i><p class="text-xs text-center">Vui lòng chọn Lớp.</p></div>';
+            studentBox.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-cyan-500"><i class="fas fa-circle-notch fa-spin text-2xl mb-2"></i><p class="text-xs text-center font-bold">Đang tải...</p></div>';
+            try {
+                const students = await (await fetch(`/api/options/students/${currentUser.SchoolID}/${cId}`)).json();
+                if (students.length === 0) return studentBox.innerHTML = '<p class="text-sm text-red-400 italic text-center mt-4">Lớp không có HS.</p>';
+                studentBox.innerHTML = students.map(st => `
+                    <label class="flex items-center space-x-3 p-2 hover:bg-slate-50 rounded cursor-pointer border-b border-slate-100 last:border-0">
+                        <input type="checkbox" name="studentCheck" value="${st.UserID}" data-email="${st.Email}" class="w-4 h-4 text-cyan-600 rounded focus:ring-cyan-500">
+                        <span class="text-sm text-slate-700 font-medium flex-1">${st.FullName} <span class="text-slate-400 text-[10px] ml-1">(${st.UserID})</span></span>
+                        ${st.Email ? '<i class="fas fa-check-circle text-green-500 text-xs" title="Có Email"></i>' : ''}
+                    </label>
+                `).join('');
+            } catch(e) { studentBox.innerHTML = '<p class="text-sm text-red-500 italic text-center mt-4">Lỗi tải dữ liệu</p>'; }
+        });
+
+        document.getElementById('selectAllStudents').addEventListener('change', (e) => document.querySelectorAll('input[name="studentCheck"]').forEach(cb => cb.checked = e.target.checked));
+
+        document.getElementById('createRoomForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin mr-2"></i> Đang xử lý...'; btn.disabled = true;
+
+            const cbs = Array.from(document.querySelectorAll('input[name="studentCheck"]:checked'));
+            try {
+                const res = await fetch('/api/classes/create-meet', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        schoolId: currentUser.SchoolID, classId: document.getElementById('classId').value,   
+                        lessonName: document.getElementById('lessonName').value, startTime: document.getElementById('startTime').value,
+                        endTime: document.getElementById('endTime').value, studentList: cbs.map(cb => cb.value).join(','),      
+                        studentEmails: cbs.map(cb => cb.getAttribute('data-email')).filter(e => e && e !== 'undefined'), 
+                        description: document.getElementById('description').value, note: document.getElementById('note').value,
+                        isSendEmail: document.getElementById('sendEmailCheckbox').checked
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("🎉 Khởi tạo phòng học thành công!");
+                    document.getElementById('createRoomModal').classList.remove('show');
+                    document.getElementById('createRoomForm').reset();
+                    loadRoomTable(); 
+                } else alert("Lỗi: " + data.message);
+            } catch (error) { alert("Lỗi kết nối server!"); } 
+            finally { btn.innerHTML = '<i class="fas fa-rocket mr-2"></i> TIẾN HÀNH KHỞI TẠO'; btn.disabled = false; }
+        });
+
+        // Bắt đầu chạy
+        loadRoomTable();
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Không gian học tập - Smart School</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex flex-col min-h-screen bg-slate-50 m-0 p-0">
+
+    <div class="w-full flex-1 flex flex-col overflow-hidden">
+        
+        <div id="smart-header"></div>
+
+        <main class="flex-1 w-full max-w-[1400px] mx-auto p-4 md:p-8 flex flex-col">
+            
+            <div id="studentClasses" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div class="col-span-full flex flex-col items-center justify-center py-20 text-cyan-600">
+                    <i class="fas fa-circle-notch fa-spin text-5xl mb-4"></i>
+                    <p class="font-bold">Đang tải lịch học của bạn...</p>
+                </div>
+            </div>
+            
+        </main>
+
+        <div id="smart-footer"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        async function loadStudentPortal() {
+            // 1. Chạy hàm dùng chung để load Header, Footer và User Profile
+            const data = await initSmartSchool('student'); 
+            
+            // Nếu chưa đăng nhập, đá về trang chủ
+            if (!data || !data.profile) {
+                window.location.href = '/classroom/index.html';
+                return;
+            }
+
+            const p = data.profile;
+            const container = document.getElementById('studentClasses');
+
+            // Bảo mật: Chặn nếu không phải Học sinh (hoặc Admin)
+            if (p.Object !== 'Học sinh' && p.Object !== 'Admin' && p.Email !== 'nguyenhaunghia@gmail.com') {
+                container.innerHTML = `
+                    <div class="col-span-full bg-red-50 border border-red-200 rounded-xl p-8 text-center text-red-600 mt-4">
+                        <i class="fas fa-user-lock text-4xl mb-3"></i>
+                        <h3 class="text-lg font-bold">Khu vực hạn chế</h3>
+                        <p class="text-sm">Trang này được thiết kế dành riêng cho Học sinh. Tính năng của bạn nằm ở menu Giáo viên.</p>
+                    </div>`;
+                return;
+            }
+
+            if (!data.rooms || data.rooms.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-20 mt-4"><i class="fas fa-box-open text-5xl text-gray-300 mb-4 block"></i><p class="text-gray-500 font-medium">Trường của bạn chưa có lớp học nào được tạo.</p></div>';
+                return;
+            }
+
+            // 2. Lọc thông minh: Chỉ lấy các phòng mà ID học sinh có nằm trong danh sách (hoặc Admin thì thấy hết)
+            let myRooms = data.rooms;
+            if (p.Object === 'Học sinh') {
+                myRooms = data.rooms.filter(r => r.StudentIDList && r.StudentIDList.includes(p.UserID));
+            }
+
+            if (myRooms.length === 0) {
+                 container.innerHTML = '<div class="col-span-full text-center py-20 mt-4"><i class="fas fa-mug-hot text-5xl text-gray-300 mb-4 block"></i><p class="text-gray-500 font-medium">Tuyệt vời! Hiện tại bạn không có lịch học nào. Hãy nghỉ ngơi nhé!</p></div>';
+                return;
+            }
+
+            // 3. Hiển thị danh sách Lớp dưới dạng Thẻ
+            const now = new Date().getTime();
+
+            container.innerHTML = myRooms.map(room => {
+                // Xử lý logic Thời gian để đổi màu sắc Thẻ
+                const beginTime = new Date(room.Begin.replace(' ', 'T')).getTime();
+                const endTime = new Date(room.End.replace(' ', 'T')).getTime();
+                
+                let statusHtml = '';
+                let btnHtml = '';
+                let cardClass = 'bg-white border-slate-200 shadow-sm hover:shadow-lg transition-shadow'; // Mặc định
+
+                if (now < beginTime) {
+                    // TRẠNG THÁI 1: SẮP BẮT ĐẦU (Khóa nút)
+                    statusHtml = `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider"><i class="far fa-clock mr-1"></i> Sắp diễn ra</span>`;
+                    btnHtml = `<button class="w-full bg-slate-100 text-slate-400 font-bold py-3 rounded-lg cursor-not-allowed mt-4"><i class="fas fa-lock mr-2"></i> CHƯA TỚI GIỜ</button>`;
+                } 
+                else if (now > endTime) {
+                    // TRẠNG THÁI 2: ĐÃ KẾT THÚC (Làm mờ thẻ)
+                    statusHtml = `<span class="bg-slate-200 text-slate-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider"><i class="fas fa-check-circle mr-1"></i> Đã kết thúc</span>`;
+                    btnHtml = `<button class="w-full bg-slate-100 text-slate-400 font-bold py-3 rounded-lg cursor-not-allowed mt-4"><i class="fas fa-history mr-2"></i> LỚP ĐÃ ĐÓNG</button>`;
+                    cardClass = 'bg-slate-50 border-slate-200 opacity-60 grayscale-[30%]'; // Làm mờ thẻ
+                } 
+                else {
+                    // TRẠNG THÁI 3: ĐANG DIỄN RA (Nổi bật, chớp nháy nhẹ)
+                    statusHtml = `<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider animate-pulse border border-green-200"><i class="fas fa-satellite-dish mr-1"></i> Đang học</span>`;
+                    btnHtml = `<a href="https://meet.google.com/${room.RomID}" target="_blank" class="w-full btn-accent-lime py-3 rounded-lg mt-4 flex items-center justify-center text-base shadow-lg shadow-green-500/30 animate-bounce-subtle"><i class="fas fa-video mr-2"></i> VÀO LỚP NGAY</a>`;
+                    cardClass = 'bg-white border-green-300 shadow-xl ring-2 ring-green-100 transform scale-[1.02] transition-transform z-10 relative'; // Nổi bật thẻ lên
+                }
+
+                // Render Thẻ HTML
+                return `
+                    <div class="rounded-2xl border p-5 flex flex-col h-full ${cardClass}">
+                        <div class="flex justify-between items-start mb-4 gap-2">
+                            <div class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded border border-blue-100 whitespace-nowrap">
+                                Lớp: ${room.ClassName || room.ClassID}
+                            </div>
+                            ${statusHtml}
+                        </div>
+                        
+                        <h3 class="text-xl font-black text-blue-950 mb-2 leading-snug line-clamp-2" title="${room.Comment || 'Bài học'}">${room.Comment || 'Tên bài học chưa cập nhật'}</h3>
+                        <p class="text-xs text-gray-500 mb-4 line-clamp-2 min-h-[32px] italic"><i class="fas fa-quote-left mr-1 text-gray-300"></i> ${room.Note || 'Không có dặn dò thêm'}</p>
+                        
+                        <div class="mt-auto space-y-2 bg-slate-50/80 p-3 rounded-xl border border-slate-100 text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500"><i class="far fa-calendar-alt mr-1 text-cyan-600"></i> Bắt đầu:</span>
+                                <span class="font-bold text-slate-700 bg-white px-2 py-1 rounded shadow-sm border border-slate-100">${room.Begin}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500"><i class="far fa-calendar-check mr-1 text-red-500"></i> Kết thúc:</span>
+                                <span class="font-bold text-slate-700 bg-white px-2 py-1 rounded shadow-sm border border-slate-100">${room.End}</span>
+                            </div>
+                            <div class="flex justify-between items-center pt-2 border-t border-slate-200 mt-2">
+                                <span class="text-gray-500"><i class="fas fa-chalkboard-teacher mr-1 text-blue-600"></i> Giáo viên:</span>
+                                <span class="font-bold text-blue-700">${room.AccountUpdate}</span>
+                            </div>
+                        </div>
+
+                        ${btnHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Chạy ứng dụng
+        loadStudentPortal();
+    </script>
+    
+    <style>
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        .animate-bounce-subtle:hover {
+            animation: bounce-subtle 1s infinite;
+        }
+    </style>
+</body>
+</html>
