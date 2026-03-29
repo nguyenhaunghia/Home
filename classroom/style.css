@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* =========================================
    HỆ THỐNG BIẾN MÀU SẮC (CSS VARIABLES)
    Đồng bộ với Smart School mẹ nhưng tối ưu cho Classroom
@@ -502,4 +503,510 @@ tbody td {
     margin-bottom: 2rem;
     text-align: justify;
     text-indent: 30px;
+=======
+/* =========================================
+   HỆ THỐNG BIẾN MÀU SẮC (CSS VARIABLES)
+   Đồng bộ với Smart School mẹ nhưng tối ưu cho Classroom
+   ========================================= */
+   :root {
+    --bg-deep: #f0fdfa; /* Nền xanh mint cực nhạt */
+    --bg-card: rgba(255, 255, 255, 0.95); 
+    --border-tech: rgba(8, 145, 178, 0.3); /* Viền xanh công nghệ */
+    
+    --primary-neon: #0891b2; /* Xanh biển đậm (Chủ đạo) */
+    --primary-neon-hover: #0e7490;
+    
+    --accent-lime: #84CC16; /* Xanh lá đọt chuối (Nhấn mạnh) */
+    --accent-lime-hover: #65A30D;
+    
+    --text-glow: #083344; /* Chữ tiêu đề tối */
+    --text-dim: #334155; /* Chữ nội dung xám */
+    
+    --danger: #ef4444; /* Đỏ báo lỗi/xóa */
+}
+
+/* =========================================
+   CÀI ĐẶT CƠ BẢN TÀN CỤC
+   ========================================= */
+html, body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: var(--text-glow);
+    background-color: var(--bg-deep);
+    overflow-x: hidden;
+}
+
+/* Nền caro đặc trưng của hệ sinh thái Smart School */
+body {
+    background-image:
+        linear-gradient(rgba(8, 145, 178, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(8, 145, 178, 0.015) 1px, transparent 1px),
+        linear-gradient(rgba(8, 145, 178, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(8, 145, 178, 0.015) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 200px 200px, 200px 200px;
+    background-attachment: fixed;
+}
+
+/* =========================================
+   TÙY CHỈNH THANH CUỘN (SCROLLBAR)
+   ========================================= */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* =========================================
+   UI COMPONENTS (CÁC THÀNH PHẦN GIAO DIỆN CHUNG)
+   ========================================= */
+
+/* Nút bấm (Button) phong cách Neon/Đọt chuối */
+.btn-primary-neon {
+    background-color: var(--primary-neon);
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(8, 145, 178, 0.1), 0 2px 4px -1px rgba(8, 145, 178, 0.06);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-primary-neon:hover {
+    background-color: var(--primary-neon-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(8, 145, 178, 0.2), 0 4px 6px -2px rgba(8, 145, 178, 0.1);
+}
+
+.btn-accent-lime {
+    background-color: var(--accent-lime);
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(132, 204, 22, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-accent-lime:hover {
+    background-color: var(--accent-lime-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(132, 204, 22, 0.3);
+}
+
+/* Thẻ Card nội dung trong suốt (Glassmorphism) */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-tech);
+    border-radius: 1rem; /* 16px */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-card:hover {
+    box-shadow: 0 10px 40px rgba(8, 145, 178, 0.1);
+}
+
+/* Form Inputs */
+.form-input-custom {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #bae6fd;
+    background-color: #ffffff;
+    color: var(--text-glow);
+    outline: none;
+    transition: all 0.3s ease;
+}
+.form-input-custom:focus {
+    border-color: var(--primary-neon);
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.2);
+    background-color: #f0f9ff;
+}
+
+/* =========================================
+   HEADER & BANNERS (Dành riêng cho index.html)
+   ========================================= */
+
+/* [CẢI TIẾN 1]: LOGO ZOOM KHÍT SÁT & BÓNG NỔI */
+.logo-box-tight {
+    padding: 0 !important;      /* Khử padding để logo khít sát mép */
+    border: none !important;    /* Loại bỏ viền border phân cách */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    /* Bóng đổ Drop-shadow tạo cảm giác nổi khối 3D cho toàn bộ khối Logo */
+    filter: drop-shadow(4px 0 12px rgba(8, 145, 178, 0.15));
+    z-index: 20;
+}
+
+.logo-box-tight img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo hình ảnh zoom khít diện tích khung mà không bị méo */
+    transition: transform 0.4s ease;
+}
+
+.logo-box-tight:hover img {
+    transform: scale(1.05); /* Zoom nhẹ khi rê chuột vào */
+}
+
+
+/* [CẢI TIẾN 2]: BANNER HỖ TRỢ SLIDE ẢNH NỀN DRIVE */
+.banner-gradient {
+    /* Background gradient mặc định khi chưa có ảnh */
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+    position: relative;
+    overflow: hidden;
+    /* Thuộc tính quan trọng: Chuyển cảnh mượt mà 1.5s khi JS đổi ảnh nền */
+    transition: background-image 1.5s ease-in-out, background 1.5s ease-in-out;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Lớp lưới phủ lên banner cho giống trang chủ (Giữ nguyên) */
+.banner-gradient::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+    z-index: 2; /* Nằm trên lớp phủ mờ */
+}
+
+/* THÊM MỚI: Lớp phủ mờ (Overlay) sẫm màu giúp chữ nổi bật trên mọi loại ảnh nền */
+.banner-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4); 
+    z-index: 1; /* Nằm dưới lớp lưới */
+}
+
+/* Tiêu đề 3D Glow */
+.title-3d-glow {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    /* Tăng độ nổi của chữ (text-shadow) để tránh bị chìm vào ảnh nền */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.3);
+    position: relative;
+    z-index: 10;
+}
+
+/* Phụ đề dưới chữ SMART SCHOOL */
+.banner-subtitle {
+    position: relative;
+    z-index: 10;
+}
+
+/* =========================================
+   BẢNG DỮ LIỆU (TABLES - Dành cho create-room.html)
+   ========================================= */
+.table-container {
+    border-radius: 0.75rem;
+    border: 1px solid #bae6fd;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    background: #ffffff;
+    overflow-x: auto;
+}
+
+/* Tính năng kéo giãn độ rộng cột (Resize) */
+.th-resize {
+    resize: horizontal;
+    overflow: hidden;
+    display: block;
+    min-width: max-content;
+    padding: 1rem;
+    position: relative;
+}
+.th-resize::-webkit-scrollbar { 
+    display: none; 
+}
+
+/* Các thẻ Table cơ bản */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead th {
+    background-color: #f0f9ff;
+    color: #1e3a8a;
+    font-weight: 700;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid #bae6fd;
+}
+tbody tr {
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #f1f5f9;
+}
+tbody tr:hover {
+    background-color: #f8fafc;
+}
+tbody td {
+    padding: 1rem;
+    color: var(--text-dim);
+}
+
+/* =========================================
+   HỆ THỐNG MENU (NAVBAR/DROPDOWN) - ĐÃ FIX LỖI CHE KHUẤT
+   ========================================= */
+.nav-container {
+    background: #ffffff;
+    border-top: 1px solid #e0f2fe;
+    border-bottom: 1px solid #e0f2fe;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,0.05);
+    /* BẮT BUỘC: Đảm bảo thanh điều hướng luôn nằm trên cùng của trang */
+    position: relative; 
+    z-index: 1001 !important;
+    overflow: visible !important; /* Cho phép menu con thò ra ngoài */
+}
+
+/* Dropdown thuần CSS */
+.dropdown-group {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-group > button, .dropdown-group > a {
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.dropdown-group:hover > button, .dropdown-group:hover > a {
+    color: var(--primary-neon);
+    background-color: #f0f9ff;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: #ffffff;
+    min-width: 240px; /* Tăng nhẹ độ rộng để chữ không bị tràn */
+    /* NÂNG CẤP: z-index cực cao để đè lên Banner và Card phòng */
+    z-index: 9999 !important; 
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn để tách lớp */
+    border: 1px solid #e0f2fe;
+    border-radius: 0 0 0.75rem 0.75rem; /* Bo góc mượt hơn */
+    animation: slideDownMenu 0.2s ease-out forwards;
+    padding: 0.5rem 0; /* Tạo khoảng trống trên dưới cho các item */
+    overflow: visible !important;
+}
+
+/* Hiển thị menu khi hover vào thẻ cha */
+.dropdown-group:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 0.75rem 1.25rem; /* Tăng padding để dễ bấm trên mobile */
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    border-bottom: 1px solid #f8fafc;
+    transition: all 0.2s;
+    text-decoration: none;
+    white-space: nowrap; /* Giữ chữ trên 1 dòng */
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f9ff;
+    color: var(--primary-neon);
+    padding-left: 1.75rem; /* Hiệu ứng thụt vào rõ rệt hơn */
+    border-left: 4px solid var(--primary-neon);
+}
+
+/* Animation mượt mà */
+@keyframes slideDownMenu {
+    from { 
+        opacity: 0; 
+        transform: translateY(-8px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* =========================================
+   MODAL (HỘP THOẠI NỔI TẠO PHÒNG)
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(30, 58, 138, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid #bae6fd;
+    width: 95%;
+    max-width: 1200px;
+    max-height: 95vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.show .modal-content {
+    transform: scale(1);
+}
+
+/* Nút đóng modal */
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: #94a3b8;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.modal-close-btn:hover {
+    color: var(--danger);
+}
+
+/* =========================================
+   UTILITIES (CÁC TIỆN ÍCH BỔ SUNG)
+   ========================================= */
+/* Checkbox Custom phong cách iOS */
+.toggle-checkbox {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background: #cbd5e1;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.3s;
+}
+.toggle-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.toggle-checkbox:checked {
+    background: var(--accent-lime);
+}
+.toggle-checkbox:checked::after {
+    transform: translateX(20px);
+}
+
+/* Văn bản hiển thị rút gọn (Truncate) */
+.text-truncate-1-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+/* =========================================
+   BỔ SUNG: ĐỊNH DẠNG BÀI VIẾT GIỚI THIỆU (PEDAGOGICAL STYLE)
+   ========================================= */
+
+/* Khối nội dung chính của bài giới thiệu */
+.pedagogical-article {
+    color: var(--text-dim);
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* Thụt đầu dòng cho tất cả các đoạn văn trong bài viết */
+.pedagogical-article p {
+    text-indent: 30px;
+    margin-bottom: 1.25rem;
+}
+
+/* Loại bỏ thụt đầu dòng cho các đoạn đặc biệt (như đoạn trích dẫn đầu bài) */
+.no-indent {
+    text-indent: 0 !important;
+}
+
+/* Định dạng tiêu đề các phần (1, 2, 3...) */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-glow);
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-tech);
+    padding-bottom: 0.5rem;
+}
+
+/* Biểu tượng trong tiêu đề */
+.section-title i {
+    width: 35px;
+    text-align: center;
+}
+
+/* Khối tóm tắt đầu bài (Abstract) */
+.article-abstract {
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #64748b;
+    border-bottom: 2px dashed #e2e8f0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: justify;
+    text-indent: 30px;
+>>>>>>> e802cbeb0af6fc01a2b7d9fc84dc3a701c42802d
 }
