@@ -6,7 +6,6 @@
     <title>Đăng nhập - TOÁN TIN</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&family=Roboto+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -35,17 +34,17 @@
 
         .input-group-custom input {
             width: 100%; box-sizing: border-box; 
-            background: rgba(0, 0, 0, 0.02); /* Đổi nền thành xám cực nhạt */
-            border: 1px solid var(--border-tech); /* Đổi viền thành xanh công nghệ */
+            background: rgba(0, 0, 0, 0.02); 
+            border: 1px solid var(--border-tech); 
             border-radius: 10px; 
             padding: 18px 45px 18px 45px !important; 
-            color: var(--text-glow); /* Đổi chữ thành màu xanh navy đậm */
+            color: var(--text-glow); 
             outline: none; transition: 0.3s; 
         }
         
         .input-group-custom input:focus { 
             border-color: var(--primary-neon); 
-            background: rgba(8, 145, 178, 0.05); /* Phủ lớp xanh mờ khi click vào */
+            background: rgba(8, 145, 178, 0.05); 
         }
 
         .password-toggle {
@@ -135,7 +134,6 @@
         <div class="login-card">
             <div class="login-header">
                 <h2 style="font-family:'Rajdhani'; color:rgb(24, 13, 89); font-size:2.2rem; margin-top:10px; margin-bottom: 50px; text-align: center;">ĐĂNG NHẬP HỆ THỐNG</h2>
-                
             </div>
             
             <form id="login-form">
@@ -196,13 +194,10 @@
                 });
                 
                 // === THUẬT TOÁN ĐO CHIỀU RỘNG TỰ ĐỘNG ===
-                // Lấy thẻ container bao bọc 2 nút
                 let container = document.getElementById("action-buttons");
                 
-                // Hàm vẽ nút Google với chiều rộng chính xác
                 function renderGoogleBtn() {
                     let containerWidth = container.offsetWidth;
-                    // Trừ đi khoảng gap (15px) và chia đôi để lấy width chuẩn cho mỗi nút
                     let halfWidth = (containerWidth - 15) / 2;
                     
                     google.accounts.id.renderButton(
@@ -211,19 +206,17 @@
                             theme: "outline", 
                             size: "large", 
                             text: "signin_with", 
-                            shape: "rectangular", // Hình chữ nhật bo góc nhẹ
+                            shape: "rectangular", 
                             width: halfWidth 
                         }
                     );
                 }
                 
-                // Vẽ lần đầu
                 renderGoogleBtn();
                 
-                // Tự động vẽ lại kích thước khi người dùng thu phóng trình duyệt
                 window.addEventListener('resize', function() {
-                    document.getElementById("buttonDiv").innerHTML = ""; // Xóa nút cũ
-                    renderGoogleBtn(); // Vẽ nút mới với width mới
+                    document.getElementById("buttonDiv").innerHTML = ""; 
+                    renderGoogleBtn(); 
                 });
             }
         };
@@ -312,8 +305,9 @@
                 if (authUser) {
                     const nickName = authUser.realRem || authUser.realName;
 
-                    sessionStorage.setItem('isLoggedIn', 'true');
-                    sessionStorage.setItem('userData', JSON.stringify({
+                    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userData', JSON.stringify({
                         uid: authUser.realID,
                         nickname: nickName, 
                         name: authUser.realName || 'User',
@@ -363,8 +357,9 @@
                 if (authUser) {
                     const nickName = authUser.realRem || authUser.realName;
 
-                    sessionStorage.setItem('isLoggedIn', 'true');
-                    sessionStorage.setItem('userData', JSON.stringify({
+                    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userData', JSON.stringify({
                         uid: authUser.realID,
                         nickname: nickName, 
                         name: authUser.realName || 'User',

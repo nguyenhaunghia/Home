@@ -189,7 +189,7 @@ function renderDynamicMenu(menuData) {
     function buildNestedHTML(item) {
         const hasChildren = item.children && item.children.length > 0;
         const iconHtml = `<i class="${item.icon}" style="color: ${item.color}; width: 18px; text-align: center; margin-right: 5px;"></i>`;
-        let hrefAttr = (item.link && item.link.length > 2 && item.link !== '#') ? `href="${item.link}" target="_blank"` : 'href="javascript:void(0)"';
+        let hrefAttr = (item.link && item.link.length > 2 && item.link !== '#') ? `href="${item.link}"` : 'href="javascript:void(0)"';
 
         if (hasChildren) {
             let html = `<div class="nav-item-nested">`;
@@ -206,7 +206,7 @@ function renderDynamicMenu(menuData) {
         const hasChildren = cardData.children && cardData.children.length > 0;
         const dropId = `root-drop-${index}`;
         const iconHtml = `<i class="${cardData.icon}" style="color: ${cardData.color}; width: 18px; text-align: center; margin-right: 5px;"></i>`;
-        let hrefAttr = (cardData.link && cardData.link.length > 2 && cardData.link !== '#') ? `href="${cardData.link}" target="_blank"` : 'href="javascript:void(0)"';
+        let hrefAttr = (cardData.link && cardData.link.length > 2 && cardData.link !== '#') ? `href="${cardData.link}"` : 'href="javascript:void(0)"';
 
         const navItem = document.createElement('div'); navItem.className = 'nav-item';
         if (hasChildren) navItem.dataset.dropTarget = dropId; 

@@ -6,7 +6,8 @@ require('dotenv').config();
 // --- NHÚNG CÁC CONTROLLER ---
 const { getAuthUrl, oauth2Callback, createMeetRoom } = require('./classroom/googleController');
 const { recordLogin, recordLogout } = require('./classroom/attendanceController');
-const { getUserProfile, getRooms, deleteRoomFromSheet, getSchoolList, getClassList, getStudentList } = require('./classroom/sheetController');
+// [CẬP NHẬT 1]: Bổ sung hàm getImagesByFolderId vào danh sách import từ sheetController
+const { getUserProfile, getRooms, deleteRoomFromSheet, getSchoolList, getClassList, getStudentList, getImagesByFolderId } = require('./classroom/sheetController');
 
 const app = express();
 
@@ -23,20 +24,21 @@ app.use(session({
 app.use(express.static(__dirname));
 app.use('/classroom', express.static(path.join(__dirname, 'classroom')));
 
-
-
-
-
 // === NHÓM 1: XÁC THỰC GOOGLE (AUTH) & SSO BRIDGE ===
 app.get('/auth/google', getAuthUrl);
 app.get('/oauth2callback', oauth2Callback);
 
-// [CẬP NHẬT] API đón dữ liệu SSO từ Local/Session Storage của trang chủ
+// [CẬP NHẬT 2]: Ép máy chủ lưu Session ngay lập tức để trị dứt điểm lỗi SSO
 app.post('/api/auth/sync-session', (req, res) => {
     const { email } = req.body;
     if (email) {
         req.session.userEmail = email; // Tự động tạo session cho Classroom
-        res.json({ success: true, message: 'SSO synced' });
+        
+        // Buộc Session phải được ghi vào bộ nhớ trước khi phản hồi
+        req.session.save((err) => {
+            if (err) console.error("Lỗi khi lưu SSO Session:", err);
+            res.json({ success: true, message: 'SSO synced' });
+        });
     } else {
         res.status(400).json({ success: false, message: 'No email provided' });
     }
@@ -107,6 +109,17 @@ app.get('/api/options/students/:schoolId/:classId', async (req, res) => {
     }
 });
 
+// === [CẬP NHẬT 3]: API KÉO SLIDE HÌNH NỀN TỪ GOOGLE DRIVE ===
+app.get('/api/options/drive-images/:folderId', async (req, res) => {
+    try {
+        // Lưu ý: Đảm bảo trong sheetController.js đã khai báo hàm này và cấp quyền scope Drive
+        const data = await getImagesByFolderId(req.params.folderId);
+        res.json({ success: true, data: data });
+    } catch (err) { 
+        console.error("Lỗi API kéo ảnh Drive:", err);
+        res.status(500).json({ success: false, error: err.message }); 
+    }
+});
 
 // === NHÓM 4: ĐIỂM DANH (ATTENDANCE) & ĐĂNG XUẤT ===
 app.post('/api/attendance/login', recordLogin);
@@ -116,7 +129,8 @@ app.get('/api/attendance/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) console.error("Lỗi khi hủy Session:", err);
         res.clearCookie('connect.sid'); 
-        res.redirect('/classroom/index.html'); 
+        // [CẬP NHẬT 4]: Đăng xuất xong đẩy thẳng về trang chủ trung tâm
+        res.redirect('/index.html'); 
     });
 });
 
@@ -124,5 +138,6 @@ app.get('/api/attendance/logout', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ Server Smart School đang chạy: http://localhost:${PORT}`);
-    console.log(`👉 Link Dashboard: http://localhost:${PORT}/classroom/index.html`);
+    console.log(`👉 Link Trang chủ gốc: http://localhost:${PORT}/index.html`);
+    console.log(`👉 Link Classroom: http://localhost:${PORT}/classroom/index.html`);
 });
