@@ -3,35 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classroom - Smart School</title>
+    <title>Giới thiệu Classroom - Smart School</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="flex flex-col min-h-screen bg-white m-0 p-0">
+<body class="flex flex-col min-h-screen">
 
-    <div class="w-full flex-1 flex flex-col overflow-hidden">
+    <div class="w-full flex-1 flex flex-col overflow-visible">
         
         <div id="smart-header"></div>
 
-        <main class="flex-1 p-6 md:p-12 w-full mx-auto max-w-7xl">
-            <div class="border-l-4 border-cyan-500 pl-4 mb-6">
-                <h1 class="text-2xl font-black text-blue-900 uppercase">Giới thiệu tổng quan N's Class</h1>
+        <main class="flex-1 p-6 md:p-12 w-full mx-auto max-w-5xl bg-white shadow-sm my-8 rounded-2xl glass-card">
+            <div class="border-l-8 border-blue-600 pl-6 mb-8">
+                <p class="article-abstract">
+                    Trong bối cảnh cuộc Cách mạng Công nghiệp 4.0 đang tác động sâu rộng, chuyển đổi số giáo dục không còn là lựa chọn mà đã trở thành yêu cầu cấp thiết. Phân hệ Smart Classroom ra đời nhằm hiện thực hóa mô hình giáo dục thông minh, hiện đại và linh hoạt, đáp ứng trọn vẹn nhu cầu của người dạy và người học.
+                </p>
             </div>
             
-            <div class="text-gray-600 leading-relaxed text-justify space-y-4">
-                <p>Chào mừng bạn đến với <b>Phân hệ Classroom</b> thuộc hệ sinh thái Smart School. Đây là trung tâm điều hành không gian học tập trực tuyến, kết nối liền mạch giữa Giáo viên và Học sinh thông qua nền tảng công nghệ hiện đại.</p>
-                
-                <div class="bg-blue-50/50 p-6 rounded-xl border border-blue-100 mt-6 shadow-sm">
-                    <h3 class="font-bold text-blue-800 mb-3"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Hướng dẫn bắt đầu:</h3>
-                    <ul class="list-disc pl-6 space-y-3 text-sm text-gray-700">
-                        <li>Nếu bạn chưa đăng nhập, vui lòng nhấn nút <b>"Kết nối với Google"</b> ở khung bên phải.</li>
-                        <li><b>Dành cho Giáo viên:</b> Bấm nút <span class="text-white bg-[#84CC16] px-2 py-1 rounded font-bold">Khởi tạo phòng học</span> trên thanh Menu để lên lịch bài giảng.</li>
-                        <li><b>Dành cho Học sinh:</b> Bấm vào menu <span class="text-green-600 font-bold">Học sinh</span> để tham gia lớp.</li>
-                    </ul>
+            <article class="pedagogical-article">
+
+                <h2 class="section-title">
+                    <i class="fas fa-microchip text-cyan-500"></i> 1. Từ thực tiễn và nhu cầu sư phạm
+                </h2>
+                <p>Mô hình lớp học truyền thống đang đối mặt với nhiều thách thức về tính kết nối và sự linh hoạt. Nhu cầu về một không gian học tập không biên giới, nơi tương tác diễn ra không giới hạn, đã thúc đẩy sự hình thành của phân hệ này. Smart School hướng tới việc xây dựng mô hình <b>Học tập hỗn hợp (Hybrid Learning)</b>, kết hợp tinh hoa dạy học trực tiếp và sự tiện lợi của công nghệ số.</p>
+
+                <h2 class="section-title">
+                    <i class="fab fa-google text-red-500"></i> 2. Hệ sinh thái Google
+                </h2>
+                <p>Điểm khác biệt cốt lõi là việc vận hành dựa trên nền tảng <b>Google Cloud</b>. Việc tích hợp Google Meet, Sheets và Drive mang lại độ ổn định tối ưu, bảo mật dữ liệu tuyệt đối theo tiêu chuẩn quốc tế. Điều này không chỉ giúp giảm thiểu rào cản công nghệ ("Chống mù công nghệ") mà còn tạo ra sự đồng bộ dữ liệu tuyệt đối trong toàn bộ hệ thống quản lý.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-10">
+                    <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-100 shadow-sm">
+                        <h3 class="font-bold text-blue-800 mb-2 flex items-center">
+                            <i class="fas fa-user-shield mr-2"></i> Ban Giám Hiệu
+                        </h3>
+                        <p class="text-sm text-gray-600">Cung cấp công cụ quản trị minh bạch. BGH dễ dàng quản lý giờ dạy thực tế, ghi nhận thời gian bắt đầu/kết thúc tự động và có cơ sở dữ liệu xác thực để đánh giá chất lượng đổi mới sáng tạo của từng tổ bộ môn.</p>
+                    </div>
+                    <div class="bg-green-50/50 p-6 rounded-2xl border border-green-100 shadow-sm">
+                        <h3 class="font-bold text-green-800 mb-2 flex items-center">
+                            <i class="fas fa-chalkboard-teacher mr-2"></i> Giáo Viên
+                        </h3>
+                        <p class="text-sm text-gray-600">Tối ưu hóa mô hình <b>"Lớp học đảo ngược"</b>. Giáo viên chủ động gửi trước yêu cầu học tập, nội dung chuẩn bị bài học cho học sinh, từ đó nâng cao chất lượng tương tác trực tiếp trong giờ dạy trực tuyến.</p>
+                    </div>
                 </div>
-            </div>
+
+                <h2 class="section-title">
+                    <i class="fas fa-user-graduate text-green-600"></i> 3. Trải nghiệm và sự tự chủ học tập
+                </h2>
+                <p>Học sinh được tiếp cận lịch học trực quan qua hệ thống <b>Thẻ bài học (Card)</b> hiện đại. Mọi lịch trình đều được hiển thị rõ ràng cùng với các ghi chú học tập, giúp các em nắm vững tâm thế chủ động chuẩn bị tri thức trước khi vào lớp, từ đó hình thành thói quen tự học và quản lý thời gian khoa học.</p>
+            </article>
         </main>
 
         <div id="smart-footer"></div>

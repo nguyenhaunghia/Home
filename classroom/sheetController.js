@@ -1,13 +1,20 @@
 const { google } = require('googleapis');
+const path = require('path');
 
-// [NÂNG CẤP BẢO MẬT]: Khởi tạo "Robot Thư Ký" đọc file credentials.json
+// [NÂNG CẤP BẢO MẬT]: Sử dụng đường dẫn tuyệt đối để tránh lỗi không tìm thấy file
+const KEY_PATH = path.join(__dirname, '../credentials.json');
+
 const auth = new google.auth.GoogleAuth({
-    keyFile: 'credentials.json', // File bạn vừa tải từ Google Cloud về
-    scopes: ['https://www.googleapis.com/auth/spreadsheets']
+    keyFile: KEY_PATH, 
+    scopes: [
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive.readonly' // [THÊM QUYỀN]: Để đọc ảnh từ Drive
+    ]
 });
 
-// Gắn quyền Robot vào thẳng công cụ Sheets
+// Gắn quyền Robot vào công cụ Sheets và Drive
 const sheets = google.sheets({ version: 'v4', auth });
+const drive = google.drive({ version: 'v3', auth });
 
 const ACCOUNT_SHEET_ID = '1oqsmFmYoVpAa9iS8q10UdL6oYtChi6CSiF0zNMfGTmE';
 const ROOM_SHEET_ID = '1I-SC1lS4wxl6zcHxzzwPmJ8CCWX9eD9FHA6OhJey70M';
@@ -34,31 +41,51 @@ async function getSchoolMap() {
 }
 
 async function getUserProfile(email) {
-    const res = await sheets.spreadsheets.values.get({ spreadsheetId: ACCOUNT_SHEET_ID, range: 'AccountProfile!A:Z' });
-    const rows = res.data.values || [];
-    if (rows.length < 2) return null;
+    try {
+        const res = await sheets.spreadsheets.values.get({ 
+            spreadsheetId: ACCOUNT_SHEET_ID, 
+            range: 'AccountProfile!A:Z' 
+        });
+        const rows = res.data.values || [];
+        if (rows.length < 1) return null;
 
-    const headers = rows.shift();
-    const idxEmail = headers.indexOf('Email');
-    const idxUserID = headers.indexOf('UserID');
-    const idxFullName = headers.indexOf('FullName');
-    const idxObject = headers.indexOf('Object');
-    const idxSchoolID = headers.indexOf('SchoolID');
-    const idxClassID = headers.indexOf('ClassID');
+        // Lấy dòng tiêu đề và chuẩn hóa (viết thường hết, xóa khoảng trắng)
+        const headers = rows[0].map(h => h.trim().toLowerCase());
+        
+        const idxEmail = headers.indexOf('email');
+        const idxUserID = headers.indexOf('userid');
+        const idxFullName = headers.indexOf('fullname');
+        const idxObject = headers.indexOf('object');
+        const idxSchoolID = headers.indexOf('schoolid');
+        const idxClassID = headers.indexOf('classid');
 
-    if (idxEmail === -1) throw new Error("Thiếu cột 'Email' trong Sheet AccountProfile!");
+        if (idxEmail === -1) {
+            console.error("🔥 LỖI: Không tìm thấy cột 'Email' trong Sheet!");
+            return null;
+        }
 
-    const userRow = rows.find(row => row[idxEmail] === email);
-    if (!userRow) return null;
+        // Tìm dòng chứa email (không phân biệt hoa thường)
+        const userRow = rows.find(row => 
+            row[idxEmail] && row[idxEmail].trim().toLowerCase() === email.trim().toLowerCase()
+        );
 
-    return {
-        UserID: userRow[idxUserID] || '',
-        FullName: userRow[idxFullName] || '',
-        Email: userRow[idxEmail] || '',
-        Object: userRow[idxObject] || '',
-        SchoolID: userRow[idxSchoolID] || '',
-        ClassID: userRow[idxClassID] || ''
-    };
+        if (!userRow) {
+            console.warn(`⚠️ CẢNH BÁO: Không tìm thấy email ${email} trong danh sách.`);
+            return null;
+        }
+
+        return {
+            UserID: userRow[idxUserID] || '',
+            FullName: userRow[idxFullName] || '',
+            Email: userRow[idxEmail] || '',
+            Object: userRow[idxObject] || '',
+            SchoolID: userRow[idxSchoolID] || '',
+            ClassID: userRow[idxClassID] || ''
+        };
+    } catch (err) {
+        console.error("❌ LỖI HỆ THỐNG (getUserProfile):", err.message);
+        throw err; // Ném lỗi để Server in ra màn hình đen cho bạn xem
+    }
 }
 
 // ============================================================================
@@ -136,11 +163,23 @@ async function deleteRoomFromSheet(romId, profile) {
         if (currentTime >= beginTime) throw new Error("Không thể xóa phòng học đã hoặc đang diễn ra!");
     }
 
+    // Lấy sheetId của tab 'RoomList' để xóa hàng chính xác
+    const spreadsheet = await sheets.spreadsheets.get({ spreadsheetId: ROOM_SHEET_ID });
+    const sheet = spreadsheet.data.sheets.find(s => s.properties.title === 'RoomList');
+    const sheetId = sheet ? sheet.properties.sheetId : 0;
+
     await sheets.spreadsheets.batchUpdate({
         spreadsheetId: ROOM_SHEET_ID,
         resource: {
             requests: [{
-                deleteDimension: { range: { sheetId: 0, dimension: 'ROWS', startIndex: rowIndex, endIndex: rowIndex + 1 } }
+                deleteDimension: { 
+                    range: { 
+                        sheetId: sheetId, 
+                        dimension: 'ROWS', 
+                        startIndex: rowIndex, 
+                        endIndex: rowIndex + 1 
+                    } 
+                }
             }]
         }
     });
@@ -224,4 +263,30 @@ async function getStudentList(schoolId, classId) {
     }));
 }
 
-module.exports = { getUserProfile, getRooms, deleteRoomFromSheet, saveRoomToSheet, getSchoolList, getClassList, getStudentList };
+// ============================================================================
+// [BỔ SUNG QUAN TRỌNG]: HÀM LẤY ẢNH TỪ GOOGLE DRIVE
+// ============================================================================
+async function getImagesByFolderId(folderId) {
+    try {
+        const res = await drive.files.list({
+            q: `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`,
+            fields: 'files(id, name)',
+            pageSize: 50
+        });
+        return res.data.files || [];
+    } catch (err) {
+        console.error("Lỗi getImagesByFolderId:", err.message);
+        return [];
+    }
+}
+
+module.exports = { 
+    getUserProfile, 
+    getRooms, 
+    deleteRoomFromSheet, 
+    saveRoomToSheet, 
+    getSchoolList, 
+    getClassList, 
+    getStudentList,
+    getImagesByFolderId // Xuất hàm mới ra cho server.js sử dụng
+};

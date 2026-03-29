@@ -137,19 +137,61 @@ body {
    HEADER & BANNERS (Dành riêng cho index.html)
    ========================================= */
 
-/* Banner Gradient dải ngân hà */
+/* [CẢI TIẾN 1]: LOGO ZOOM KHÍT SÁT & BÓNG NỔI */
+.logo-box-tight {
+    padding: 0 !important;      /* Khử padding để logo khít sát mép */
+    border: none !important;    /* Loại bỏ viền border phân cách */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    /* Bóng đổ Drop-shadow tạo cảm giác nổi khối 3D cho toàn bộ khối Logo */
+    filter: drop-shadow(4px 0 12px rgba(8, 145, 178, 0.15));
+    z-index: 20;
+}
+
+.logo-box-tight img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Đảm bảo hình ảnh zoom khít diện tích khung mà không bị méo */
+    transition: transform 0.4s ease;
+}
+
+.logo-box-tight:hover img {
+    transform: scale(1.05); /* Zoom nhẹ khi rê chuột vào */
+}
+
+
+/* [CẢI TIẾN 2]: BANNER HỖ TRỢ SLIDE ẢNH NỀN DRIVE */
 .banner-gradient {
+    /* Background gradient mặc định khi chưa có ảnh */
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
     position: relative;
     overflow: hidden;
+    /* Thuộc tính quan trọng: Chuyển cảnh mượt mà 1.5s khi JS đổi ảnh nền */
+    transition: background-image 1.5s ease-in-out, background 1.5s ease-in-out;
+    background-size: cover;
+    background-position: center;
 }
-/* Tạo lớp lưới phủ lên banner cho giống trang chủ */
+
+/* Lớp lưới phủ lên banner cho giống trang chủ (Giữ nguyên) */
 .banner-gradient::before {
     content: '';
     position: absolute;
     inset: 0;
     opacity: 0.15;
     background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+    z-index: 2; /* Nằm trên lớp phủ mờ */
+}
+
+/* THÊM MỚI: Lớp phủ mờ (Overlay) sẫm màu giúp chữ nổi bật trên mọi loại ảnh nền */
+.banner-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4); 
+    z-index: 1; /* Nằm dưới lớp lưới */
 }
 
 /* Tiêu đề 3D Glow */
@@ -159,7 +201,14 @@ body {
     color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2);
+    /* Tăng độ nổi của chữ (text-shadow) để tránh bị chìm vào ảnh nền */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6), 0 0 20px rgba(255,255,255,0.3);
+    position: relative;
+    z-index: 10;
+}
+
+/* Phụ đề dưới chữ SMART SCHOOL */
+.banner-subtitle {
     position: relative;
     z-index: 10;
 }
@@ -216,22 +265,27 @@ tbody td {
 }
 
 /* =========================================
-   HỆ THỐNG MENU (NAVBAR/DROPDOWN)
+   HỆ THỐNG MENU (NAVBAR/DROPDOWN) - ĐÃ FIX LỖI CHE KHUẤT
    ========================================= */
 .nav-container {
     background: #ffffff;
     border-top: 1px solid #e0f2fe;
     border-bottom: 1px solid #e0f2fe;
     box-shadow: 0 2px 4px -1px rgba(0,0,0,0.05);
+    /* BẮT BUỘC: Đảm bảo thanh điều hướng luôn nằm trên cùng của trang */
+    position: relative; 
+    z-index: 1001 !important;
+    overflow: visible !important; /* Cho phép menu con thò ra ngoài */
 }
 
-/* Dropdown thuần CSS (Không cần Javascript) */
+/* Dropdown thuần CSS */
 .dropdown-group {
     position: relative;
     display: inline-block;
 }
+
 .dropdown-group > button, .dropdown-group > a {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 1rem;
     font-weight: 700;
     color: #1e3a8a;
     display: flex;
@@ -239,6 +293,7 @@ tbody td {
     transition: all 0.2s;
     cursor: pointer;
 }
+
 .dropdown-group:hover > button, .dropdown-group:hover > a {
     color: var(--primary-neon);
     background-color: #f0f9ff;
@@ -250,40 +305,54 @@ tbody td {
     left: 0;
     top: 100%;
     background-color: #ffffff;
-    min-width: 220px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    min-width: 240px; /* Tăng nhẹ độ rộng để chữ không bị tràn */
+    /* NÂNG CẤP: z-index cực cao để đè lên Banner và Card phòng */
+    z-index: 9999 !important; 
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); /* Đổ bóng đậm hơn để tách lớp */
     border: 1px solid #e0f2fe;
-    border-radius: 0 0 0.5rem 0.5rem;
-    z-index: 50;
+    border-radius: 0 0 0.75rem 0.75rem; /* Bo góc mượt hơn */
     animation: slideDownMenu 0.2s ease-out forwards;
+    padding: 0.5rem 0; /* Tạo khoảng trống trên dưới cho các item */
+    overflow: visible !important;
 }
-/* Hiển thị menu khi hover vào thẻ LI cha */
+
+/* Hiển thị menu khi hover vào thẻ cha */
 .dropdown-group:hover .dropdown-menu {
     display: block;
 }
 
 .dropdown-item {
     display: block;
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.25rem; /* Tăng padding để dễ bấm trên mobile */
     color: var(--text-dim);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     border-bottom: 1px solid #f8fafc;
     transition: all 0.2s;
     text-decoration: none;
+    white-space: nowrap; /* Giữ chữ trên 1 dòng */
 }
+
 .dropdown-item:last-child {
     border-bottom: none;
 }
+
 .dropdown-item:hover {
     background-color: #f0f9ff;
     color: var(--primary-neon);
-    padding-left: 1.5rem; /* Hiệu ứng thụt vào nhẹ khi hover */
-    border-left: 3px solid var(--primary-neon);
+    padding-left: 1.75rem; /* Hiệu ứng thụt vào rõ rệt hơn */
+    border-left: 4px solid var(--primary-neon);
 }
 
+/* Animation mượt mà */
 @keyframes slideDownMenu {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { 
+        opacity: 0; 
+        transform: translateY(-8px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
 }
 
 /* =========================================
@@ -378,4 +447,59 @@ tbody td {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+
+
+/* =========================================
+   BỔ SUNG: ĐỊNH DẠNG BÀI VIẾT GIỚI THIỆU (PEDAGOGICAL STYLE)
+   ========================================= */
+
+/* Khối nội dung chính của bài giới thiệu */
+.pedagogical-article {
+    color: var(--text-dim);
+    line-height: 1.8;
+    text-align: justify;
+}
+
+/* Thụt đầu dòng cho tất cả các đoạn văn trong bài viết */
+.pedagogical-article p {
+    text-indent: 30px;
+    margin-bottom: 1.25rem;
+}
+
+/* Loại bỏ thụt đầu dòng cho các đoạn đặc biệt (như đoạn trích dẫn đầu bài) */
+.no-indent {
+    text-indent: 0 !important;
+}
+
+/* Định dạng tiêu đề các phần (1, 2, 3...) */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-glow);
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-tech);
+    padding-bottom: 0.5rem;
+}
+
+/* Biểu tượng trong tiêu đề */
+.section-title i {
+    width: 35px;
+    text-align: center;
+}
+
+/* Khối tóm tắt đầu bài (Abstract) */
+.article-abstract {
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #64748b;
+    border-bottom: 2px dashed #e2e8f0;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: justify;
+    text-indent: 30px;
 }
