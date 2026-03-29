@@ -39,8 +39,9 @@ function logActivity(uid, nickname, action) {
 
 function checkAuthAndRenderUI() {
     if (!window.location.href.includes('login.html')) {
-        const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-        const userDataString = sessionStorage.getItem('userData');
+        // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userDataString = localStorage.getItem('userData');
         if (isLoggedIn !== 'true' || !userDataString) {
             renderUserProfile(null); return null;
         }
@@ -92,12 +93,15 @@ function renderUserProfile(user) {
 }
 
 function logout() {
-    const userDataString = sessionStorage.getItem('userData');
+    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+    const userDataString = localStorage.getItem('userData');
     if (userDataString) {
         const user = JSON.parse(userDataString);
         logActivity(user.uid || 'Khách', user.nickname || user.name, 'Đăng xuất');
     }
-    sessionStorage.clear();
+    // Dọn dẹp cục bộ thay vì xóa toàn bộ trình duyệt
+    localStorage.removeItem('userData');
+    localStorage.removeItem('isLoggedIn');
     setTimeout(() => { window.location.href = 'index.html'; }, 300);
 }
 
@@ -458,7 +462,9 @@ function openProfileModal() {
         document.body.insertAdjacentHTML('beforeend', `<div id="profile-modal" class="tech-modal-overlay"><div class="tech-modal-content"><div class="tech-modal-header"><h3><i class="fas fa-user-astronaut"></i> CẬP NHẬT TÀI KHOẢN</h3><i class="fas fa-times close-modal" onclick="closeProfileModal()"></i></div><div class="tech-modal-body" id="profile-modal-body"><div style="text-align:center; color: var(--primary-neon);"><i class="fas fa-spinner fa-spin"></i> Đang tải...</div></div><div class="modal-footer-btn"><button class="btn-save-modal" onclick="saveProfileModal()" id="btn-save-profile" style="display:none;">CẬP NHẬT</button></div></div></div>`);
     }
     document.getElementById('profile-modal').classList.add('active');
-    const userStr = sessionStorage.getItem('userData');
+    
+    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+    const userStr = localStorage.getItem('userData');
     if(!userStr) return; const user = JSON.parse(userStr);
     
     fetch(WEB_APP_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'getUserProfile', uid: user.uid }) })
@@ -533,12 +539,13 @@ async function saveProfileModal() {
     const pwd = document.getElementById('upd-password').value; const pwdConf = document.getElementById('upd-password-confirm').value;
     if (pwd !== '' && pwd !== pwdConf) { showToast("Mật khẩu xác nhận không khớp!", "warning"); return; }
     
+    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
     const profileData = {
         uid: document.getElementById('upd-uid').value, FullName: document.getElementById('upd-fullname').value, NickName: document.getElementById('upd-nickname').value,
         Email: document.getElementById('upd-email').value, BirthDay: document.getElementById('upd-birthday').value, Gender: document.getElementById('upd-gender').value,
         Phone: document.getElementById('upd-phone').value, Address: document.getElementById('upd-address').value, SchoolName: document.getElementById('upd-school').value,
         ClassName: document.getElementById('upd-class').value, Avatar: document.getElementById('upd-avatar-old').value, avatarBase64: document.getElementById('upd-avatar-base64').value, 
-        Password: pwd, AccountUpdate: JSON.parse(sessionStorage.getItem('userData')).account || 'Unknown'
+        Password: pwd, AccountUpdate: JSON.parse(localStorage.getItem('userData')).account || 'Unknown'
     };
 
     try {
@@ -550,9 +557,12 @@ async function saveProfileModal() {
 
         if (json.success) {
             msg.style.color = "#4ade80"; msg.innerText = "Thành công!"; showToast("Đã cập nhật hồ sơ!", "success");
-            let userSession = JSON.parse(sessionStorage.getItem('userData'));
+            
+            // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+            let userSession = JSON.parse(localStorage.getItem('userData'));
             userSession.name = profileData.FullName; userSession.nickname = profileData.NickName; if(json.newAvatar) userSession.avatar = json.newAvatar; 
-            sessionStorage.setItem('userData', JSON.stringify(userSession));
+            localStorage.setItem('userData', JSON.stringify(userSession));
+            
             renderUserProfile(userSession); logActivity(profileData.uid, profileData.NickName, 'Cập nhật Profile');
             setTimeout(closeProfileModal, 1500);
         } else { showToast(json.error, "error"); throw new Error(json.error); }

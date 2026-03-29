@@ -20,12 +20,27 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 24 * 60 * 60 * 1000 } // Session tồn tại 1 ngày
 }));
-
+app.use(express.static(__dirname));
 app.use('/classroom', express.static(path.join(__dirname, 'classroom')));
 
-// === NHÓM 1: XÁC THỰC GOOGLE (AUTH) ===
+
+
+
+
+// === NHÓM 1: XÁC THỰC GOOGLE (AUTH) & SSO BRIDGE ===
 app.get('/auth/google', getAuthUrl);
 app.get('/oauth2callback', oauth2Callback);
+
+// [CẬP NHẬT] API đón dữ liệu SSO từ Local/Session Storage của trang chủ
+app.post('/api/auth/sync-session', (req, res) => {
+    const { email } = req.body;
+    if (email) {
+        req.session.userEmail = email; // Tự động tạo session cho Classroom
+        res.json({ success: true, message: 'SSO synced' });
+    } else {
+        res.status(400).json({ success: false, message: 'No email provided' });
+    }
+});
 
 // === NHÓM 2: QUẢN LÝ PHÒNG HỌC & DASHBOARD (SHEETS) ===
 app.get('/api/dashboard-data', async (req, res) => {
@@ -97,12 +112,11 @@ app.get('/api/options/students/:schoolId/:classId', async (req, res) => {
 app.post('/api/attendance/login', recordLogin);
 app.post('/api/attendance/logout', recordLogout);
 
-// [CẬP NHẬT] Thêm Route GET để xử lý hành động bấm nút Đăng xuất trên giao diện
 app.get('/api/attendance/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) console.error("Lỗi khi hủy Session:", err);
-        res.clearCookie('connect.sid'); // Xóa sạch dữ liệu Cookie
-        res.redirect('/classroom/index.html'); // Đá người dùng văng ra ngoài trang chủ
+        res.clearCookie('connect.sid'); 
+        res.redirect('/classroom/index.html'); 
     });
 });
 
