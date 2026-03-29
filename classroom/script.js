@@ -131,12 +131,12 @@ async function initSmartSchool(currentPage) {
             console.log("[SSO] BƯỚC 2 - Email đăng nhập:", userEmail);
             
             if (userEmail) {
-                // [ĐIỂM CHỐT LỖI]: Phải có credentials: 'same-origin' để ép lưu Cookie
+                // [ĐÃ SỬA CHỮA]: Đổi same-origin thành include để ép mang Cookie đi mọi nơi
                 const syncRes = await fetch('/api/auth/sync-session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: userEmail }),
-                    credentials: 'same-origin' 
+                    credentials: 'include' 
                 });
                 const syncData = await syncRes.json();
                 console.log("[SSO] BƯỚC 3 - Kết quả đồng bộ Server:", syncData);
@@ -148,10 +148,10 @@ async function initSmartSchool(currentPage) {
     // ========================================================
 
     try {
-        // [ĐIỂM CHỐT LỖI]: Phải mang Cookie (credentials) đi hỏi Dashboard mới được cho vào
+        // [ĐÃ SỬA CHỮA]: Đổi same-origin thành include để mang Cookie đi xét duyệt
         const res = await fetch('/api/dashboard-data?t=' + new Date().getTime(), {
             method: 'GET',
-            credentials: 'same-origin'
+            credentials: 'include'
         });
         const data = await res.json();
         console.log("[SSO] BƯỚC 4 - Dữ liệu tải về từ Server:", data);
