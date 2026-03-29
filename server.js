@@ -3,27 +3,48 @@ const session = require('express-session');
 const path = require('path');
 require('dotenv').config();
 
+// [BỔ SUNG THƯ VIỆN ĐỌC FILE]
+const fs = require('fs'); 
+
+// --- [BẮT ĐẦU CỨU HỘ LOCALHOST: CHỐNG LỖI JWT SIGNATURE] ---
+// Đọc trực tiếp file credentials gốc để không bị mất dấu xuống dòng như file .env
+try {
+    const credPath = path.join(__dirname, 'credentials.json');
+    if (fs.existsSync(credPath)) {
+        process.env.GOOGLE_CREDENTIALS = fs.readFileSync(credPath, 'utf8');
+        console.log("🔑 [LOCAL] Đã nạp thành công chìa khóa trực tiếp từ file credentials.json gốc!");
+    }
+} catch (err) {
+    console.log("⚠️ Đang chạy trên Render hoặc không tìm thấy file credentials.json cục bộ.");
+}
+// --- [KẾT THÚC CỨU HỘ LOCALHOST] ---
+
 // --- NHÚNG CÁC CONTROLLER ---
 const { getAuthUrl, oauth2Callback, createMeetRoom } = require('./classroom/googleController');
 const { recordLogin, recordLogout } = require('./classroom/attendanceController');
-// [CẬP NHẬT 1]: Bổ sung hàm getImagesByFolderId vào danh sách import từ sheetController
 const { getUserProfile, getRooms, deleteRoomFromSheet, getSchoolList, getClassList, getStudentList, getImagesByFolderId } = require('./classroom/sheetController');
 
 const app = express();
 
-// --- CẤU HÌNH HỆ THỐNG ---
+// --- [QUAN TRỌNG NHẤT]: BỘ ĐỌC DỮ LIỆU (KÍNH LÚP) ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // [NÂNG CẤP]: Cấu hình Trust Proxy để nhận diện HTTPS trên Render
 app.set('trust proxy', 1); 
+
+// CẤU HÌNH SESSION CHUẨN QUỐC TẾ (Sửa lỗi mất trí nhớ trên localhost)
+const isProduction = process.env.NODE_ENV === 'production';
 app.use(session({
     secret: process.env.SESSION_SECRET || 'smart-school-backup-key-2026',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // TUYỆT ĐỐI ĐỂ FALSE để tránh tràn bộ nhớ
     cookie: { 
         maxAge: 24 * 60 * 60 * 1000,
-        secure: process.env.NODE_ENV === 'production' 
+        secure: isProduction, // Mạng thì True (HTTPS), Máy tính thì False (HTTP)
+        httpOnly: true, // Chống hack cookie qua XSS
+        sameSite: isProduction ? 'none' : 'lax', // CHÌA KHÓA Ở ĐÂY: Dưới máy tính dùng 'lax' để chuyển trang không bị mất vé
+        path: '/' // Bắt buộc phải có để thẻ nhớ dùng được cho mọi thư mục
     }
 }));
 
@@ -36,7 +57,9 @@ app.get('/oauth2callback', oauth2Callback);
 
 // [CẬP NHẬT 2]: Ép máy chủ lưu Session ngay lập tức để trị dứt điểm lỗi SSO
 app.post('/api/auth/sync-session', (req, res) => {
-    const { email } = req.body;
+    // [ÁO GIÁP BẢO VỆ]: Thêm || {} để chống sập server nếu req.body bị rỗng
+    const { email } = req.body || {}; 
+    
     if (email) {
         req.session.userEmail = email; // Tự động tạo session cho Classroom
         
