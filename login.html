@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -389,4 +390,397 @@
         });
     </script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - TOÁN TIN</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800;900&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* --- BẮT ĐẦU PHẦN UPDATE VỊ TRÍ ICON --- */
+        .input-group-custom { 
+            position: relative; 
+            margin-bottom: 25px; 
+        }
+        
+        .input-group-custom label {
+            display: none; 
+        }
+
+        .input-group-custom > i:first-of-type {
+            position: absolute;
+            left: 15px;      
+            top: 50%;        
+            transform: translateY(-50%); 
+            color: var(--text-dim); 
+            z-index: 10;     
+            font-size: 1.1rem;
+            pointer-events: none; 
+        }
+
+        .input-group-custom input {
+            width: 100%; box-sizing: border-box; 
+            background: rgba(0, 0, 0, 0.02); 
+            border: 1px solid var(--border-tech); 
+            border-radius: 10px; 
+            padding: 18px 45px 18px 45px !important; 
+            color: var(--text-glow); 
+            outline: none; transition: 0.3s; 
+        }
+        
+        .input-group-custom input:focus { 
+            border-color: var(--primary-neon); 
+            background: rgba(8, 145, 178, 0.05); 
+        }
+
+        .password-toggle {
+            position: absolute; 
+            right: 15px; 
+            left: auto !important; 
+            top: 50% !important; 
+            transform: translateY(-50%); 
+            cursor: pointer; 
+            color: var(--text-dim); 
+            transition: 0.3s;
+            z-index: 10;
+        }
+        .password-toggle:hover { color: var(--primary-neon); }
+        /* --- KẾT THÚC PHẦN UPDATE --- */
+
+
+        .autocomplete-items {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 99;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid var(--primary-neon); border-radius: 8px;
+            max-height: 250px; overflow-y: auto; display: none;
+            margin-top: 5px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .autocomplete-items div {
+            padding: 12px 15px; cursor: pointer; color: var(--text-dim);
+            font-size: 0.95rem; border-bottom: 1px dashed rgba(255,255,255,0.1);
+            display: flex; align-items: center; transition: 0.2s; gap: 8px;
+        }
+        .autocomplete-items div:hover {
+            background: rgba(34, 211, 238, 0.15); border-left: 3px solid var(--primary-neon);
+        }
+        .autocomplete-items::-webkit-scrollbar { width: 6px; }
+        .autocomplete-items::-webkit-scrollbar-thumb { background: rgba(14, 165, 233, 0.5); border-radius: 5px; }
+
+        /* Style cho 2 link Quên pass & Đăng ký */
+        .form-links {
+            display: flex; justify-content: space-between; 
+            margin-top: 20px; font-size: 0.85rem; font-family: 'Inter', sans-serif;
+        }
+        .form-links a {
+            color: #94a3b8; text-decoration: none; transition: 0.3s;
+        }
+        .form-links a:hover {
+            color: var(--primary-neon); text-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+        }
+        
+        /* === BỔ SUNG CSS CHO 2 NÚT TRÊN 1 DÒNG === */
+        .action-buttons-container {
+            display: flex;
+            align-items: stretch; /* Đảm bảo 2 nút cao bằng nhau */
+            gap: 15px; /* Khoảng cách giữa 2 nút */
+            width: 100%;
+            margin-top: 10px;
+        }
+        .action-buttons-container .btn-login {
+            flex: 1; /* Chiếm 50% */
+            height: 40px; /* Chiều cao chuẩn khớp với nút Google */
+            padding: 0; 
+            background: var(--primary-neon); 
+            border: none; 
+            border-radius: 4px; /* Bo góc chuẩn khớp với nút Google dạng rectangular */
+            color: white; 
+            font-family: 'Inter', sans-serif;
+            font-weight: 100; 
+            font-size: 1rem; 
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .action-buttons-container .btn-login:hover {
+            background: #0284c7;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        .action-buttons-container #googleBtnWrapper {
+            flex: 1; /* Chiếm 50% */
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="hero-canvas"></canvas>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2 style="font-family:'Rajdhani'; color:rgb(24, 13, 89); font-size:2.2rem; margin-top:10px; margin-bottom: 50px; text-align: center;">ĐĂNG NHẬP HỆ THỐNG</h2>
+            </div>
+            
+            <form id="login-form">
+                <div class="input-group-custom">
+                    <label>TÊN ĐĂNG NHẬP</label> <i class="fas fa-user-circle"></i>
+                    <input type="text" id="username" placeholder="Nhập tên hoặc chọn từ danh sách..." autocomplete="off" required>
+                    <div id="autocomplete-list" class="autocomplete-items"></div>
+                </div>
+                
+                <div class="input-group-custom">
+                    <label>PASSWORD</label> <i class="fas fa-key"></i>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+                
+                <div class="action-buttons-container" id="action-buttons">
+                    <button type="submit" class="btn-login" id="btn-submit">Đăng nhập</button>
+                    
+                    <div id="googleBtnWrapper">
+                        <div id="buttonDiv"></div>
+                    </div>
+                </div>
+                
+                <div class="form-links">
+                    <a href="#">Quên mật khẩu?</a>
+                    <a href="#">Đăng ký mới</a>
+                </div>
+            </form>
+
+            <div id="login-msg" style="text-align:center; margin-top:20px; font-family:'Roboto Mono'; font-size:0.85rem;"></div>
+
+            <div style="text-align: center; margin-top: 10px; font-size: 0.75rem; color: #64748b; font-family: 'Roboto Mono', monospace; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+                <div style="margin-top: 20px;">&copy; Copyright N's Softwave || nhn.SoftWwave@gmail.com</div>
+                <div style="margin-top: 5px; margin-bottom: 5px; ">Phiên bản: <span style="color: var(--primary-neon); font-weight: 600; text-shadow: 0 0 8px rgba(14, 165, 233, 0.5);">Ver 3.0 2026</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=7"></script>
+    <script>
+        // =========================================================
+        const GOOGLE_CLIENT_ID = "834940004336-755h6t11fq21femvdip5u024m8vb45ob.apps.googleusercontent.com"; 
+        // =========================================================
+
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        const input = document.getElementById('username');
+        const listContainer = document.getElementById('autocomplete-list');
+        const msg = document.getElementById('login-msg');
+        let usersData = []; 
+
+        // Khởi tạo các dịch vụ khi trang web tải xong
+        window.onload = function() {
+            if (typeof google !== 'undefined' && GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_ID.includes("ĐIỀN_CLIENT_ID")) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleLogin
+                });
+                
+                // === THUẬT TOÁN ĐO CHIỀU RỘNG TỰ ĐỘNG ===
+                let container = document.getElementById("action-buttons");
+                
+                function renderGoogleBtn() {
+                    let containerWidth = container.offsetWidth;
+                    let halfWidth = (containerWidth - 15) / 2;
+                    
+                    google.accounts.id.renderButton(
+                        document.getElementById("buttonDiv"),
+                        { 
+                            theme: "outline", 
+                            size: "large", 
+                            text: "signin_with", 
+                            shape: "rectangular", 
+                            width: halfWidth 
+                        }
+                    );
+                }
+                
+                renderGoogleBtn();
+                
+                window.addEventListener('resize', function() {
+                    document.getElementById("buttonDiv").innerHTML = ""; 
+                    renderGoogleBtn(); 
+                });
+            }
+        };
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // 1. TẢI NGẦM DỮ LIỆU TỪ WEB APP
+        const fetchUsersPromise = fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'getAllUsersForLogin' })
+        })
+        .then(res => res.json())
+        .then(json => {
+            if (json.success) {
+                usersData = json.data;
+                return json.data;
+            } else {
+                console.error("Lỗi từ Server:", json.error);
+                return [];
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi kết nối Web App:", err);
+            return [];
+        });
+
+        // 2. GỢI Ý NGƯỜI DÙNG (AUTOCOMPLETE)
+        function renderSuggestions(val) {
+            val = val.trim().toLowerCase();
+            listContainer.innerHTML = '';
+            
+            let matches = usersData;
+            if (val) {
+                matches = usersData.filter(u => 
+                    u.name.includes(val) || 
+                    u.uID.includes(val) || 
+                    u.rem.includes(val) || 
+                    u.acc.includes(val)
+                );
+            }
+
+            if (matches.length > 0) {
+                listContainer.style.display = 'block';
+                matches.slice(0, 30).forEach(match => {
+                    const item = document.createElement('div');
+                    
+                    const idHtml = match.realID ? `<span style="color:var(--primary-neon); font-family:'Roboto Mono';">ID:${match.realID}</span>` : '';
+                    const nameHtml = `<span style="color:#fff; font-weight:600; font-size:1.05rem;">${match.realName}</span>`;
+                    const dobHtml = match.dob ? `<span style="color:#94a3b8; font-size:0.85rem; margin-left:auto;"><i class="fas fa-calendar-alt"></i> ${match.dob}</span>` : '';
+
+                    item.innerHTML = `${idHtml} <span style="color:#475569">|</span> ${nameHtml} ${dobHtml}`;
+                    
+                    item.addEventListener('click', function() {
+                        input.value = match.realName; 
+                        listContainer.style.display = 'none';
+                    });
+                    listContainer.appendChild(item);
+                });
+            } else {
+                listContainer.style.display = 'none';
+            }
+        }
+
+        input.addEventListener('focus', function() { renderSuggestions(this.value); });
+        input.addEventListener('input', function() { renderSuggestions(this.value); });
+        document.addEventListener('click', function(e) {
+            if (e.target !== input) listContainer.style.display = 'none';
+        });
+
+        // 3. XỬ LÝ ĐĂNG NHẬP GOOGLE
+        function handleGoogleLogin(response) {
+            msg.innerText = "> ĐANG XÁC THỰC DỮ LIỆU GOOGLE...";
+            msg.style.color = "var(--primary-neon)";
+
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1]));
+                const googleEmail = payload.email.toLowerCase();
+
+                let authUser = usersData.find(u => u.acc === googleEmail);
+
+                if (authUser) {
+                    const nickName = authUser.realRem || authUser.realName;
+
+                    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userData', JSON.stringify({
+                        uid: authUser.realID,
+                        nickname: nickName, 
+                        name: authUser.realName || 'User',
+                        avatar: authUser.avatar || payload.picture, 
+                        perms: authUser.perms,
+                        account: authUser.realAcc,
+                        object: authUser.object
+                    }));
+
+                    if (typeof logActivity === 'function') {
+                        logActivity(authUser.realID, nickName, 'Đăng nhập Google');
+                    }
+                    
+                    msg.innerText = "> XÁC THỰC THÀNH CÔNG. ĐANG CHUYỂN HƯỚNG..."; 
+                    msg.style.color = "#4ade80";
+                    setTimeout(() => window.location.href = 'index.html', 1000); 
+                } else {
+                    msg.innerText = "> ERROR: EMAIL NÀY CHƯA ĐƯỢC CẤP QUYỀN TRUY CẬP!"; 
+                    msg.style.color = "#f87171";
+                }
+            } catch (error) {
+                console.error("Lỗi Google Auth:", error);
+                msg.innerText = "> LỖI GIẢI MÃ TOKEN GOOGLE!"; 
+                msg.style.color = "#f87171";
+            }
+        }
+
+        // 4. XÁC MINH ĐĂNG NHẬP BẰNG TÀI KHOẢN/MẬT KHẨU
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userInp = input.value.trim().toLowerCase();
+            const passInp = document.getElementById('password').value;
+            const btn = document.getElementById('btn-submit');
+
+            msg.innerText = "> XÁC MINH HỆ THỐNG ..."; 
+            msg.style.color = "var(--primary-neon)";
+            btn.disabled = true;
+
+            try {
+                const users = await fetchUsersPromise;
+                
+                let authUser = users.find(u => 
+                    (userInp === u.uID || userInp === u.name || userInp === u.rem || userInp === u.acc) 
+                    && passInp === u.pass && passInp !== ''
+                );
+
+                if (authUser) {
+                    const nickName = authUser.realRem || authUser.realName;
+
+                    // [CẬP NHẬT TỪ SESSION SANG LOCAL STORAGE]
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userData', JSON.stringify({
+                        uid: authUser.realID,
+                        nickname: nickName, 
+                        name: authUser.realName || 'User',
+                        avatar: authUser.avatar,
+                        perms: authUser.perms,
+                        account: authUser.realAcc,
+                        object: authUser.object
+                    }));
+
+                    if (typeof logActivity === 'function') {
+                        logActivity(authUser.realID, nickName, 'Đăng nhập');
+                    }
+                    
+                    msg.innerText = "> CẤP QUYỀN TRUY CẬP. ĐANG CHUYỂN HƯỚNG..."; 
+                    msg.style.color = "#4ade80";
+                    setTimeout(() => window.location.href = 'index.html', 1000); 
+                } else {
+                    msg.innerText = "> ERROR: TÀI KHOẢN HOẶC MẬT KHẨU KHÔNG ĐÚNG!"; 
+                    msg.style.color = "#f87171";
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error(err);
+                msg.innerText = "> SYSTEM ERROR"; 
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+>>>>>>> e802cbeb0af6fc01a2b7d9fc84dc3a701c42802d
 </html>
